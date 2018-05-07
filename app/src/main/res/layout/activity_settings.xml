@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.reformluach.activities.SettingsActivity">
+
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_70"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_10">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            android:background="@mipmap/back"/>
+
+        <com.reformluach.typeface.CustomtextViewFontLight
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/margin_15"
+            android:gravity="center"
+            android:text="Settings"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_18"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_18"
+        android:layout_marginTop="@dimen/margin_10"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/rgSettings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.reformluach.typeface.CustomRadioButtonRegular
+                android:id="@+id/rb_reform"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:button="@drawable/radio_button_selector_cb"
+                android:padding="@dimen/margin_12"
+                android:text="Reform Calender"
+                android:textColor="@color/colorBlack"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_15"
+                android:background="@color/text_grey"/>
+
+            <com.reformluach.typeface.CustomRadioButtonRegular
+                android:id="@+id/rb_israel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_5"
+                android:button="@drawable/radio_button_selector_cb"
+                android:padding="@dimen/margin_12"
+                android:text="Israel Holidays"
+                android:textColor="@color/colorBlack"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_15"
+                android:background="@color/text_grey1"/>
+
+            <com.reformluach.typeface.CustomRadioButtonRegular
+                android:id="@+id/rb_diaspora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_5"
+                android:button="@drawable/radio_button_selector_cb"
+                android:padding="@dimen/margin_12"
+                android:text="Diaspora Calender"
+                android:textColor="@color/colorBlack"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_15"
+                android:background="@color/text_grey1"/>
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

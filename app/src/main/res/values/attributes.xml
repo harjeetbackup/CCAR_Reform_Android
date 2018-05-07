@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RippleView">
+        <attr name="rv_alpha" format="integer"/>
+        <attr name="rv_framerate" format="integer"/>
+        <attr name="rv_rippleDuration" format="integer"/>
+        <attr name="rv_zoomDuration" format="integer"/>
+        <attr name="rv_color" format="color"/>
+        <attr name="rv_centered" format="boolean"/>
+        <attr name="rv_type" format="enum">
+            <enum name="simpleRipple" value="0"/>
+            <enum name="doubleRipple" value="1"/>
+            <enum name="rectangle" value="2"/>
+        </attr>
+        <attr name="rv_ripplePadding" format="dimension"/>
+        <attr name="rv_zoom" format="boolean"/>
+        <attr name="rv_zoomScale" format="float"/>
+    </declare-styleable>
+    <declare-styleable name="BlurDrawerLayout">
+        <attr name="blurRadius_trns" format="integer"/>
+        <attr name="downScaleFactor" format="float"/>
+        <attr name="drawerUpImageId" format="reference"/>
+        <attr name="openDescription" format="reference"/>
+        <attr name="closeDescription" format="reference"/>
+        <attr name="toolbar" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="RangeSeekBarForSale">
+        <attr name="absoluteMinValue" format="integer|float"/>
+        <attr name="absoluteMaxValue" format="integer|float"/>
+        <attr name="singleThumb" format="boolean"/>
+        <attr name="showLabels" format="boolean"/>
+        <attr name="alwaysActive" format="boolean"/>
+        <attr name="valuesAboveThumbs" format="boolean"/>
+        <attr name="internalPadding" format="dimension"/>
+        <attr name="barHeight" format="dimension"/>
+        <attr name="defaultColor" format="color"/>
+        <attr name="activeColor" format="color"/>
+        <attr name="textAboveThumbsColor" format="color"/>
+        <attr name="thumbNormal" format="reference"/>
+        <attr name="thumbPressed" format="reference"/>
+        <attr name="thumbDisabled" format="reference"/>
+        <attr name="thumbShadow" format="boolean"/>
+        <attr name="thumbShadowColor" format="color"/>
+        <attr name="thumbShadowXOffset" format="dimension"/>
+        <attr name="thumbShadowYOffset" format="dimension"/>
+        <attr name="thumbShadowBlur" format="dimension"/>
+        <attr name="activateOnDefaultValues" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="CircularImageView">
+        <attr name="civ_border" format="boolean"/>
+        <attr name="civ_border_width" format="dimension"/>
+        <attr name="civ_border_color" format="color"/>
+        <attr name="civ_shadow" format="boolean"/>
+        <attr name="civ_shadow_color" format="color"/>
+        <attr name="civ_shadow_radius" format="float"/>
+    </declare-styleable>
+</resources>

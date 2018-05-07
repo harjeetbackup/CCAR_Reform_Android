@@ -1,0 +1,38 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="detail_txt_size">10dp</dimen>
+    <dimen name="schedule_cardview_width">95dp</dimen>
+    <dimen name="schedule_cardview_time_width">95dp</dimen>
+    <dimen name="dialog_width">380dp</dimen>
+    <dimen name="margin_2">3dp</dimen>
+    <dimen name="margin_4">2dp</dimen>
+    <dimen name="margin_5">6dp</dimen>
+    <dimen name="margin_8">6dp</dimen>
+    <dimen name="margin_9">10dp</dimen>
+    <dimen name="margin_10">12dp</dimen>
+    <dimen name="margin_12">14dp</dimen>
+    <dimen name="margin_15">17dp</dimen>
+    <dimen name="margin_18">19dp</dimen>
+    <dimen name="margin_30">31dp</dimen>
+    <dimen name="margin_32">33dp</dimen>
+    <dimen name="margin_33">35dp</dimen>
+    <dimen name="margin_35">36dp</dimen>
+    <dimen name="margin_45">46dp</dimen>
+    <dimen name="margin_50">51dp</dimen>
+    <dimen name="margin_60">61dp</dimen>
+    <dimen name="margin_70">71dp</dimen>
+    <dimen name="margin_80">81dp</dimen>
+    <dimen name="margin_13">14dp</dimen>
+    <dimen name="margin_110">111dp</dimen>
+    <dimen name="margin_120">121dp</dimen>
+    <dimen name="margin_140">141dp</dimen>
+    <dimen name="margin_25">26dp</dimen>
+    <dimen name="margin_180">181dp</dimen>
+    <dimen name="margin_200">201dp</dimen>
+    <dimen name="margin_240">241dp</dimen>
+    <dimen name="margin_300">301dp</dimen>
+    <!--Sizes for the TextViews-->
+    <dimen name="large_size">17dp</dimen>
+    <dimen name="medium_size">15dp</dimen>
+    <dimen name="small_size">12dp</dimen>
+</resources>

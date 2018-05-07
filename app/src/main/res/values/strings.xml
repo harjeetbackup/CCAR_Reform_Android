@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Luach</string>
+    <string name="about">About</string>
+    <string name="date_converter">Date Converter</string>
+    <string name="calender_sync">Calender Sync</string>
+    <string name="events">Events</string>
+    <string name="todays">Today</string>
+    <string name="eventparshiyot_childfragment_name">PARSHIYOT</string>
+    <string name="eventholidays_childfragment_name">HOLIDAYS</string>
+    <string name="eventRosh_childfragment_name">ROSH CHODESH</string>
+    <string name="convert">Convert</string>
+    <string name="calender_text">Calender sync places the following Jewish yearly events directly on your device\'s calender app.Toggle the switch above,  and adjust the checkboxes below.</string>
+    <string name="custom_events_text">Add custom events to synced calender, such as Yahrzeits, Birthdays or Anniversaries. Tap "\"Add\"" when done.To enter a Hebrew date, start on the Date Converter Page.</string>
+    <string name="please_check_internet">Please check internet connection.</string>
+    <string name="please_select_month">Please select month.</string>
+    <string name="please_select_year">Please select year.</string>
+    <string name="please_select_day">Please select day.</string>
+    <string name="please_select_sunset">Please select sunset.</string>
+    <string name="sync">Please wait, syncing calendar.</string>
+    <string name="select_event">Please select an event.</string>
+    <string name="dot">"\u2022"</string>
+    <string name="delete_message">Are you sure you want to delete this item?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="are_you_sure_you_want_to_exit_from_the_app">Are you sure you want to exit from Application?</string>
+</resources>

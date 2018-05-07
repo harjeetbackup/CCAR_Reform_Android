@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rl_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@mipmap/dec"
+                android:gravity="center"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/margin_25"
+        android:layout_marginRight="@dimen/margin_25"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="@dimen/margin_300"
+            android:layout_height="@dimen/margin_300"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_25"
+            android:background="@drawable/bg_circle"
+            android:gravity="center"
+            android:minHeight="@dimen/margin_180">
+
+            <com.reformluach.typeface.CustomtextViewFontThin
+                android:id="@+id/tv_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/margin_110"/>
+        </LinearLayout>
+
+        <com.reformluach.typeface.CustomtextViewFontThin
+            android:id="@+id/tv_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_5"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_45"/>
+
+        <com.reformluach.typeface.CustomtextViewFontThin
+            android:id="@+id/tv_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_month"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_45"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="@color/colorWhite"/>
+
+        <com.reformluach.typeface.CustomtextViewFontLight
+            android:id="@+id/tv_gre_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_month"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_18"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_25"/>
+
+        <com.reformluach.typeface.CustomtextViewFontLight
+            android:id="@+id/tv_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_month"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_5"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_25"/>
+    </LinearLayout>
+</RelativeLayout>

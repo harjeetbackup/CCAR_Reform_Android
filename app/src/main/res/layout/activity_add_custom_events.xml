@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.reformluach.activities.AddCustomEventsActivity">
+
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10">
+
+            <com.reformluach.typeface.CustomtextViewFontLight
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Add Custom Events"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/margin_18"/>
+        </LinearLayout>
+
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:layout_marginRight="@dimen/margin_30"
+            android:padding="@dimen/margin_10"
+            android:text="@string/custom_events_text"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_13"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/margin_15"
+            android:layout_marginRight="@dimen/margin_15"
+            android:orientation="horizontal">
+
+            <com.reformluach.typeface.CustomtextViewFontRegular
+                android:id="@+id/tvAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white_corner"
+                android:clickable="true"
+                android:foreground="@drawable/bg_foreground_selector"
+                android:paddingBottom="@dimen/margin_8"
+                android:paddingLeft="@dimen/margin_15"
+                android:paddingRight="@dimen/margin_15"
+                android:paddingTop="@dimen/margin_8"
+                android:text="Add"
+                android:textColor="@color/colorWhite"/>
+
+            <com.reformluach.typeface.CustomtextViewFontRegular
+                android:id="@+id/tvCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:background="@drawable/bg_white_corner"
+                android:clickable="true"
+                android:foreground="@drawable/bg_foreground_selector"
+                android:paddingBottom="@dimen/margin_8"
+                android:paddingLeft="@dimen/margin_15"
+                android:paddingRight="@dimen/margin_15"
+                android:paddingTop="@dimen/margin_8"
+                android:text="Cancel"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_18"
+        android:layout_marginTop="@dimen/margin_18">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_18"
+                    android:layout_marginRight="@dimen/margin_18"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:theme="@style/TextLabel">
+
+                            <com.reformluach.typeface.CustomEditTextRegular
+                                android:id="@+id/event_title_one"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="TITLE"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions"
+                                android:paddingBottom="@dimen/margin_18"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/margin_15"/>
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llMain"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:layout_marginTop="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spMonth_one"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginLeft="@dimen/margin_5"
+                            android:layout_marginTop="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spDay_one"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lineasdfrLayout4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llMonth"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spYear_one"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_60"
+                            android:layout_weight="1"
+                            android:visibility="visible">
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <RadioButton
+                                    android:id="@+id/rb_before_one"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:button="@drawable/radio_button_selector"
+                                    android:paddingLeft="@dimen/margin_10"
+                                    android:text="Before sunset"
+                                    android:textColor="@color/colorBlack"/>
+
+                                <RadioButton
+                                    android:id="@+id/rb_after_one"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/margin_5"
+                                    android:button="@drawable/radio_button_selector"
+                                    android:paddingLeft="@dimen/margin_10"
+                                    android:text="After sunset"
+                                    android:textColor="@color/colorBlack"/>
+                            </RadioGroup>
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:background="@color/colorBlack"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_two"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_18"
+                    android:layout_marginRight="@dimen/margin_18"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:theme="@style/TextLabel">
+
+                            <com.reformluach.typeface.CustomEditTextRegular
+                                android:id="@+id/event_title_two"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="TITLE"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions"
+                                android:paddingBottom="@dimen/margin_18"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/margin_15"/>
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llMain"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:layout_marginTop="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spMonth_two"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginLeft="@dimen/margin_5"
+                            android:layout_marginTop="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spDay_two"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayousdft4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llMonth"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spYear_two"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_60"
+                            android:layout_weight="1"
+                            android:visibility="visible">
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <RadioButton
+                                    android:id="@+id/rb_before_two"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:button="@drawable/radio_button_selector"
+                                    android:paddingLeft="@dimen/margin_10"
+                                    android:text="Before sunset"
+                                    android:textColor="@color/colorBlack"/>
+
+                                <RadioButton
+                                    android:id="@+id/rb_after_two"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/margin_5"
+                                    android:button="@drawable/radio_button_selector"
+                                    android:paddingLeft="@dimen/margin_10"
+                                    android:text="After sunset"
+                                    android:textColor="@color/colorBlack"/>
+                            </RadioGroup>
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margin_5"
+                    android:background="@color/colorBlack"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_three"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_18"
+                    android:layout_marginRight="@dimen/margin_18"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:theme="@style/TextLabel">
+
+                            <com.reformluach.typeface.CustomEditTextRegular
+                                android:id="@+id/event_title_three"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="TITLE"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions"
+                                android:paddingBottom="@dimen/margin_18"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/margin_15"/>
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llMonth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llMain"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:layout_marginTop="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spMonth_three"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginLeft="@dimen/margin_5"
+                            android:layout_marginTop="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spDay_three"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/llMonth"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_45"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:visibility="visible">
+
+                            <com.reformluach.utils.HintSpinner
+                                android:id="@+id/spYear_three"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:gravity="left|center"
+                                android:paddingLeft="@dimen/margin_15"
+                                android:saveEnabled="false"
+                                android:spinnerMode="dropdown"
+                                tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_marginLeft="@dimen/margin_2"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:contentDescription="@string/app_name"
+                                android:src="@mipmap/down"
+                                tools:ignore="RtlHardcoded"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="@dimen/margin_15"
+                                android:layout_marginRight="@dimen/margin_15"
+                                android:background="@color/text_grey1"/>
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_60"
+                            android:layout_weight="1"
+                            android:visibility="visible">
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <RadioButton
+                                    android:id="@+id/rb_before_three"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:button="@drawable/radio_button_selector"
+                                    android:paddingLeft="@dimen/margin_10"
+                                    android:text="Before sunset"
+                                    android:textColor="@color/colorBlack"/>
+
+                                <RadioButton
+                                    android:id="@+id/rb_after_three"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/margin_5"
+                                    android:button="@drawable/radio_button_selector"
+                                    android:paddingLeft="@dimen/margin_10"
+                                    android:text="After sunset"
+                                    android:textColor="@color/colorBlack"/>
+                            </RadioGroup>
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

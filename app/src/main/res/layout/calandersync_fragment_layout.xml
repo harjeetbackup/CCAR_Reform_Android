@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10">
+
+            <com.reformluach.typeface.CustomtextViewFontLight
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_30"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/margin_10"
+                android:text="Calander Sync"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/margin_18"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/swSync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/SCBSwitch"/>
+        </LinearLayout>
+
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:layout_marginRight="@dimen/margin_30"
+            android:padding="@dimen/margin_10"
+            android:text="@string/calender_text"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_15"/>
+    </LinearLayout>
+
+    <com.reformluach.typeface.CustomtextViewFontRegular
+        android:id="@+id/tvSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/llMain"
+        android:layout_marginRight="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_10"
+        android:drawablePadding="@dimen/margin_5"
+        android:drawableRight="@mipmap/setting"
+        android:padding="@dimen/margin_10"
+        android:text="Settings"
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/margin_15"
+        android:visibility="gone"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvSettings">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvSettings"
+            android:layout_marginTop="@dimen/margin_5"
+            android:orientation="vertical">
+
+            <com.reformluach.typeface.CustomCheckBoxRegular
+                android:id="@+id/cb_major_holidays"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:padding="10dp"
+                android:state_checked="false"
+                android:text="Major Holidays"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/margin_13"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.reformluach.typeface.CustomCheckBoxRegular
+                    android:id="@+id/cb_minor_holidays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_25"
+                    android:button="@drawable/checkbox_selector"
+                    android:checked="false"
+                    android:padding="10dp"
+                    android:state_checked="false"
+                    android:text="Minor Holidays"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_13"/>
+
+                <com.reformluach.typeface.CustomtextViewFontRegular
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="(Tu B'Sh'vat, Lag Ba'Omer,...)"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_9"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <com.reformluach.typeface.CustomCheckBoxRegular
+                android:id="@+id/cb_rosh_chodesh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:padding="10dp"
+                android:state_checked="false"
+                android:text="Rosh Chodesh"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/margin_13"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <com.reformluach.typeface.CustomCheckBoxRegular
+                android:id="@+id/cb_weekly_parshiyot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:padding="10dp"
+                android:state_checked="false"
+                android:text="Weekly Parshiyot"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/margin_13"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <com.reformluach.typeface.CustomCheckBoxRegular
+                android:id="@+id/cb_sefirat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:padding="10dp"
+                android:state_checked="false"
+                android:text="Sefirat Ha'Omer"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/margin_13"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.reformluach.typeface.CustomCheckBoxRegular
+                    android:id="@+id/cb_shabatot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_25"
+                    android:button="@drawable/checkbox_selector"
+                    android:checked="false"
+                    android:padding="10dp"
+                    android:state_checked="false"
+                    android:text="Special Shabatot"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_13"/>
+
+                <com.reformluach.typeface.CustomtextViewFontRegular
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="(Shabbat Sh'kalim, Zachor,...)"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_9"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.reformluach.typeface.CustomCheckBoxRegular
+                    android:id="@+id/cb_modern_holiday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_25"
+                    android:button="@drawable/checkbox_selector"
+                    android:checked="false"
+                    android:padding="10dp"
+                    android:state_checked="false"
+                    android:text="Modern Holidays"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_13"/>
+
+                <com.reformluach.typeface.CustomtextViewFontRegular
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_15"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="(Yom HaShoah V'hag'vurah, Yom Ha'atzma'ut,...)"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_9"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/margin_25"
+                android:layout_marginRight="@dimen/margin_25"
+                android:background="@color/color_gray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.reformluach.typeface.CustomCheckBoxRegular
+                    android:id="@+id/cb_custom_events"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_25"
+                    android:layout_weight="1"
+                    android:button="@drawable/checkbox_selector"
+                    android:checked="false"
+                    android:padding="10dp"
+                    android:state_checked="false"
+                    android:text="Custom Repeating Events"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_13"/>
+
+                <com.reformluach.typeface.CustomtextViewFontRegular
+                    android:id="@+id/tvAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/margin_15"
+                    android:background="@drawable/round_corner_black"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:paddingLeft="@dimen/margin_10"
+                    android:paddingRight="@dimen/margin_10"
+                    android:paddingTop="@dimen/margin_5"
+                    android:text="ADD"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/margin_13"/>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_50"
+                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_8"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

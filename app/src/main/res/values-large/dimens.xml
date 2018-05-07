@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_toolbarheadings">26sp</dimen>
+    <dimen name="Popup_heading">26sp</dimen>
+    <dimen name="Popup_subheading">24sp</dimen>
+    <dimen name="Popup_buttons">25sp</dimen>
+</resources>

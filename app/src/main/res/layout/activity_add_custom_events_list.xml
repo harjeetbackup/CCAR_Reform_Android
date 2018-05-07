@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.reformluach.activities.AddCustomEventsActivity">
+
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10">
+
+            <com.reformluach.typeface.CustomtextViewFontLight
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Add Custom Events"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/margin_18"/>
+        </LinearLayout>
+
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_30"
+            android:layout_marginRight="@dimen/margin_30"
+            android:padding="@dimen/margin_10"
+            android:text="@string/custom_events_text"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_13"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:orientation="horizontal">
+
+            <com.reformluach.typeface.CustomtextViewFontRegular
+                android:id="@+id/tvAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white_corner"
+                android:clickable="true"
+                android:foreground="@drawable/bg_foreground_selector"
+                android:paddingBottom="@dimen/margin_8"
+                android:paddingLeft="@dimen/margin_15"
+                android:paddingRight="@dimen/margin_15"
+                android:paddingTop="@dimen/margin_8"
+                android:text="Add"
+                android:textColor="@color/colorWhite"/>
+
+            <com.reformluach.typeface.CustomtextViewFontRegular
+                android:id="@+id/tvCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:background="@drawable/bg_white_corner"
+                android:clickable="true"
+                android:foreground="@drawable/bg_foreground_selector"
+                android:paddingBottom="@dimen/margin_8"
+                android:paddingLeft="@dimen/margin_15"
+                android:paddingRight="@dimen/margin_15"
+                android:paddingTop="@dimen/margin_8"
+                android:text="Cancel"
+                android:textColor="@color/colorWhite"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAddMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/margin_10"
+        android:background="@drawable/round_corner_black"
+        android:padding="@dimen/margin_10"
+        android:text="Add Another"
+        android:textColor="@color/colorBlack"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCustom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_10"/>
+</LinearLayout>

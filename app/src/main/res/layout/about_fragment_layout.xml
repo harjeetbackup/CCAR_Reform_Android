@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_70"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_10">
+
+        <com.reformluach.typeface.CustomtextViewFontLight
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/about"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/margin_18"/>
+
+        <ImageView
+            android:id="@+id/ivSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            android:background="@mipmap/sett"
+            android:padding="@dimen/margin_5"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlSetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llMain"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_5">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_8"
+            android:background="@mipmap/set"/>
+
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="Calendar Settings"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/margin_15"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_8"
+            android:background="@mipmap/forward"
+            android:rotation="180"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/vb"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/rlSetting"
+        android:layout_marginTop="@dimen/margin_2"
+        android:background="@color/color_gray"/>
+
+    <WebView
+        android:id="@+id/wvAbout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/vb"/>
+</RelativeLayout>
