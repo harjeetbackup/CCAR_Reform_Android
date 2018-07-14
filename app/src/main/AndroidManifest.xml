@@ -35,7 +35,8 @@
         <activity
             android:name=".activities.DashBoardCheckActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".activities.AddCustomEventsActivity"
             android:screenOrientation="portrait"/>
@@ -48,10 +49,6 @@
         <activity
             android:name=".activities.CustomEventsUtilityListActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.MainActivity"
-            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
 
-
-            />
     </application>
 </manifest>

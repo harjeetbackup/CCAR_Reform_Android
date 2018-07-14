@@ -169,10 +169,5 @@
                 android:textSize="@dimen/margin_9"/>
         </LinearLayout>
     </LinearLayout>
-    <!--<FrameLayout
-        android:id="@+id/replace_container_sort"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:visibility="gone"/>-->
+
 </LinearLayout>

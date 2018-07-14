@@ -86,4 +86,8 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         notifyDataSetChanged();
     }
 
+    public ArrayList<ParseIsraelItemBean> getData() {
+        return data;
+    }
+
 }

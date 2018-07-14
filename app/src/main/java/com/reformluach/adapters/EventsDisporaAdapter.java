@@ -89,4 +89,6 @@ public class EventsDisporaAdapter extends RecyclerView.Adapter<EventsDisporaAdap
         notifyDataSetChanged();
     }
 
+
+
 }
