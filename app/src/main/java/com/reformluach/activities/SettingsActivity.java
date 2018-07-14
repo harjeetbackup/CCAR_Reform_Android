@@ -67,17 +67,17 @@ public class SettingsActivity extends AppCompatActivity {
                     controller.savePreferencesString(context, Appconstant.REFORM, "selected");
                     controller.savePreferencesString(context, Appconstant.DIASPORA, "unselected");
                     controller.savePreferencesString(context, Appconstant.ISRAEL, "unselected");
-                    onBackPressed();
+//                    onBackPressed();
                 } else if (i == R.id.rb_israel) {
                     controller.savePreferencesString(context, Appconstant.ISRAEL, "selected");
                     controller.savePreferencesString(context, Appconstant.DIASPORA, "unselected");
                     controller.savePreferencesString(context, Appconstant.REFORM, "unselected");
-                    onBackPressed();
+//                    onBackPressed();
                 } else if (i == R.id.rb_diaspora) {
                     controller.savePreferencesString(context, Appconstant.DIASPORA, "selected");
                     controller.savePreferencesString(context, Appconstant.REFORM, "unselected");
                     controller.savePreferencesString(context, Appconstant.ISRAEL, "unselected");
-                    onBackPressed();
+//                    onBackPressed();
                 }
             }
         });

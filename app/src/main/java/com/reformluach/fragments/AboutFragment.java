@@ -27,7 +27,14 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private LinearLayout llMain;
     private Controller controller;
     private ImageView ivSettings;
-    private RelativeLayout rlSetting;
+//    private RelativeLayout rlSetting;
+
+
+    public static AboutFragment getInstance(Bundle bundle) {
+        AboutFragment fragment = new AboutFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -43,9 +50,9 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         WebView wvAbout = aboutFragmentView.findViewById(R.id.wvAbout);
         llMain = aboutFragmentView.findViewById(R.id.llMain);
         ivSettings = aboutFragmentView.findViewById(R.id.ivSettings);
-        rlSetting = aboutFragmentView.findViewById(R.id.rlSetting);
+//        rlSetting = aboutFragmentView.findViewById(R.id.rlSetting);
         ivSettings.setOnClickListener(this);
-        rlSetting.setOnClickListener(this);
+//        rlSetting.setOnClickListener(this);
         setBgAccordingToMonth(controller.getMonth());
         wvAbout.loadUrl("file:///android_asset/about.html");
     }
@@ -93,12 +100,12 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.rlSetting:
-                Intent intentSetting = new Intent(context, SettingsActivity.class);
-                startActivity(intentSetting);
-                controller.animationForward(context);
-                break;
-        }
+//        switch (view.getId()) {
+//            case R.id.rlSetting:
+//                Intent intentSetting = new Intent(context, SettingsActivity.class);
+//                startActivity(intentSetting);
+//                controller.animationForward(context);
+//                break;
+//        }
     }
 }

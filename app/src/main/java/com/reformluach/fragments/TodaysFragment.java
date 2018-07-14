@@ -33,6 +33,12 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
     private TextView tv_date, tv_month, tv_year, tv_event, tv_gre_date;
     private String eventName;
 
+    public static TodaysFragment getInstance(Bundle bundle) {
+        TodaysFragment fragment = new TodaysFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -11,12 +11,17 @@ import android.widget.ImageView;
 import com.reformluach.R;
 import com.reformluach.utils.Controller;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class EventDetailsActivity extends AppCompatActivity implements View.OnClickListener {
     Controller controller;
     private ImageView ivCross;
     private WebView wvDetails;
     private String eventType, eventName;
     private Context context;
+
+//    private String startDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
         if (getIntent() != null) {
             eventType = getIntent().getStringExtra("eventType");
             eventName = getIntent().getStringExtra("eventName");
+//            startDate = getIntent().getStringExtra("startDate");
         }
         getIds();
     }
@@ -236,7 +242,21 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else if (eventName.contains("Pesach Chol Hamoed Day 3")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_4.html");
             } else if (eventName.contains("Pesach I")) {
-                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
+
+//                Date d1 = new Date(startDate);
+//
+//                Calendar c1 = Calendar.getInstance();
+//                c1.setTime(d1);
+//                System.out.println(c1.get(Calendar.DAY_OF_WEEK));
+//
+//                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)){
+//                    wvDetails.loadUrl("file:///android_asset/Pesach I Shabbat.html");
+//                }else {
+                    wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
+
+//                }
+
+//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
             } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Friday.html");
             } else if (eventName.contains("Pesach Chol HaMoed Day 5 Friday")) {
@@ -468,7 +488,8 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_II_or_One_Day_Rosh_Chodesh_Weekday.html");
             }
-        } else if (eventType.contains("Parshiyot")) {
+//        } else if (eventType.contains("Parshiyot")) {
+        } else if (eventType.contains("parashat")) {
             if (eventName.contains("Mot") || eventName.contains("Acharei") || eventName.contains("Acharei_Mot")) {
                 wvDetails.loadUrl("file:///android_asset/Acharei_Mot.html");
             } else if (eventName.contains("Parashat B'har/B'chukotai")) {
@@ -598,7 +619,9 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Yitro.html");
             }
-        } else if (eventType.contains("Holidays")) {
+//        } else if (eventType.contains("Holidays")) {
+        } else if (eventType.contains("holiday")) {
+
             if (eventName.contains("Asara B'Tevet")) {
                 wvDetails.loadUrl("file:///android_asset/Asara_B'Tevet.html");
             } else if (eventName.contains("Aseret Y'mei T'shuva")) {
@@ -664,7 +687,21 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else if (eventName.contains("Pesach Chol Hamoed Day 3")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_4.html");
             } else if (eventName.contains("Pesach I")) {
-                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
+
+//                Date d1 = new Date(startDate);
+//
+//                Calendar c1 = Calendar.getInstance();
+////                c1.setTime(d1);
+////                System.out.println(c1.get(Calendar.DAY_OF_WEEK));
+//
+//                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)){
+//                    wvDetails.loadUrl("file:///android_asset/Pesach I Shabbat.html");
+//                }else {
+                    wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
+
+//                }
+
+//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
             } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Friday.html");
             } else if (eventName.contains("Pesach Chol HaMoed Day 5 Friday")) {
@@ -898,7 +935,8 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else if (eventName.contains("Sigd")) {
                 wvDetails.loadUrl("file:///android_asset/Asara_B'Tevet.html");
             }
-        } else if (eventType.contains("Rosh")) {
+//        } else if (eventType.contains("Rosh")) {
+        } else if (eventType.contains("roshchodesh")) {
             if (eventName.contains("Rosh Chodesh Adar")) {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_Adar_I.html");
             } else if (eventName.contains("Rosh Chodesh Av")) {
@@ -910,6 +948,110 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_II_or_One_Day_Rosh_Chodesh_Weekday.html");
             }
+        }else if (eventType.contains("omer")){
+            if (eventName.contains("15th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("15th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("16th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("17th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("18th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("19th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("20th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("21th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("22th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("23th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("24th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("25th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("26th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("27th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("28th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("29th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("30th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("31th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("32th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("34th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("35th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("36th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("37th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("38th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("39th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("40th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("41th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("42th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("43th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("44th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("45th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("46th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("47th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("48th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }else  if (eventName.contains("49th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
+            }
+            else  if (eventName.contains("33rd day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("14th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("1st day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("2nd day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("3rd day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("4th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("5th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("6th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("7th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("8th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("9th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("10th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("11th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("12th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }else  if (eventName.contains("13th day of the Omer")) {
+                wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
+            }
+
         }
     }
 

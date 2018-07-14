@@ -70,6 +70,12 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
     private LinearLayout llMain;
     private CustomEventsList customEventsList;
 
+    public static CalenderSyncFragment getInstance(Bundle bundle) {
+        CalenderSyncFragment fragment = new CalenderSyncFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

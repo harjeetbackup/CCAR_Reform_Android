@@ -44,6 +44,13 @@ public class DateConverterFragment extends Fragment implements View.OnClickListe
     private RadioButton rbAfter, rbBefore;
     private LinearLayout llMain;
 
+    public static DateConverterFragment getInstance(Bundle bundle) {
+        DateConverterFragment fragment = new DateConverterFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

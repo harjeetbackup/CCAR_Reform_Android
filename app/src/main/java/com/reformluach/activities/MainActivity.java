@@ -1,7 +1,11 @@
 package com.reformluach.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +26,7 @@ import com.reformluach.fragments.EventsFragment;
 import com.reformluach.fragments.TodaysFragment;
 import com.reformluach.utils.Controller;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private ViewPager viewPager;
     private LinearLayout bottom_bar_parent, today_parent, events_parent, calander_sync_parent, date_converter_parent, about_parent;
     private TextView today_textview, events_textview, calander_sync_textview, date_converter_textview, about_textview;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AboutFragment aboutFragment;
     private boolean mHasSaveInstanceState;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         context = MainActivity.this;
         controller = (Controller) context.getApplicationContext();
         initialiseView();
+
+
     }
 
     @Override

@@ -11,47 +11,45 @@ import android.widget.TextView;
 
 import com.reformluach.R;
 import com.reformluach.activities.EventDetailsActivity;
-import com.reformluach.models.EventsRosh;
-import com.reformluach.models.ParseEventsModel;
+import com.reformluach.models.ParseDisporaItemBean;
 
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by Naveen Mishra on 12/5/2017.
- */
-public class AdapterEventsRosh extends RecyclerView.Adapter<AdapterEventsRosh.ViewHolder> {
+public class EventsDisporaHolidayAdapter extends RecyclerView.Adapter<EventsDisporaHolidayAdapter.ViewHolder>{
     private final Context context;
-    private final List<EventsRosh> data;
+    private final ArrayList<ParseDisporaItemBean> data;
 
+    EventsDisporaHolidayAdapter eventsHolidayDisporaAdpater;
 
-    public AdapterEventsRosh(Context context, List<EventsRosh> data) {
+    public EventsDisporaHolidayAdapter(Context context, ArrayList<ParseDisporaItemBean> data) {
         this.context = context;
         this.data = data;
     }
 
-
     @Override
-    public AdapterEventsRosh.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_events_rosh, parent, false);
-        return new AdapterEventsRosh.ViewHolder(view);
+    public EventsDisporaHolidayAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_events_parshiyot, parent, false);
+        return new EventsDisporaHolidayAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final AdapterEventsRosh.ViewHolder holder, final int position) {
-        EventsRosh model = data.get(position);
-        holder.tvEventName.setText(model.getSubject());
-        holder.tvDate.setText(model.getStartDate());
+    public void onBindViewHolder(final EventsDisporaHolidayAdapter.ViewHolder holder, final int position) {
+        ParseDisporaItemBean model = data.get(position);
+
+        if (model.getCategory().equalsIgnoreCase("holiday")){
+            holder.tvEventName.setText(model.getTitle());
+            holder.tvDate.setText(model.getDate());
+        }
+
         holder.llMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, EventDetailsActivity.class);
-                intent.putExtra("eventType", "Rosh");
-                intent.putExtra("eventName", data.get(position).getSubject());
+                intent.putExtra("eventType", "holiday");
+                intent.putExtra("eventName", data.get(position).getTitle());
                 context.startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -65,9 +63,10 @@ public class AdapterEventsRosh extends RecyclerView.Adapter<AdapterEventsRosh.Vi
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvEventName = itemView.findViewById(R.id.tvEventName);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvEventName = itemView.findViewById(R.id.tvEventName);
             llMain = itemView.findViewById(R.id.llMain);
         }
     }
+
 }

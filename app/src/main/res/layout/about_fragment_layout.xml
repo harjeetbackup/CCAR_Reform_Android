@@ -31,50 +31,49 @@
             android:visibility="gone"/>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/rlSetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/llMain"
-        android:orientation="horizontal"
-        android:padding="@dimen/margin_5">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rlSetting"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/llMain"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="@dimen/margin_5">-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_8"
-            android:background="@mipmap/set"/>
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="@dimen/margin_8"-->
+            <!--android:background="@mipmap/set"/>-->
 
-        <com.reformluach.typeface.CustomtextViewFontRegular
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:text="Calendar Settings"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/margin_15"/>
+        <!--<com.reformluach.typeface.CustomtextViewFontRegular-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:text="Calendar Settings"-->
+            <!--android:textColor="@color/colorBlack"-->
+            <!--android:textSize="@dimen/margin_15"/>-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_8"
-            android:background="@mipmap/forward"
-            android:rotation="180"/>
-    </RelativeLayout>
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/margin_8"-->
+            <!--android:background="@mipmap/forward"-->
+            <!--android:rotation="180"/>-->
+    <!--</RelativeLayout>-->
 
     <View
         android:id="@+id/vb"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/rlSetting"
-        android:layout_marginTop="@dimen/margin_2"
+        android:layout_below="@+id/llMain"
         android:background="@color/color_gray"/>
 
     <WebView

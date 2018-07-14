@@ -2,6 +2,7 @@ package com.reformluach.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -13,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.reformluach.R;
+import com.reformluach.activities.SettingsActivity;
 import com.reformluach.adapters.ViewPagerAdapterHome;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
@@ -37,6 +40,14 @@ public class EventsFragment extends Fragment {
     private TextView tvEvent, tvDate, tvCancel;
     private LinearLayout llMain;
 
+    private ImageButton imgBtnSetting;
+
+    public static EventsFragment getInstance(Bundle bundle) {
+        EventsFragment fragment = new EventsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +66,17 @@ public class EventsFragment extends Fragment {
         tvDate = rootView.findViewById(R.id.tvDate);
         tvCancel = rootView.findViewById(R.id.tvCancel);
         llMain = rootView.findViewById(R.id.llMain);
+
+        imgBtnSetting = rootView.findViewById(R.id.ImgBtnSetting);
+
+        imgBtnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         setBgAccordingToMonth(controller.getMonth());
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
