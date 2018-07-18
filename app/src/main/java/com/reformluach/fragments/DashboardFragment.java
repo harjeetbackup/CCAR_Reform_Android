@@ -176,4 +176,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         controller.textColorChange(date_converter_textview, textDateConverter, context);
         controller.textColorChange(about_textview, textAbout, context);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

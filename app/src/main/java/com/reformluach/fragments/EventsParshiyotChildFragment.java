@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.android.volley.Request;
@@ -24,13 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.reformluach.R;
-import com.reformluach.adapters.AdapterEventsParshiyor;
-import com.reformluach.adapters.EventsDisporaAdapter;
 import com.reformluach.adapters.EventsIsraelAdapter;
-import com.reformluach.adapters.EventsParshiyotDisporaAdpater;
-import com.reformluach.adapters.EventsParshiyotIsraelAdapter;
-import com.reformluach.models.EventsParsiyor;
-import com.reformluach.models.ParseDisporaItemBean;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
 import com.reformluach.utils.Appconstant;
@@ -41,42 +36,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.NavigableSet;
-import java.util.TreeSet;
 
 /**
  * Created by Naveen Mishra on 12/1/2017.
  */
-public class EventsParshiyotChildFragment extends Fragment implements EventsParshiyotIsraelAdapter.ReloadAllDataListener,EventsParshiyotDisporaAdpater.ReloadAllDataListener {
+public class EventsParshiyotChildFragment extends Fragment implements EventsIsraelAdapter.ReloadAllDataListener {
     private View eventsParshiyotFragmentView;
     private Context context;
     private RecyclerView rv_events_parshiyot;
-    private AdapterEventsParshiyor adapterEventsParshiyor;
-    private ArrayList<EventsParsiyor> data = new ArrayList();
     private EditText searchEditText;
     private Controller controller;
-    private int index = 0;
 
     private int yearCount = 0;
 
-    private EventsParshiyotIsraelAdapter eventsParshiyotIsraelAdapter;
-    private ArrayList<ParseIsraelItemBean> parseIsraelItemBeanArrayList = new ArrayList<>();
-
-    private EventsParshiyotDisporaAdpater eventsParshiyotDisporaAdpater;
-    private ArrayList<ParseDisporaItemBean> parseDisporaItemBeanArrayList = new ArrayList<>();
     int pageCount = 0;
     int mCurrentPage = -1;
 
     LinearLayoutManager layoutManager;
     private boolean isNeedToRefresh = false;
 
+    private EventsIsraelAdapter eventsIsraelAdapter;
+    private boolean isVisible;
 
     @Nullable
     @Override
@@ -98,17 +82,44 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
 
 
         if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-            getAllEventsDispora();
+            if (isVisible) {
+                getAllEventsDispora();
+            }
         }else if (controller.getPreferencesString((Activity) context,Appconstant.ISRAEL).equalsIgnoreCase("selected")){
-            getAllEventsIsrael();
+            if (isVisible) {
+                getAllEventsIsrael();
+            }
         }
         return eventsParshiyotFragmentView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        eventsIsraelAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
+        rv_events_parshiyot.setAdapter(eventsIsraelAdapter);
+        rv_events_parshiyot.setLayoutManager(layoutManager);
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
+
+        if(isVisible && getView() != null) {
+            if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                getAllEventsDispora();
+
+            } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                getAllEventsIsrael();
+            }
+
+        }
+    }
 
     private void getAllEventsIsrael() {
 
-//        String url = Url.israelUrl;
         // Try to parse JSON
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
@@ -137,10 +148,12 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
                             return;
                         }
 
-                        rv_events_parshiyot.clearOnScrollListeners();
-                        rv_events_parshiyot.removeOnScrollListener(getRecyclerLoadMore());
-                        rv_events_parshiyot.addOnScrollListener(getRecyclerLoadMore());
-
+                        if (pageCount ==0 ) {
+                            rv_events_parshiyot.clearOnScrollListeners();
+                            rv_events_parshiyot.removeOnScrollListener(getRecyclerLoadMore());
+                            rv_events_parshiyot.addOnScrollListener(getRecyclerLoadMore());
+                            eventsIsraelAdapter.clearPreviousData();
+                        }
                         mCurrentPage = pageCount;
 
 
@@ -150,7 +163,7 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
                             JSONArray jsonArray = object.getJSONArray("items");
                             int dataLen = jsonArray.length();
 
-                            parseIsraelItemBeanArrayList.clear();
+                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
 
                             for (int i = 0; i < dataLen; i++) {
 
@@ -163,15 +176,13 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 if (parseItemBean.getCategory().equalsIgnoreCase("parashat")) {
-                                    parseIsraelItemBeanArrayList.add(parseItemBean);
+                                    parseItemBeans.add(parseItemBean);
                                 }
 
                             }
 
-//                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rv_events_parshiyot.getContext(), LinearLayoutManager.VERTICAL, false);
-                            rv_events_parshiyot.setLayoutManager(layoutManager);
-                            eventsParshiyotIsraelAdapter = new EventsParshiyotIsraelAdapter(getContext(),parseIsraelItemBeanArrayList);
-                            rv_events_parshiyot.setAdapter(eventsParshiyotIsraelAdapter);
+                            eventsIsraelAdapter.addMessege(parseItemBeans,pageCount);
+                            eventsIsraelAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -190,7 +201,6 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
 
     private void getAllEventsDispora() {
 
-//        String url = Url.disporaUrl;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
         Calendar myCal = Calendar.getInstance();
@@ -217,10 +227,12 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
                             return;
                         }
 
-                        rv_events_parshiyot.clearOnScrollListeners();
-                        rv_events_parshiyot.removeOnScrollListener(getRecyclerLoadMore());
-                        rv_events_parshiyot.addOnScrollListener(getRecyclerLoadMore());
-
+                        if (pageCount == 0) {
+                            rv_events_parshiyot.clearOnScrollListeners();
+                            rv_events_parshiyot.removeOnScrollListener(getRecyclerLoadMore());
+                            rv_events_parshiyot.addOnScrollListener(getRecyclerLoadMore());
+                            eventsIsraelAdapter.clearPreviousData();
+                        }
                         mCurrentPage = pageCount;
 
                         try {
@@ -229,26 +241,26 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
                             JSONArray jsonArray = object.getJSONArray("items");
                             int dataLen = jsonArray.length();
 
-                            parseDisporaItemBeanArrayList.clear();
+
+                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
 
                             for (int i = 0; i < dataLen; i++) {
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                ParseDisporaItemBean parseItemBean = new ParseDisporaItemBean();
+                                ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
 
                                 parseItemBean.setTitle(jsonObject.optString("title"));
                                 parseItemBean.setDate(jsonObject.optString("date"));
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 if (parseItemBean.getCategory().equalsIgnoreCase("parashat")) {
-                                    parseDisporaItemBeanArrayList.add(parseItemBean);
+                                    parseItemBeans.add(parseItemBean);
                                 }
                             }
 
-                            rv_events_parshiyot.setLayoutManager(layoutManager);
-                            eventsParshiyotDisporaAdpater = new EventsParshiyotDisporaAdpater(getContext(),parseDisporaItemBeanArrayList);
-                            rv_events_parshiyot.setAdapter(eventsParshiyotDisporaAdpater);
+                            eventsIsraelAdapter.addMessege(parseItemBeans,pageCount);
+                            eventsIsraelAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -270,28 +282,22 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onLoadMore(int current_page) {
-                if(eventsParshiyotDisporaAdpater != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                if(eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
 //
-                    if (eventsParshiyotDisporaAdpater != null) {
+                    if (eventsIsraelAdapter != null) {
                         pageCount = current_page + 1;
                     }
                     getAllEventsDispora();
 
                 }
-                else if(eventsParshiyotIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    if (eventsParshiyotIsraelAdapter != null) {
+                else if(eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    if (eventsIsraelAdapter != null) {
                         pageCount = current_page + 1;
                     }
                   getAllEventsIsrael();
 
                 }
 
-//                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-//                    getAllEventsDispora();
-//                }else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")){
-//                    getAllEventsIsrael();
-//
-//                }
             }
 
         };
@@ -308,10 +314,23 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+
                 if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                    callRefreshDispora(s.toString());
+                    if (s.length()!=0) {
+                        callRefreshIsrael(s.toString());
+                    }else {
+                        getAllEventsDispora();
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                    }
                 }else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")){
-                    callRefreshIsrael(s.toString());
+                    if (s.length()!=0) {
+                        callRefreshIsrael(s.toString());
+                    }else {
+                        getAllEventsIsrael();
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                    }
                 }
             }
 
@@ -321,36 +340,23 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
         });
     }
 
-//
 
     private void callRefreshIsrael(String s) {
         final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
-        for (int i = 0; i < parseIsraelItemBeanArrayList.size(); i++) {
-            final String text = parseIsraelItemBeanArrayList.get(i).getTitle();
+        ArrayList<ParseIsraelItemBean> parseItemBeans = eventsIsraelAdapter.getData();
+
+        for (int i = 0; i < parseItemBeans.size(); i++) {
+            final String text = parseItemBeans.get(i).getTitle();
             if (text.contains(s)) {
-                filteredList.add(parseIsraelItemBeanArrayList.get(i));
+                filteredList.add(parseItemBeans.get(i));
             }
         }
-        rv_events_parshiyot.setLayoutManager(layoutManager);
-        eventsParshiyotIsraelAdapter = new EventsParshiyotIsraelAdapter(getContext(),filteredList);
-
-        rv_events_parshiyot.setAdapter(eventsParshiyotIsraelAdapter);
+        eventsIsraelAdapter.clearPreviousData();
+        pageCount = 0;
+        eventsIsraelAdapter.addMessege(filteredList, pageCount);
     }
 
-    private void callRefreshDispora(String s) {
-        final ArrayList<ParseDisporaItemBean> filteredList = new ArrayList<>();
-        for (int i = 0; i < parseDisporaItemBeanArrayList.size(); i++) {
-            final String text = parseDisporaItemBeanArrayList.get(i).getTitle();
-            if (text.contains(s)) {
-                filteredList.add(parseDisporaItemBeanArrayList.get(i));
-            }
-        }
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rv_events_parshiyot.getContext(), LinearLayoutManager.VERTICAL, false);
-        rv_events_parshiyot.setLayoutManager(layoutManager);
-        eventsParshiyotDisporaAdpater = new EventsParshiyotDisporaAdpater(getContext(),filteredList);
 
-        rv_events_parshiyot.setAdapter(eventsParshiyotDisporaAdpater);
-    }
 
     @Override
     public void onResume() {
@@ -376,14 +382,12 @@ public class EventsParshiyotChildFragment extends Fragment implements EventsPars
 
     @Override
     public void refreshAllIsraelData() {
-//        pageCount=0;
-        getAllEventsIsrael();
+        if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            getAllEventsDispora();
+        }else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected"))
+            getAllEventsIsrael();
+
     }
 
-    @Override
-    public void refreshAllDisporaData() {
-//        pageCount=0;
 
-        getAllEventsDispora();
-    }
 }

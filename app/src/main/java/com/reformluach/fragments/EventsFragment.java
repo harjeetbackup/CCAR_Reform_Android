@@ -9,10 +9,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,9 +23,13 @@ import android.widget.TextView;
 
 import com.reformluach.R;
 import com.reformluach.activities.SettingsActivity;
+import com.reformluach.adapters.EventsIsraelAdapter;
 import com.reformluach.adapters.ViewPagerAdapterHome;
+import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
+
+import java.util.ArrayList;
 
 /**
  * Created by Naveen Mishra on 11/30/2017.
@@ -41,12 +48,10 @@ public class EventsFragment extends Fragment {
     private LinearLayout llMain;
 
     private ImageButton imgBtnSetting;
+    private TabLayout tabLayout;
+    private boolean isVisible;
 
-    public static EventsFragment getInstance(Bundle bundle) {
-        EventsFragment fragment = new EventsFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+    String selected ="";
 
     @Nullable
     @Override
@@ -54,18 +59,21 @@ public class EventsFragment extends Fragment {
         eventsFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.events_fragment_layout, container, false);
         context = eventsFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
+
         initialiseView(eventsFragmentView);
         return eventsFragmentView;
     }
 
+
     private void initialiseView(View rootView) {
         viewPager = rootView.findViewById(R.id.viewPager);
         setupViewPager(viewPager);
-        TabLayout tabLayout = rootView.findViewById(R.id.tab_layout);
+        tabLayout = rootView.findViewById(R.id.tab_layout);
         tvEvent = rootView.findViewById(R.id.tvEvent);
         tvDate = rootView.findViewById(R.id.tvDate);
         tvCancel = rootView.findViewById(R.id.tvCancel);
         llMain = rootView.findViewById(R.id.llMain);
+//        searchViewEvents = rootView.findViewById(R.id.searchViewEvents);
 
         imgBtnSetting = rootView.findViewById(R.id.ImgBtnSetting);
 
@@ -74,14 +82,32 @@ public class EventsFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(intent);
+
             }
         });
 
         setBgAccordingToMonth(controller.getMonth());
+
+//        searchViewEvents.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                mSearchedQuery = query;
+//                callRefreshIsrael(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
+
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 events_search_edittext.setText("");
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(events_search_edittext.getWindowToken(), 0);
             }
         });
         events_search_edittext = rootView.findViewById(R.id.events_search_edittext);
@@ -95,6 +121,7 @@ public class EventsFragment extends Fragment {
         }
     }
 
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
@@ -102,12 +129,12 @@ public class EventsFragment extends Fragment {
             Log.e("SetMenuVisibleFragment", menuVisible + " ");
         }
     }
-
+    ViewPagerAdapterHome viewPagerAdapterHome;
     public void setupViewPager(ViewPager viewPager) {
         eventsParshiyotChildFragment = (EventsParshiyotChildFragment) controller.getFragmentInstance(5);
         eventsHolidaysFragment = (EventsHolidaysChildFragment) controller.getFragmentInstance(6);
         eventRoshFragment = (EventRoshChildFragment) controller.getFragmentInstance(7);
-        ViewPagerAdapterHome viewPagerAdapterHome = new ViewPagerAdapterHome(getChildFragmentManager());
+         viewPagerAdapterHome = new ViewPagerAdapterHome(getChildFragmentManager());
         viewPagerAdapterHome.addFrag(eventRoshFragment, "All");
 
         viewPagerAdapterHome.addFrag(eventsParshiyotChildFragment, getString(R.string.eventparshiyot_childfragment_name));
@@ -168,6 +195,59 @@ public class EventsFragment extends Fragment {
             case 12:
                 llMain.setBackground(ContextCompat.getDrawable(context, R.mipmap.decss));
                 break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+//        if (selected==true) {
+            setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
+//        }
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        isVisible = isVisibleToUser;
+
+        if(isVisible && getView() != null) {
+            setupViewPager(viewPager);
+        }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        clearTabSetup();
+    }
+
+    private void clearTabSetup() {
+        viewPagerAdapterHome =null;
+        viewPager = null;
+    }
+
+    public void openEventsAllTab() {
+        if(viewPager != null) {
+            viewPager.setCurrentItem(0);
+        }
+    }
+
+
+    public void openEventsParshiyotTab() {
+        if(viewPager != null) {
+            viewPager.setCurrentItem(1);
+        }
+    }
+
+    public void openEventsHolidayTab() {
+        if(viewPager != null) {
+            viewPager.setCurrentItem(2);
         }
     }
 }

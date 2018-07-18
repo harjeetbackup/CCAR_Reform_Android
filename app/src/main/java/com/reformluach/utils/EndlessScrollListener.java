@@ -25,6 +25,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
         private LinearLayoutManager mLinearLayoutManager;
 
 
+
     public EndlessScrollListener(LinearLayoutManager linearLayoutManager) {
             this.mLinearLayoutManager = linearLayoutManager;
         }
@@ -66,6 +67,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
 //            showFAB();
             }
             super.onScrollStateChanged(recyclerView, newState);
+
         }
 
         public abstract void onLoadMore(int current_page);

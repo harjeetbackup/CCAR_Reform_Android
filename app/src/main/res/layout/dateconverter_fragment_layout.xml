@@ -354,7 +354,9 @@
                 android:layout_marginLeft="@dimen/margin_25"
                 android:layout_marginRight="@dimen/margin_25"
                 android:layout_marginTop="@dimen/margin_10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <com.reformluach.typeface.CustomtextViewFontRegular
                     android:layout_width="0dp"

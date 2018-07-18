@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
     <LinearLayout
         android:id="@+id/llMain"
@@ -22,16 +24,31 @@
                 android:layout_marginLeft="@dimen/margin_30"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="@dimen/margin_10"
+                android:paddingTop="15dp"
+                android:paddingLeft="@dimen/margin_10"
+                android:paddingRight="@dimen/margin_10"
                 android:text="Calander Sync"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/margin_18"/>
+                android:textSize="@dimen/margin_18"
+                android:layout_marginTop="15dp"
+
+                />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/swSync"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:theme="@style/SCBSwitch"/>
+                android:theme="@style/SCBSwitch"
+
+                />
+
+            <!--<Button-->
+                <!--android:id="@+id/swSync"-->
+                <!--android:layout_width="40dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:src="@mipmap/dowload"-->
+                <!--android:background="@color/transparent"-->
+                <!--/>-->
         </LinearLayout>
 
         <com.reformluach.typeface.CustomtextViewFontRegular
@@ -42,29 +59,30 @@
             android:padding="@dimen/margin_10"
             android:text="@string/calender_text"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/margin_15"/>
+            android:textSize="14dp"
+            android:layout_marginTop="50dp"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_50"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_8"
+            android:scrollbars="horizontal"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
-    <com.reformluach.typeface.CustomtextViewFontRegular
-        android:id="@+id/tvSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/llMain"
-        android:layout_marginRight="@dimen/margin_10"
-        android:layout_marginTop="@dimen/margin_10"
-        android:drawablePadding="@dimen/margin_5"
-        android:drawableRight="@mipmap/setting"
-        android:padding="@dimen/margin_10"
-        android:text="Settings"
-        android:textColor="@color/text_grey"
-        android:textSize="@dimen/margin_15"
-        android:visibility="gone"/>
+
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvSettings">
+        android:layout_below="@+id/llMain"
+        android:layout_marginTop="10dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -264,7 +282,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
 
                 <com.reformluach.typeface.CustomCheckBoxRegular
                     android:id="@+id/cb_custom_events"

@@ -19,6 +19,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -26,8 +28,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +39,7 @@ import android.widget.Toast;
 import com.reformluach.R;
 import com.reformluach.activities.CustomEventsUtilityListActivity;
 import com.reformluach.adapters.AdapterCustomEventsList;
+import com.reformluach.adapters.CalenderPagerAdapter;
 import com.reformluach.models.CustomEventsList;
 import com.reformluach.utils.Controller;
 
@@ -45,8 +50,12 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -59,7 +68,7 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
     private TextView tvAdd/*, tvSettings*/;
     private ArrayList<CustomEventsList> data = new ArrayList<>();
     private ArrayList<CustomEventsList> datacustom = new ArrayList<>();
-    private CheckBox cb_major_holidays, cb_minor_holidays, cb_rosh_chodesh, cb_weekly_parshiyot, cb_sefirat, cb_shabatot, cb_modern_holiday, cb_custom_events;
+    private CheckBox cb_major_holidays, cb_minor_holidays, cb_rosh_chodesh, cb_weekly_parshiyot, cb_sefirat, cb_shabatot, cb_modern_holiday,cb_custom_events;
     private SwitchCompat swSync;
     private String eventdate, event;
     private long timestamp;
@@ -70,11 +79,8 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
     private LinearLayout llMain;
     private CustomEventsList customEventsList;
 
-    public static CalenderSyncFragment getInstance(Bundle bundle) {
-        CalenderSyncFragment fragment = new CalenderSyncFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+//    private Button swSync;
+
 
     @Nullable
     @Override
@@ -83,8 +89,11 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         context = calanderSyncFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
         getIds(calanderSyncFragmentView);
+
         return calanderSyncFragmentView;
+
     }
+
 
     private void deleteEvent(ContentResolver resolver, Uri baseUri, int calendarId) {
         try {
@@ -150,13 +159,12 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         swSync = calanderSyncFragmentView.findViewById(R.id.swSync);
         rvCalendar = calanderSyncFragmentView.findViewById(R.id.rvCalendar);
         tvAdd.setOnClickListener(this);
-        // tvSettings.setOnClickListener(this);
         swSync.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 getSelectedCheckBox();
                 if (b) {
-                    if (getSelectedCheckBox() == 8) {
+                    if (getSelectedCheckBox() == 7) {
                         callSelectedJsonMethod();
                         if (controller.getArayList() != null && controller.getArayList().size() > 0) {
                             controller.PdStart(context, getString(R.string.sync), R.color.text_grey);
@@ -166,7 +174,7 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                             cb_custom_events.setChecked(false);
                             Toast.makeText(context, "No custom events found.", Toast.LENGTH_SHORT).show();
                         }
-                    } else if (getSelectedCheckBox() != 0 && getSelectedCheckBox() != 8) {
+                    } else if (getSelectedCheckBox() != 0 && getSelectedCheckBox() != 7) {
                         callSelectedJsonMethod();
                         controller.PdStart(context, getString(R.string.sync), R.color.text_grey);
                         new CalenderAsync().execute();
@@ -177,6 +185,10 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                 }
             }
         });
+
+
+
+
         setBgAccordingToMonth(controller.getMonth());
         if (controller.getArayList() != null && controller.getArayList().size() > 0) {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rvCalendar.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -197,10 +209,12 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         values.put(CalendarContract.Events.TITLE, name);
         if (cb_custom_events.isChecked()) {
             values.put(CalendarContract.Events.RRULE, "FREQ=YEARLY");
+            //evt.getStartTime());
             values.put(CalendarContract.Events.DTSTART, open);
             values.put(CalendarContract.Events.DURATION, "PT1H");
         } else {
             values.put(CalendarContract.Events.DTSTART, open);
+            //evt.getEndTime())
             values.put(CalendarContract.Events.DTEND, open + 82800000);
         }
         values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
@@ -217,6 +231,7 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
             values.put(CalendarContract.Reminders.MINUTES, 15);
             try {
+                // Insert event to calendar
                 cr.insert(REMINDERS_URI, values);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -262,9 +277,9 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         if (cb_modern_holiday.isChecked()) {
             return 7;
         }
-        if (cb_custom_events.isChecked()) {
-            return 8;
-        }
+//        if (cb_custom_events.isChecked()) {
+//            return 8;
+//        }
         return 0;
     }
 
@@ -624,9 +639,11 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             getJsonDataSpecial();
         } else if (getSelectedCheckBox() == 7) {
             getJsonDataModern();
-        } else if (getSelectedCheckBox() == 8) {
-            getJsonDataCustom();
         }
+
+//        else if (getSelectedCheckBox() == 8) {
+//            getJsonDataCustom();
+//        }
     }
 
     private void getJsonDataCustom() {
@@ -668,6 +685,8 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             super.onPostExecute(o);
             controller.PdStop();
             swSync.setChecked(false);
+//            swSync.setClickable(false);
+
             if (cb_major_holidays.isChecked()) {
                 cb_major_holidays.setChecked(false);
             }
@@ -689,9 +708,9 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             if (cb_modern_holiday.isChecked()) {
                 cb_modern_holiday.setChecked(false);
             }
-            if (cb_custom_events.isChecked()) {
-                cb_custom_events.setChecked(false);
-            }
+//            if (cb_custom_events.isChecked()) {
+//                cb_custom_events.setChecked(false);
+//            }
         }
     }
 }

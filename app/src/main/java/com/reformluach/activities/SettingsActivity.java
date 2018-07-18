@@ -2,6 +2,7 @@ package com.reformluach.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.reformluach.R;
+import com.reformluach.fragments.EventsFragment;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
 
@@ -41,13 +43,21 @@ public class SettingsActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.ivBack);
         llMain = findViewById(R.id.llMain);
         setBgAccordingToMonth(controller.getMonth());
+
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+//                Intent intent = new Intent(SettingsActivity.this,EventsFragment.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("selected", "yes");
+//                intent.putExtras(bundle);
+////                setResult(RESULT_OK);
+//                startActivity(intent);
                 controller.animationBackward(context);
             }
         });
+
         rb_reform.setChecked(true);
         if (controller.getPreferencesString((Activity) context, Appconstant.REFORM) != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL) != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA) != null) {
             if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
@@ -67,17 +77,14 @@ public class SettingsActivity extends AppCompatActivity {
                     controller.savePreferencesString(context, Appconstant.REFORM, "selected");
                     controller.savePreferencesString(context, Appconstant.DIASPORA, "unselected");
                     controller.savePreferencesString(context, Appconstant.ISRAEL, "unselected");
-//                    onBackPressed();
                 } else if (i == R.id.rb_israel) {
                     controller.savePreferencesString(context, Appconstant.ISRAEL, "selected");
                     controller.savePreferencesString(context, Appconstant.DIASPORA, "unselected");
                     controller.savePreferencesString(context, Appconstant.REFORM, "unselected");
-//                    onBackPressed();
                 } else if (i == R.id.rb_diaspora) {
                     controller.savePreferencesString(context, Appconstant.DIASPORA, "selected");
                     controller.savePreferencesString(context, Appconstant.REFORM, "unselected");
                     controller.savePreferencesString(context, Appconstant.ISRAEL, "unselected");
-//                    onBackPressed();
                 }
             }
         });

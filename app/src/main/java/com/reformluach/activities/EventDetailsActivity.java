@@ -243,21 +243,8 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_4.html");
             } else if (eventName.contains("Pesach I")) {
 
-//                Date d1 = new Date(startDate);
-//
-//                Calendar c1 = Calendar.getInstance();
-//                c1.setTime(d1);
-//                System.out.println(c1.get(Calendar.DAY_OF_WEEK));
-//
-//                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)){
-//                    wvDetails.loadUrl("file:///android_asset/Pesach I Shabbat.html");
-//                }else {
-                    wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
-
-//                }
-
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
-            } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
+                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
+                } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Friday.html");
             } else if (eventName.contains("Pesach Chol HaMoed Day 5 Friday")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Weekday.html");
@@ -488,7 +475,6 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_II_or_One_Day_Rosh_Chodesh_Weekday.html");
             }
-//        } else if (eventType.contains("Parshiyot")) {
         } else if (eventType.contains("parashat")) {
             if (eventName.contains("Mot") || eventName.contains("Acharei") || eventName.contains("Acharei_Mot")) {
                 wvDetails.loadUrl("file:///android_asset/Acharei_Mot.html");

@@ -12,10 +12,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,11 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.reformluach.R;
-import com.reformluach.adapters.AdapterEventsHolidays;
-import com.reformluach.adapters.EventsDisporaAdapter;
 import com.reformluach.adapters.EventsIsraelAdapter;
-import com.reformluach.models.EventsHolidays;
-import com.reformluach.models.ParseDisporaItemBean;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
 import com.reformluach.utils.Appconstant;
@@ -48,23 +49,15 @@ import java.util.Date;
  * Created by Naveen Mishra on 12/1/2017.
  */
 
-public class EventRoshChildFragment extends Fragment implements EventsIsraelAdapter.ReloadAllDataListener, EventsDisporaAdapter.ReloadAllDataListener {
+public class EventRoshChildFragment extends Fragment implements EventsIsraelAdapter.ReloadAllDataListener {
     private View eventsHolidaysFragmentView;
     private Context context;
     private RecyclerView rv_events_holiday;
-//    private AdapterEventsHolidays adapterEventsHolidays;
-//    private ArrayList<EventsHolidays> data = new ArrayList();
     private EditText searchEditText;
     private Controller controller;
-//    private int index = 0;
-//    private int pos = 0;
     private int yearCount = 0;
 
     private EventsIsraelAdapter eventsIsraelAdapter;
-//    private ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
-
-//    private EventsDisporaAdapter eventsDisporaAdapter;
-//    private ArrayList<ParseDisporaItemBean> disporaItemBeanArrayList = new ArrayList<>();
 
     int mCurrentPage = -1;
 
@@ -72,12 +65,15 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
     private boolean isNeedToRefresh = false;
 
     int pageCount = 0;
+    private boolean isVisible;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        super.onCreateView(inflater,container,savedInstanceState);
         eventsHolidaysFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.eventholidays_fragment_layout, container, false);
         context = eventsHolidaysFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
@@ -93,26 +89,46 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         yearCount = Integer.parseInt(sdf.format(date));
 
         layoutManager = new LinearLayoutManager(getActivity());
-        rv_events_holiday.setLayoutManager(layoutManager);
 
         if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-            getAllEventsDispora();
+          if (isVisible) {
+              getAllEventsDispora();
+          }
+
         } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-            getAllEventsIsrael();
+            if (isVisible) {
+                getAllEventsIsrael();
+            }
         }
+
         return eventsHolidaysFragmentView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        eventsIsraelAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
-        rv_events_holiday.setAdapter(eventsIsraelAdapter);
+            eventsIsraelAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
+            rv_events_holiday.setLayoutManager(layoutManager);
+            rv_events_holiday.setAdapter(eventsIsraelAdapter);
+
+        }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
+
+        if(isVisible && getView() != null) {
+            if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                getAllEventsDispora();
+
+            } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                getAllEventsIsrael();
+            }
+
+        }
     }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
+//    @RequiresApi(api = Build.VERSION_CODES.O)
     private void getAllEventsIsrael() {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -141,10 +157,12 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                             return;
                         }
 
-                        rv_events_holiday.clearOnScrollListeners();
-                        rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
-                        rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-
+                        if (pageCount ==0 ) {
+                            rv_events_holiday.clearOnScrollListeners();
+                            rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
+                            rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
+                            eventsIsraelAdapter.clearPreviousData();
+                        }
                         mCurrentPage = pageCount;
 
                         try {
@@ -166,14 +184,9 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 parseItemBeans.add(parseItemBean);
-
                             }
-
-//                                 rv_events_holiday.setLayoutManager(layoutManager);
-//                                    eventsIsraelAdapter = new EventsIsraelAdapter(getContext(),parseItemBeans);
-//                                    rv_events_holiday.setAdapter(eventsIsraelAdapter);
-
                             eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
+                            eventsIsraelAdapter.notifyDataSetChanged();
 
 
                         } catch (JSONException e) {
@@ -191,51 +204,41 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         queue.add(objectRequest);
     }
 
-
     private EndlessScrollListener getRecyclerLoadMore() {
         return new EndlessScrollListener(layoutManager) {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onLoadMore(int current_page) {
-                /*if (eventsDisporaAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
 
-                    if (eventsDisporaAdapter != null) {
+                    if (eventsIsraelAdapter != null) {
                         pageCount = current_page + 1;
                     }
                     getAllEventsDispora();
-
-                } else*/ if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                } else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                     if (eventsIsraelAdapter != null) {
                         pageCount = current_page + 1;
 
                     }
                     getAllEventsIsrael();
-
                 }
-
-//                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-//                   getAllEventsDispora();
-//                }else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")){
-//                    getAllEventsIsrael();
-//
-//                }
             }
 
         };
     }
 
-    //
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void refreshAllIsraelData() {
-        getAllEventsIsrael();
+        if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            getAllEventsDispora();
 
+        } else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")){
+            getAllEventsIsrael();
+       }
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void getAllEventsDispora() {
-
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
@@ -262,9 +265,13 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                         if (getActivity() == null || getContext() == null || getView() == null) {
                             return;
                         }
-                        rv_events_holiday.clearOnScrollListeners();
-                        rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
-                        rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
+
+                        if (pageCount ==0 ) {
+                            rv_events_holiday.clearOnScrollListeners();
+                            rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
+                            rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
+                            eventsIsraelAdapter.clearPreviousData();
+                        }
 
                         mCurrentPage = pageCount;
 
@@ -288,11 +295,12 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                                 parseItemBean.setDate(jsonObject.optString("date"));
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
-//                                parseItemBeans.add(parseItemBean);
+                                parseItemBeans.add(parseItemBean);
 
                             }
 
                         eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
+                            eventsIsraelAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -302,32 +310,93 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("Response", String.valueOf(error));
-
             }
 
         });
         queue.add(objectRequest);
     }
 
+    String search;
     private void initViews(View eventsHolidaysFragmentView) {
         rv_events_holiday = eventsHolidaysFragmentView.findViewById(R.id.rv_events_holiday);
         searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                    if (s.length()!=0) {
+                        callRefreshIsrael(s.toString());
+                    }
+                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    if (s.length()!=0) {
+                        callRefreshIsrael(s.toString());
+                    }
+                }
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                /*if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                    callRefreshDispora(s.toString());
-                } else*/ if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    callRefreshIsrael(s.toString());
+
+                 search = s.toString();
+                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                    if (s.length()!=0) {
+                        callRefreshIsrael(s.toString());
+                    }else {
+                        getAllEventsDispora();
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                    }
+                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    if (s.length()!=0) {
+                        callRefreshIsrael(s.toString());
+                    }else {
+                        getAllEventsIsrael();
+                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                    }
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    callRefreshIsrael(search);
+//                    if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//                    if (searchEditText.getText().length()!=0) {
+//                        callRefreshIsrael(search);
+//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//
+//                    }else {
+//                        getAllEventsDispora();
+//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//                    }
+//                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+//                    if (searchEditText.getText().length()!=0) {
+//                        callRefreshIsrael(search);
+//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//
+//                    }else {
+//                        getAllEventsIsrael();
+//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//                    }
+//                }
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -338,27 +407,24 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         for (int i = 0; i < parseItemBeans.size(); i++) {
             final String text = parseItemBeans.get(i).getTitle();
             if (text.contains(s)) {
-                filteredList.add(parseItemBeans.get(i));
+                    filteredList.add(parseItemBeans.get(i));
             }
         }
-//        rv_events_holiday.setLayoutManager(layoutManager);
-//        eventsIsraelAdapter = new EventsIsraelAdapter(getContext(),filteredList);
-//
-//        rv_events_holiday.setAdapter(eventsIsraelAdapter);
 
         eventsIsraelAdapter.clearPreviousData();
-        pageCount = 0;
+         pageCount =0;
+//        layoutManager.setStackFromEnd(false);
+//        layoutManager.setReverseLayout(false);
         eventsIsraelAdapter.addMessege(filteredList, pageCount);
+        eventsIsraelAdapter.notifyDataSetChanged();
+
     }
 
 
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
-        if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+        if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected") ){
             if (isNeedToRefresh) {
                 isNeedToRefresh = false;
                 pageCount = 0;
@@ -372,13 +438,10 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                 pageCount = 0;
                 getAllEventsIsrael();
             }
+
         }
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void refreshAllDisporaData() {
-        getAllEventsDispora();
-    }
+
 }
