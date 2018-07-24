@@ -113,7 +113,7 @@
         </LinearLayout>
 
         <com.reformluach.typeface.CustomtextViewFontRegular
-            android:id="@+id/tvCancel"
+            android:id="@+id/tvCancelEvents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

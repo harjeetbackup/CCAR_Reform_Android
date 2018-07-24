@@ -26,6 +26,7 @@ import com.reformluach.activities.SettingsActivity;
 import com.reformluach.adapters.EventsIsraelAdapter;
 import com.reformluach.adapters.ViewPagerAdapterHome;
 import com.reformluach.models.ParseIsraelItemBean;
+import com.reformluach.typeface.CustomEditTextRegular;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
 
@@ -39,19 +40,17 @@ public class EventsFragment extends Fragment {
     private View eventsFragmentView;
     private Context context;
     private ViewPager viewPager;
-    private ViewPager upViewPager;
     private EventsParshiyotChildFragment eventsParshiyotChildFragment;
     private EventsHolidaysChildFragment eventsHolidaysFragment;
     private EventRoshChildFragment eventRoshFragment;
     private Controller controller;
-    private TextView tvEvent, tvDate, tvCancel;
+    public TextView tvEvent, tvDate, tvCancel;
     private LinearLayout llMain;
 
     private ImageButton imgBtnSetting;
     private TabLayout tabLayout;
     private boolean isVisible;
 
-    String selected ="";
 
     @Nullable
     @Override
@@ -71,9 +70,8 @@ public class EventsFragment extends Fragment {
         tabLayout = rootView.findViewById(R.id.tab_layout);
         tvEvent = rootView.findViewById(R.id.tvEvent);
         tvDate = rootView.findViewById(R.id.tvDate);
-        tvCancel = rootView.findViewById(R.id.tvCancel);
+        tvCancel = rootView.findViewById(R.id.tvCancelEvents);
         llMain = rootView.findViewById(R.id.llMain);
-//        searchViewEvents = rootView.findViewById(R.id.searchViewEvents);
 
         imgBtnSetting = rootView.findViewById(R.id.ImgBtnSetting);
 
@@ -88,27 +86,13 @@ public class EventsFragment extends Fragment {
 
         setBgAccordingToMonth(controller.getMonth());
 
-//        searchViewEvents.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                mSearchedQuery = query;
-//                callRefreshIsrael(query);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
 
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                events_search_edittext.setText("");
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(events_search_edittext.getWindowToken(), 0);
-            }
+                    events_search_edittext.setText("");
+
+                }
         });
         events_search_edittext = rootView.findViewById(R.id.events_search_edittext);
         tvEvent.setText(controller.getPreferencesString((Activity) context, Appconstant.EVENTS_NAME));

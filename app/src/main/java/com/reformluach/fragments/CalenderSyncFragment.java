@@ -36,12 +36,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 import com.reformluach.R;
 import com.reformluach.activities.CustomEventsUtilityListActivity;
 import com.reformluach.adapters.AdapterCustomEventsList;
 import com.reformluach.adapters.CalenderPagerAdapter;
 import com.reformluach.models.CustomEventsList;
+import com.reformluach.models.ModelForYear;
+import com.reformluach.models.ParseIsraelItemBean;
+import com.reformluach.services.Url;
+import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
+import com.reformluach.utils.SharedPreferencesCalenderSync;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +62,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,7 +74,7 @@ import java.util.TimeZone;
 /**
  * Created by Naveen Mishra on 11/30/2017.
  */
-public class CalenderSyncFragment extends Fragment implements View.OnClickListener {
+public class CalenderSyncFragment extends Fragment implements View.OnClickListener, CalenderPagerAdapter.OnYearSelected {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
     private View calanderSyncFragmentView;
     private Context context;
@@ -79,8 +92,8 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
     private LinearLayout llMain;
     private CustomEventsList customEventsList;
 
-//    private Button swSync;
-
+    CalenderPagerAdapter calenderPagerAdapter;
+    RecyclerView recyclerViewYear;
 
     @Nullable
     @Override
@@ -89,6 +102,13 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         context = calanderSyncFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
         getIds(calanderSyncFragmentView);
+
+        if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            getAllEventsDispora();
+
+        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+            getAllEventsIsrael();
+        }
 
         return calanderSyncFragmentView;
 
@@ -144,10 +164,47 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         return 0;
     }
 
+    String setSelectedYear = "";
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        String year = "";
+
+        Calendar calendar = Calendar.getInstance();
+        int yearCount = calendar.get(Calendar.YEAR);
+
+
+        ArrayList<ModelForYear> modelForYears = new ArrayList<>();
+        for (int i=0;i<=3;i++){
+            year = String.valueOf(yearCount);
+
+            ModelForYear modelForYear = new ModelForYear();
+            modelForYear.setYear(year);
+            modelForYears.add(modelForYear);
+
+            yearCount = yearCount+1;
+
+        }
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewYear.setLayoutManager(layoutManager);
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(false);
+
+
+
+
+        calenderPagerAdapter = new CalenderPagerAdapter(getActivity(),modelForYears);
+        recyclerViewYear.setAdapter(calenderPagerAdapter);
+        calenderPagerAdapter.setOnYearSelect(this);
+
+    }
+
     private void getIds(View calanderSyncFragmentView) {
         tvAdd = calanderSyncFragmentView.findViewById(R.id.tvAdd);
         llMain = calanderSyncFragmentView.findViewById(R.id.llMain);
-        //  tvSettings = calanderSyncFragmentView.findViewById(R.id.tvSettings);
         cb_major_holidays = calanderSyncFragmentView.findViewById(R.id.cb_major_holidays);
         cb_minor_holidays = calanderSyncFragmentView.findViewById(R.id.cb_minor_holidays);
         cb_rosh_chodesh = calanderSyncFragmentView.findViewById(R.id.cb_rosh_chodesh);
@@ -158,6 +215,9 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         cb_custom_events = calanderSyncFragmentView.findViewById(R.id.cb_custom_events);
         swSync = calanderSyncFragmentView.findViewById(R.id.swSync);
         rvCalendar = calanderSyncFragmentView.findViewById(R.id.rvCalendar);
+        recyclerViewYear = calanderSyncFragmentView.findViewById(R.id.rvYear);
+
+
         tvAdd.setOnClickListener(this);
         swSync.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -197,6 +257,226 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             rvCalendar.setAdapter(adapter);
         }
     }
+
+    public void getAllEventsIsrael() {
+
+        String getYear= SharedPreferencesCalenderSync.getInstance(getActivity()).getData("year");
+
+        String url = Url.israelUrlBeforeDate+getYear+Url.israelUrlAfterDate;
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("Response", String.valueOf(response));
+                        if (getActivity() == null || getContext() == null || getView() == null) {
+                            return;
+                        }
+
+                        try {
+                            JSONObject object = new JSONObject(String.valueOf(response));
+
+                            JSONArray jsonArray = object.getJSONArray("items");
+                            int dataLen = jsonArray.length();
+
+                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
+
+                            for (int i = 0; i < dataLen; i++) {
+
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
+
+                                parseItemBean.setTitle(jsonObject.optString("title"));
+                                parseItemBean.setDate(jsonObject.optString("date"));
+                                parseItemBean.setCategory(jsonObject.optString("category"));
+                                parseItemBean.setSubcat(jsonObject.optString("subcat"));
+
+                                String eventTitle = jsonObject.optString("title");
+                                String eventDate  = jsonObject.optString("date");
+                                String eventSubCategory = jsonObject.optString("subcat");
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                                        eventSubCategory.equalsIgnoreCase("major") && eventSubCategory!=null
+                                        && !eventSubCategory.equalsIgnoreCase("null"))
+                                {
+                                    getMajorHolidays(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                                        eventSubCategory.equalsIgnoreCase("minor") && eventSubCategory!=null
+                                        && !eventSubCategory.equalsIgnoreCase("null"))
+                                {
+                                    getMinorHolidays(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("roshchodesh"))
+                                {
+                                    getRoshChodesh(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("parashat") )
+                                {
+                                    getWeekendParshiyot(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("omer"))
+                                {
+                                    getSefiratHaOmer(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                                        eventSubCategory.equalsIgnoreCase("shabbat") && eventSubCategory!=null
+                                        && !eventSubCategory.equalsIgnoreCase("null"))
+                                {
+                                    getSpecialShabbat(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                                        eventSubCategory.equalsIgnoreCase("modern") && eventSubCategory!=null
+                                        && !eventSubCategory.equalsIgnoreCase("null"))
+                                {
+                                    getModernHolidays(eventTitle,eventDate);
+                                    parseItemBeans.add(parseItemBean);
+                                }
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response", String.valueOf(error));
+
+            }
+
+        });
+        queue.add(objectRequest);
+    }
+
+
+    public void getMajorHolidays(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+
+    public void getMinorHolidays(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+
+    public void getWeekendParshiyot(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+    public void getRoshChodesh(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+    public void getSefiratHaOmer(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+    public void getSpecialShabbat(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+    public void getModernHolidays(String title,String date){
+        customEventsList = new CustomEventsList();
+        customEventsList.setTitle(title);
+        customEventsList.setDate(date);
+        data.add(customEventsList);
+    }
+
+    CalenderPagerAdapter.OnYearSelected onYearSelected;
+    @Override
+    public void onCourseSelected(boolean isSelected, ModelForYear bean) {
+
+        ArrayList<ModelForYear> modelForYearArrayList = new ArrayList<>();
+        calenderPagerAdapter.setOnYearSelect(onYearSelected);
+        if (isSelected){
+            setSelectedYear = bean.getYear();
+            bean.setYear(setSelectedYear);
+            modelForYearArrayList.add(bean);
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("year",setSelectedYear);
+        }
+    }
+    private void getAllEventsDispora() {
+
+        String getYear= SharedPreferencesCalenderSync.getInstance(getActivity()).getData("year");
+
+        String url = Url.disporaUrlBeforeDate + getYear + Url.disporaUrlAfterDate;
+        // Try to parse JSON
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("Response", String.valueOf(response));
+                        if (getActivity() == null || getContext() == null || getView() == null) {
+                            return;
+                        }
+
+                        try {
+                            JSONObject object = new JSONObject(String.valueOf(response));
+
+                            JSONArray jsonArray = object.getJSONArray("items");
+                            int dataLen = jsonArray.length();
+
+                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
+
+
+                            for (int i = 0; i < dataLen; i++) {
+
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
+
+                                parseItemBean.setTitle(jsonObject.optString("title"));
+                                parseItemBean.setDate(jsonObject.optString("date"));
+                                parseItemBean.setCategory(jsonObject.optString("category"));
+                                parseItemBeans.add(parseItemBean);
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Response", String.valueOf(error));
+            }
+
+        });
+        queue.add(objectRequest);
+    }
+
+
 
     private void addReminderInCalendar(long open, String name) {
         Calendar cal = Calendar.getInstance();
@@ -659,6 +939,9 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             }
         }
     }
+
+
+
 
     public class CalenderAsync extends AsyncTask {
         @Override

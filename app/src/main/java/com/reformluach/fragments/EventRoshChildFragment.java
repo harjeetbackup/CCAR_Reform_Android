@@ -16,7 +16,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -40,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,23 +49,32 @@ import java.util.Date;
  * Created by Naveen Mishra on 12/1/2017.
  */
 
-public class EventRoshChildFragment extends Fragment implements EventsIsraelAdapter.ReloadAllDataListener {
+public class EventRoshChildFragment extends Fragment  {
     private View eventsHolidaysFragmentView;
     private Context context;
     private RecyclerView rv_events_holiday;
     private EditText searchEditText;
     private Controller controller;
-    private int yearCount = 0;
+
 
     private EventsIsraelAdapter eventsIsraelAdapter;
 
+    int pageCount = 0;
     int mCurrentPage = -1;
 
     LinearLayoutManager layoutManager;
     private boolean isNeedToRefresh = false;
+    private int yearCount = 0;
 
-    int pageCount = 0;
     private boolean isVisible;
+    public TextView tvCanc;
+
+    RecyclerView.LayoutManager layoutmanager = new RecyclerView.LayoutManager() {
+        @Override
+        public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+            return null;
+        }
+    };
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -74,11 +83,14 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         super.onCreateView(inflater,container,savedInstanceState);
-        eventsHolidaysFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.eventholidays_fragment_layout, container, false);
+        eventsHolidaysFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.eventrosh_fragment_layout, container, false);
         context = eventsHolidaysFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
 
-        // It is initialising Views
+        rv_events_holiday = eventsHolidaysFragmentView.findViewById(R.id.rv_events_rosh);
+        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+//         It is initialising Views
         initViews(eventsHolidaysFragmentView);
 
         pageCount = 0;
@@ -89,6 +101,8 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         yearCount = Integer.parseInt(sdf.format(date));
 
         layoutManager = new LinearLayoutManager(getActivity());
+
+
 
         if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
           if (isVisible) {
@@ -107,11 +121,40 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-            eventsIsraelAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
+
+
+
+        eventsIsraelAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
             rv_events_holiday.setLayoutManager(layoutManager);
             rv_events_holiday.setAdapter(eventsIsraelAdapter);
 
-        }
+//        int top = 0;
+//        rv_events_holiday.smoothScrollToPosition(top); // for top
+
+//        int bottom = rv_events_holiday.getAdapter().getItemCount()-1;
+//
+//        RecyclerView.State state = new RecyclerView.State();
+//        layoutmanager.smoothScrollToPosition(rv_events_holiday, state, bottom);
+
+
+//        Calendar calendar = Calendar.getInstance();
+//        Date today = calendar.getTime();
+//
+//        calendar.add(Calendar.DAY_OF_YEAR, 1);
+//        Date tomorrow = calendar.getTime();
+//        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+//
+//        String todayAsString = dateFormat.format(today);
+//        String tomorrowAsString = dateFormat.format(tomorrow);
+//
+//        if (comparingDate.contains(todayAsString) || comparingDate.contains(tomorrowAsString)) {
+//            int firstItem = layoutManager.findFirstVisibleItemPosition();
+//            View firstItemView = layoutManager.findViewByPosition(firstItem);
+//            float topOffset = firstItemView.getTop();
+//        }
+
+//        initViews(eventsHolidaysFragmentView);
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -125,11 +168,20 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
             } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                 getAllEventsIsrael();
             }
-
+            initViews(eventsHolidaysFragmentView);
+            showFullData();
+            isFilterEnable = false;
         }
+
+
     }
-//    @RequiresApi(api = Build.VERSION_CODES.O)
+
+    String comparingDate ="";
     private void getAllEventsIsrael() {
+
+        if (isFilterEnable){
+            return;
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
@@ -179,14 +231,36 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
 
                                 ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
 
+
+
                                 parseItemBean.setTitle(jsonObject.optString("title"));
                                 parseItemBean.setDate(jsonObject.optString("date"));
+
+
+                                String recievedDate = jsonObject.optString("date");
+                                comparingDate= recievedDate;
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 parseItemBeans.add(parseItemBean);
                             }
+
+                            Calendar calendar = Calendar.getInstance();
+                            Date today = calendar.getTime();
+
+                            calendar.add(Calendar.DAY_OF_YEAR, 1);
+                            Date tomorrow = calendar.getTime();
+                            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+                            String todayAsString = dateFormat.format(today);
+                            String tomorrowAsString = dateFormat.format(tomorrow);
+
+                            if (comparingDate.contains(todayAsString) || comparingDate.contains(tomorrowAsString)) {
+                                int firstItem = layoutManager.findFirstVisibleItemPosition();
+                                View firstItemView = layoutManager.findViewByPosition(firstItem);
+                                float topOffset = firstItemView.getTop();
+                            }
+
                             eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
-                            eventsIsraelAdapter.notifyDataSetChanged();
 
 
                         } catch (JSONException e) {
@@ -203,6 +277,14 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         });
         queue.add(objectRequest);
     }
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (eventsIsraelAdapter.getItemCount() == 0) {
+//            load();
+//        }
+//    }
 
     private EndlessScrollListener getRecyclerLoadMore() {
         return new EndlessScrollListener(layoutManager) {
@@ -227,18 +309,14 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         };
     }
 
-    @Override
-    public void refreshAllIsraelData() {
-        if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-            getAllEventsDispora();
 
-        } else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")){
-            getAllEventsIsrael();
-       }
-    }
 
 
     private void getAllEventsDispora() {
+
+        if (isFilterEnable){
+            return;
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
@@ -294,13 +372,11 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                                 parseItemBean.setTitle(jsonObject.optString("title"));
                                 parseItemBean.setDate(jsonObject.optString("date"));
                                 parseItemBean.setCategory(jsonObject.optString("category"));
-
                                 parseItemBeans.add(parseItemBean);
 
                             }
 
                         eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
-                            eventsIsraelAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -316,94 +392,178 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         queue.add(objectRequest);
     }
 
-    String search;
-    private void initViews(View eventsHolidaysFragmentView) {
-        rv_events_holiday = eventsHolidaysFragmentView.findViewById(R.id.rv_events_holiday);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
         searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
 
-        searchEditText.addTextChangedListener(new TextWatcher() {
+
+    }
+
+    private void initViews(View eventsHolidaysFragmentView) {
+//        rv_events_holiday = eventsHolidaysFragmentView.findViewById(R.id.rv_events_rosh);
+//        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+//        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+
+        tvCanc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onClick(View v) {
                 if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                    if (s.length()!=0) {
-                        callRefreshIsrael(s.toString());
-                    }
-                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    if (s.length()!=0) {
-                        callRefreshIsrael(s.toString());
-                    }
-                }
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                 search = s.toString();
-                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                    if (s.length()!=0) {
-                        callRefreshIsrael(s.toString());
-                    }else {
+                        searchEditText.getText().clear();
+                        isFilterEnable=false;
                         getAllEventsDispora();
-                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-                    }
-                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    if (s.length()!=0) {
-                        callRefreshIsrael(s.toString());
-                    }else {
-                        getAllEventsIsrael();
-                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-                    }
-                }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                        searchEditText.getText().clear();
+                        isFilterEnable=false;
+                        getAllEventsIsrael();
+                    }
+                    if (searchEditText.getText().length()==0){
+                        searchEditText.getText().clear();
+                        showFullData();
+                        isFilterEnable=false;
+
+                }
             }
         });
+
+
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    callRefreshIsrael(search);
-//                    if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-//                    if (searchEditText.getText().length()!=0) {
-//                        callRefreshIsrael(search);
-//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-//
-//                    }else {
-//                        getAllEventsDispora();
-//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-//                    }
-//                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-//                    if (searchEditText.getText().length()!=0) {
-//                        callRefreshIsrael(search);
-//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-//
-//                    }else {
-//                        getAllEventsIsrael();
-//                        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-//                    }
-//                }
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                    if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                        if (searchEditText.getText().length()!=0) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
+                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                        if (searchEditText.getText().length()!=0) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
+
+                    }
+
+                    if (searchEditText.getText().length()==0){
+                        showFullData();
+                        isFilterEnable=false;
+
+                    }
+
                     return true;
                 }
+
+
                 return false;
             }
         });
+
     }
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+////        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+////        tvCancel = ((EventsFragment) getParentFragment()).tvCancel;
+//////
+//        tvCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//
+//
+//                    searchEditText.getText().clear();
+//                    getAllEventsDispora();
+//
+//
+//                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+//                    searchEditText.getText().clear();
+//                    getAllEventsIsrael();
+//
+//                }
+//
+//                if (searchEditText.getText().length()==0){
+//                    showFullData();
+//                    isFilterEnable=false;
+//
+//                }
+//            }
+//        });
+//
+////        searchEditText.addTextChangedListener(new TextWatcher() {
+////            @Override
+////            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+////
+////
+////            }
+////
+////            @Override
+////            public void onTextChanged(CharSequence s, int start, int before, int count) {
+////
+////                if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+////                    if (s.length()==0 ){
+////                        getAllEventsDispora();
+////                    }
+////                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+////                    if (s.length()==0 ){
+////                        getAllEventsIsrael();
+////                    }
+////                }
+////            }
+////
+////            @Override
+////            public void afterTextChanged(Editable s) {
+////            }
+////        });
+//
+//
+//        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                    if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//                        if (searchEditText.getText().length()!=0) {
+//                            callRefreshIsrael(searchEditText.getText().toString());
+//                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//
+//                        }
+//                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+//                        if (searchEditText.getText().length()!=0) {
+//                            callRefreshIsrael(searchEditText.getText().toString());
+//                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//
+//                        }
+//
+//                    }
+//
+//
+//                    if (searchEditText.getText().length()==0){
+//                        showFullData();
+//                        isFilterEnable=false;
+//
+//                    }
+//
+//                    return true;
+//                }
+//
+//
+//                return false;
+//            }
+//        });
+//
+//    }
+
+    boolean isFilterEnable = false;
     private void callRefreshIsrael(String s) {
         final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
-        ArrayList<ParseIsraelItemBean> parseItemBeans = eventsIsraelAdapter.getData();
+        ArrayList<ParseIsraelItemBean> parseItemBeans = eventsIsraelAdapter.getAllActualData();
         for (int i = 0; i < parseItemBeans.size(); i++) {
             final String text = parseItemBeans.get(i).getTitle();
             if (text.contains(s)) {
@@ -412,12 +572,14 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
         }
 
         eventsIsraelAdapter.clearPreviousData();
-         pageCount =0;
-//        layoutManager.setStackFromEnd(false);
-//        layoutManager.setReverseLayout(false);
-        eventsIsraelAdapter.addMessege(filteredList, pageCount);
-        eventsIsraelAdapter.notifyDataSetChanged();
+        isFilterEnable =true;
+        eventsIsraelAdapter.showFilteredData(filteredList);
 
+    }
+
+    public void showFullData(){
+        ArrayList<ParseIsraelItemBean> parseItemBeans = eventsIsraelAdapter.getAllActualData();
+        eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
     }
 
 
@@ -438,7 +600,6 @@ public class EventRoshChildFragment extends Fragment implements EventsIsraelAdap
                 pageCount = 0;
                 getAllEventsIsrael();
             }
-
         }
 
     }

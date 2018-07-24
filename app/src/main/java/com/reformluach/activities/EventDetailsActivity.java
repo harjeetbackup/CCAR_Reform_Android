@@ -3,16 +3,32 @@ package com.reformluach.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
 
 import com.reformluach.R;
+import com.reformluach.models.EventTitle;
+import com.reformluach.utils.AppDateUtil;
 import com.reformluach.utils.Controller;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 public class EventDetailsActivity extends AppCompatActivity implements View.OnClickListener {
     Controller controller;
@@ -21,7 +37,9 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
     private String eventType, eventName;
     private Context context;
 
-//    private String startDate;
+    private String eventDate;
+    boolean reachedAFriday = false;
+    String friday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +50,42 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
         if (getIntent() != null) {
             eventType = getIntent().getStringExtra("eventType");
             eventName = getIntent().getStringExtra("eventName");
-//            startDate = getIntent().getStringExtra("startDate");
+            eventDate = getIntent().getStringExtra("eventDate");
         }
         getIds();
+
+
+//        // Get calendar set to current date and time
+//        Calendar c = GregorianCalendar.getInstance();
+//
+//        System.out.println("Current week = " + Calendar.FRIDAY);
+//
+//// Set the calendar to monday of the current week
+//        c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+//
+//// Print dates of the current week starting on Monday
+//        DateFormat df = new SimpleDateFormat("EEEE", Locale.getDefault());
+//
+//        friday = df.format(c.getTime());
+//        c.add(Calendar.DATE, 6);
+//
+
+//        Calendar c = GregorianCalendar.getInstance();
+//        Date date = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy EEEE");
+//        try {
+//            date= df.parse(eventDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        String formattedDate = df.format(c);
     }
 
     private void getIds() {
         ivCross = findViewById(R.id.ivCross);
         wvDetails = findViewById(R.id.wvDetails);
-        loadHtml();
+//        loadHtml();
+        wvDetails.loadUrl(EventTitle.loadHtmlFile(eventType,eventName));
         ivCross.setOnClickListener(this);
     }
     private void loadHtml() {
@@ -475,7 +520,11 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_II_or_One_Day_Rosh_Chodesh_Weekday.html");
             }
-        } else if (eventType.contains("parashat")) {
+        }
+
+
+
+        else if (eventType.contains("parashat")) {
             if (eventName.contains("Mot") || eventName.contains("Acharei") || eventName.contains("Acharei_Mot")) {
                 wvDetails.loadUrl("file:///android_asset/Acharei_Mot.html");
             } else if (eventName.contains("Parashat B'har/B'chukotai")) {
@@ -605,8 +654,10 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Yitro.html");
             }
-//        } else if (eventType.contains("Holidays")) {
-        } else if (eventType.contains("holiday")) {
+        }
+
+
+        else if (eventType.contains("holiday")) {
 
             if (eventName.contains("Asara B'Tevet")) {
                 wvDetails.loadUrl("file:///android_asset/Asara_B'Tevet.html");
@@ -673,21 +724,7 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else if (eventName.contains("Pesach Chol Hamoed Day 3")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_4.html");
             } else if (eventName.contains("Pesach I")) {
-
-//                Date d1 = new Date(startDate);
-//
-//                Calendar c1 = Calendar.getInstance();
-////                c1.setTime(d1);
-////                System.out.println(c1.get(Calendar.DAY_OF_WEEK));
-//
-//                if ((c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)){
-//                    wvDetails.loadUrl("file:///android_asset/Pesach I Shabbat.html");
-//                }else {
-                    wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
-
-//                }
-
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
+                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
             } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
                 wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Friday.html");
             } else if (eventName.contains("Pesach Chol HaMoed Day 5 Friday")) {
@@ -921,8 +958,11 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else if (eventName.contains("Sigd")) {
                 wvDetails.loadUrl("file:///android_asset/Asara_B'Tevet.html");
             }
-//        } else if (eventType.contains("Rosh")) {
-        } else if (eventType.contains("roshchodesh")) {
+        }
+
+
+
+        else if (eventType.contains("roshchodesh")) {
             if (eventName.contains("Rosh Chodesh Adar")) {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_Adar_I.html");
             } else if (eventName.contains("Rosh Chodesh Av")) {
@@ -934,7 +974,10 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             } else {
                 wvDetails.loadUrl("file:///android_asset/Rosh_Chodesh_II_or_One_Day_Rosh_Chodesh_Weekday.html");
             }
-        }else if (eventType.contains("omer")){
+        }
+
+
+        else if (eventType.contains("omer")){
             if (eventName.contains("15th day of the Omer")) {
                 wvDetails.loadUrl("file:///android_asset/Counting_the_Omer.html");
             }else  if (eventName.contains("15th day of the Omer")) {
@@ -1018,11 +1061,20 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
                 wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
             }else  if (eventName.contains("4th day of the Omer")) {
                 wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
-            }else  if (eventName.contains("5th day of the Omer")) {
+            }else  if (eventName.contains("5th day of the Omer") ) {
                 wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
-            }else  if (eventName.contains("6th day of the Omer")) {
+            }
+            else if (eventName.contains("5th day of the Omer") ){
+                wvDetails.loadUrl("file:///android_asset/Erev_Pesach-Ta'anit_Bechorot_Friday.html");
+            }
+            else  if (eventName.contains("6th day of the Omer") ) {
                 wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
-            }else  if (eventName.contains("7th day of the Omer")) {
+            }
+
+            else if (eventName.contains("6th day of the Omer") && eventDate.equals(friday)){
+                wvDetails.loadUrl("file:///android_asset/Erev_Pesach-Ta'anit_Bechorot_Friday.html");
+            }
+            else  if (eventName.contains("7th day of the Omer")) {
                 wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
             }else  if (eventName.contains("8th day of the Omer")) {
                 wvDetails.loadUrl("file:///android_asset/Lag_Ba'Omer.html");
@@ -1039,6 +1091,27 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
             }
 
         }
+
+
+        else if (eventType.contains("omer")) {
+            if (eventName.contains("6th day of the Omer")  ){
+                wvDetails.loadUrl("file:///android_asset/Erev_Sukkot.html");
+            }
+        }else if (eventType.contains("parashat") && eventDate.equals(Calendar.FRIDAY)){
+            wvDetails.loadUrl("file:///android_asset/Erev_Sukkot.html");
+        }else if (eventType.contains("holiday") && eventDate.equals(Calendar.FRIDAY)){
+            wvDetails.loadUrl("file:///android_asset/Erev_Sukkot.html");
+        }else if (eventType.contains("roshchodesh") && eventDate.equals(Calendar.FRIDAY)){
+            wvDetails.loadUrl("file:///android_asset/Erev_Sukkot.html");
+        }
+
+
+    }
+
+    private int getDayOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_WEEK);
     }
 
     @Override

@@ -29,6 +29,16 @@ public class ParseIsraelItemBean implements Parcelable{
     private String subcat;
     private boolean yomtov;
 
+    private EventTitle replaceTitle;
+
+    public EventTitle getReplaceTitle() {
+        return replaceTitle;
+    }
+
+    public void setReplaceTitle() {
+        this.replaceTitle = replaceTitle;
+    }
+
     public String getDate() {
         return date;
     }
@@ -74,7 +84,7 @@ public class ParseIsraelItemBean implements Parcelable{
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = EventTitle.replaceRecievedTitle(title);
     }
 
     public String getMemo() {
@@ -127,6 +137,9 @@ public class ParseIsraelItemBean implements Parcelable{
         this.date = in.readString();
         this.category = in.readString();
         this.title = in.readString();
+        this.subcat = in.readString();
+        this.replaceTitle = in.readParcelable(EventTitle.class.getClassLoader());
+
     }
 
     @Override
@@ -134,6 +147,9 @@ public class ParseIsraelItemBean implements Parcelable{
      parcel.writeString(this.category);
      parcel.writeString(this.date);
      parcel.writeString(this.title);
+     parcel.writeString(this.subcat);
+     parcel.writeParcelable((Parcelable) this.replaceTitle, i);
+
 
     }
 

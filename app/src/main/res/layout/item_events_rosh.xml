@@ -5,14 +5,22 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:id="@+id/linEventItems"
+    android:background="@color/colorWhite"
     >
 
     <LinearLayout
-        android:id="@+id/llMain"
+        android:id="@+id/linearMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/margin_10">
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/llMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10">
 
         <com.reformluach.typeface.CustomtextViewFontRegular
             android:id="@+id/tvEventName"
@@ -31,6 +39,28 @@
             android:layout_margin="@dimen/margin_5"
             android:gravity="start"
             android:textColor="@color/colorBlack"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:id="@+id/tvEventSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textColor="@color/colorBlack"
+            android:text="ghffgh gjhgh kjgjhgjh kjhg"
+            android:layout_marginLeft="@dimen/margin_5"
+            android:layout_marginRight="@dimen/margin_5"
+            android:textSize="8dp"
+            android:visibility="gone"
+            />
+
+        </LinearLayout>
+        />
     </LinearLayout>
 
     <View
