@@ -19,8 +19,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -28,10 +26,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +38,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
 import com.reformluach.R;
 import com.reformluach.activities.CustomEventsUtilityListActivity;
 import com.reformluach.adapters.AdapterCustomEventsList;
@@ -62,13 +57,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -94,6 +84,14 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
 
     CalenderPagerAdapter calenderPagerAdapter;
     RecyclerView recyclerViewYear;
+
+
+
+    private ArrayList<ParseIsraelItemBean> dataToSync = new ArrayList<>();
+
+    private ArrayList<ParseIsraelItemBean> itemBeanArrayList = new ArrayList<>();
+
+
 
     @Nullable
     @Override
@@ -193,9 +191,6 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         layoutManager.setStackFromEnd(true);
         layoutManager.setReverseLayout(false);
 
-
-
-
         calenderPagerAdapter = new CalenderPagerAdapter(getActivity(),modelForYears);
         recyclerViewYear.setAdapter(calenderPagerAdapter);
         calenderPagerAdapter.setOnYearSelect(this);
@@ -226,7 +221,9 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                 if (b) {
                     if (getSelectedCheckBox() == 7) {
                         callSelectedJsonMethod();
-                        if (controller.getArayList() != null && controller.getArayList().size() > 0) {
+//                        if (controller.getArayList() != null && controller.getArayList().size() > 0) {
+                        if (controller.getEventsList() != null && controller.getEventsList().size() > 0) {
+
                             controller.PdStart(context, getString(R.string.sync), R.color.text_grey);
                             new CalenderAsync().execute();
                         } else {
@@ -238,7 +235,8 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                         callSelectedJsonMethod();
                         controller.PdStart(context, getString(R.string.sync), R.color.text_grey);
                         new CalenderAsync().execute();
-                    } else {
+                    }
+                    else {
                         compoundButton.setChecked(false);
                         Toast.makeText(context, getString(R.string.select_event), Toast.LENGTH_SHORT).show();
                     }
@@ -255,6 +253,33 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             rvCalendar.setLayoutManager(linearLayoutManager);
             adapter = new AdapterCustomEventsList(context, controller.getArayList());
             rvCalendar.setAdapter(adapter);
+        }
+    }
+
+    CalenderPagerAdapter.OnYearSelected onYearSelected;
+    @Override
+    public void onCourseSelected(boolean isSelected, ModelForYear bean,int position) {
+
+        ArrayList<ModelForYear> modelForYearArrayList = new ArrayList<>();
+        calenderPagerAdapter.setOnYearSelect(onYearSelected);
+        if (isSelected){
+            setSelectedYear = bean.getYear();
+            bean.setYear(setSelectedYear);
+            modelForYearArrayList.add(bean);
+            int buttonId = position;
+
+//            String year = setSelectedYear;
+//            if (buttonId==0) {
+//                SharedPreferencesCalenderSync.getInstance(getActivity()).saveData(year, setSelectedYear);
+//            }if (buttonId==1) {
+//                SharedPreferencesCalenderSync.getInstance(getActivity()).saveData(year,setSelectedYear);
+//            }if (buttonId==2) {
+//                SharedPreferencesCalenderSync.getInstance(getActivity()).saveData(year,setSelectedYear);
+//            }if (buttonId==3) {
+//                SharedPreferencesCalenderSync.getInstance(getActivity()).saveData(year,setSelectedYear);
+//            }
+
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("year",setSelectedYear);
         }
     }
 
@@ -279,7 +304,6 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                             JSONArray jsonArray = object.getJSONArray("items");
                             int dataLen = jsonArray.length();
 
-                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
 
                             for (int i = 0; i < dataLen; i++) {
 
@@ -292,59 +316,7 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                                 parseItemBean.setCategory(jsonObject.optString("category"));
                                 parseItemBean.setSubcat(jsonObject.optString("subcat"));
 
-                                String eventTitle = jsonObject.optString("title");
-                                String eventDate  = jsonObject.optString("date");
-                                String eventSubCategory = jsonObject.optString("subcat");
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                                        eventSubCategory.equalsIgnoreCase("major") && eventSubCategory!=null
-                                        && !eventSubCategory.equalsIgnoreCase("null"))
-                                {
-                                    getMajorHolidays(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                                        eventSubCategory.equalsIgnoreCase("minor") && eventSubCategory!=null
-                                        && !eventSubCategory.equalsIgnoreCase("null"))
-                                {
-                                    getMinorHolidays(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("roshchodesh"))
-                                {
-                                    getRoshChodesh(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("parashat") )
-                                {
-                                    getWeekendParshiyot(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("omer"))
-                                {
-                                    getSefiratHaOmer(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                                        eventSubCategory.equalsIgnoreCase("shabbat") && eventSubCategory!=null
-                                        && !eventSubCategory.equalsIgnoreCase("null"))
-                                {
-                                    getSpecialShabbat(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
-
-                                if (parseItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                                        eventSubCategory.equalsIgnoreCase("modern") && eventSubCategory!=null
-                                        && !eventSubCategory.equalsIgnoreCase("null"))
-                                {
-                                    getModernHolidays(eventTitle,eventDate);
-                                    parseItemBeans.add(parseItemBean);
-                                }
+                                itemBeanArrayList.add(parseItemBean);
 
                             }
 
@@ -365,64 +337,81 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
     }
 
 
-    public void getMajorHolidays(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
+    public void  major(){
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
+
+            String subcategory = parseIsraelItemBean.getSubcat();
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") && subcategory!=null &&
+                     !subcategory.equalsIgnoreCase("null")
+                    && subcategory.equalsIgnoreCase("major")) {
+                dataToSync.add(parseIsraelItemBean);
+            }
+        }
+
+        Log.i("",""+dataToSync);
     }
 
-    public void getMinorHolidays(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
-    }
 
-    public void getWeekendParshiyot(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
-    }
-    public void getRoshChodesh(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
-    }
-    public void getSefiratHaOmer(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
-    }
-    public void getSpecialShabbat(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
-    }
-    public void getModernHolidays(String title,String date){
-        customEventsList = new CustomEventsList();
-        customEventsList.setTitle(title);
-        customEventsList.setDate(date);
-        data.add(customEventsList);
-    }
+    public void getMinorHolidays(){
 
-    CalenderPagerAdapter.OnYearSelected onYearSelected;
-    @Override
-    public void onCourseSelected(boolean isSelected, ModelForYear bean) {
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
 
-        ArrayList<ModelForYear> modelForYearArrayList = new ArrayList<>();
-        calenderPagerAdapter.setOnYearSelect(onYearSelected);
-        if (isSelected){
-            setSelectedYear = bean.getYear();
-            bean.setYear(setSelectedYear);
-            modelForYearArrayList.add(bean);
-            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("year",setSelectedYear);
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                    parseIsraelItemBean.getSubcat().equalsIgnoreCase("minor")
+                    && !parseIsraelItemBean.getSubcat().equalsIgnoreCase("null") && parseIsraelItemBean.getSubcat()!=null) {
+                dataToSync.add(parseIsraelItemBean);
+            }
         }
     }
+
+    public void getWeekendParshiyot(){
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
+
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("parashat")){
+                dataToSync.add(parseIsraelItemBean);
+            }
+        }
+    }
+    public void getRoshChodesh(){
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
+
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("roshchodesh")){
+                dataToSync.add(parseIsraelItemBean);
+            }
+        }
+    }
+    public void getSefiratHaOmer(){
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
+
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("omer")){
+                dataToSync.add(parseIsraelItemBean);
+            }
+        }
+    }
+    public void getSpecialShabbat(){
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
+
+            String subcategory = parseIsraelItemBean.getSubcat();
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                    subcategory.equalsIgnoreCase("shabbat") && subcategory!=null
+                    && !subcategory.equalsIgnoreCase("null")){
+                dataToSync.add(parseIsraelItemBean);
+            }
+        }
+    }
+    public void getModernHolidays(){
+        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
+
+            String subcategory = parseIsraelItemBean.getSubcat();
+            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") &&
+                    subcategory.equalsIgnoreCase("modern") && subcategory!=null
+                    && !subcategory.equalsIgnoreCase("null")){
+                dataToSync.add(parseIsraelItemBean);
+            }
+        }
+    }
+
+
     private void getAllEventsDispora() {
 
         String getYear= SharedPreferencesCalenderSync.getInstance(getActivity()).getData("year");
@@ -458,8 +447,9 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
                                 parseItemBean.setTitle(jsonObject.optString("title"));
                                 parseItemBean.setDate(jsonObject.optString("date"));
                                 parseItemBean.setCategory(jsonObject.optString("category"));
-                                parseItemBeans.add(parseItemBean);
+                                parseItemBean.setSubcat(jsonObject.optString("subcat"));
 
+                               itemBeanArrayList.add(parseItemBean);
                             }
 
                         } catch (JSONException e) {
@@ -535,28 +525,94 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         return calendarURI.toString();
     }
 
+    String selectedEventYear ="";
     private int getSelectedCheckBox() {
         if (cb_major_holidays.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("majorHolidays",dataToSync.toString() );
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("majorHolidays").equals("majorHolidays") && selectedEventYear.equals(setSelectedYear)) {
+                cb_major_holidays.setEnabled(false);
+            }
+            cb_major_holidays.refreshDrawableState();
+
             return 1;
         }
         if (cb_minor_holidays.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("minorHolidays",dataToSync.toString());
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("minorHolidays").equals("minorHolidays") && selectedEventYear.equals(setSelectedYear)) {
+                cb_minor_holidays.setEnabled(false);
+            }
+
+            cb_minor_holidays.refreshDrawableState();
+
             return 2;
         }
         if (cb_rosh_chodesh.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("roshchodesh",dataToSync.toString());
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("roshchodesh").equals("roshchodesh") && selectedEventYear.equals(setSelectedYear)) {
+                cb_rosh_chodesh.setEnabled(false);
+            }
+            cb_rosh_chodesh.refreshDrawableState();
+
             return 3;
         }
         if (cb_weekly_parshiyot.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("weeklyparshiyot",dataToSync.toString());
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("weeklyparshiyot").equals("weeklyparshiyot") && selectedEventYear.equals(setSelectedYear)) {
+                cb_weekly_parshiyot.setEnabled(false);
+            }
+            cb_weekly_parshiyot.refreshDrawableState();
+
+
             return 4;
         }
         if (cb_sefirat.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("sefiratomer",dataToSync.toString());
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("sefiratomer").equals("sefiratomer") && selectedEventYear.equals(setSelectedYear)) {
+                cb_sefirat.setEnabled(false);
+            }
+            cb_sefirat.refreshDrawableState();
+
+
             return 5;
         }
         if (cb_shabatot.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("specialshabbat",dataToSync.toString());
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("specialshabbat").equals("specialshabbat") && selectedEventYear.equals(setSelectedYear)) {
+                cb_shabatot.setEnabled(false);
+            }
+            cb_shabatot.refreshDrawableState();
+
             return 6;
         }
         if (cb_modern_holiday.isChecked()) {
+            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("modernholidays",dataToSync.toString());
+            if (SharedPreferencesCalenderSync.getInstance(getActivity()).getData("modernholidays").equals("modernholidays") && selectedEventYear.equals(setSelectedYear)) {
+                cb_modern_holiday.setEnabled(false);
+            }
+            cb_modern_holiday.refreshDrawableState();
+
             return 7;
         }
+//        if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }
+//        if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }if (cb_major_holidays.isChecked() && cb_minor_holidays.isChecked()) {
+//            return 8;
+//        }
 //        if (cb_custom_events.isChecked()) {
 //            return 8;
 //        }
@@ -658,288 +714,28 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void getJsonDataMajor() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("Major_Holidays.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-    //Json Data Parsing
 
-    private void getJsonDataMinor() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("Majer_miner.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
-    private void getJsonDataRosh() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("Rosh_Chodush.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    private void getJsonDataWeekly() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("Weakly_parshiyor.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    private void getJsonDataOmer() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("DaysOfOmer.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    private void getJsonDataSpecial() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("Special_Shabbatot.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    private void getJsonDataModern() {
-        StringBuffer sb = new StringBuffer();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open("Morder_Holiday.json")));
-            String temp;
-            while ((temp = br.readLine()) != null) sb.append(temp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String myjsonstring = sb.toString();
-        try {
-            JSONObject jsonObjMain = new JSONObject(myjsonstring);
-            JSONArray jsonArray = jsonObjMain.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String subject = jsonObj.getString("Subject");
-                String date = jsonObj.getString("Start Date");
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     private void callSelectedJsonMethod() {
         if (getSelectedCheckBox() == 1) {
-            getJsonDataMajor();
+            major();
         } else if (getSelectedCheckBox() == 2) {
-            getJsonDataMinor();
+            getMinorHolidays();
         } else if (getSelectedCheckBox() == 3) {
-            getJsonDataRosh();
+            getRoshChodesh();
         } else if (getSelectedCheckBox() == 4) {
-            getJsonDataWeekly();
+            getWeekendParshiyot();
         } else if (getSelectedCheckBox() == 5) {
-            getJsonDataOmer();
+            getSefiratHaOmer();
         } else if (getSelectedCheckBox() == 6) {
-            getJsonDataSpecial();
+            getSpecialShabbat();
         } else if (getSelectedCheckBox() == 7) {
-            getJsonDataModern();
+            getModernHolidays();
         }
 
-//        else if (getSelectedCheckBox() == 8) {
-//            getJsonDataCustom();
-//        }
-    }
 
-    private void getJsonDataCustom() {
-        if (controller.getArayList() != null) {
-            datacustom = controller.getArayList();
-            for (int i = 0; i < datacustom.size(); i++) {
-                String subject = datacustom.get(i).getTitle();
-                String date = String.valueOf(getMonthInt(datacustom.get(i).getMonth())) + "/" + String.valueOf(datacustom.get(i).getDay()) + "/" + String.valueOf(datacustom.get(i).getYear());
-                customEventsList = new CustomEventsList();
-                customEventsList.setTitle(subject);
-                customEventsList.setDate(date);
-                data.add(customEventsList);
-            }
-        }
     }
-
 
 
 
@@ -951,13 +747,18 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
             deleteEvent(resolver, EVENTS_URI, 1);
             boolean result = checkPermission();
             if (result) {
-                Log.e("Data Size", String.valueOf(data.size()));
-                for (int i = 0; i < data.size(); i++) {
-                    eventdate = data.get(i).date;
-                    event = data.get(i).title;
-                    timestamp = controller.getUtcTimeInMillis(eventdate);
+                Log.e("Data Size", String.valueOf(dataToSync.size()));
+                for (int i = 0; i < dataToSync.size(); i++) {
+                    eventdate = dataToSync.get(i).getDate();
+                    event = dataToSync.get(i).getTitle();
+                    timestamp = controller.getUtcTimeInMillisEvents(eventdate);
                     Log.e("Timestamp", "Timestamp" + timestamp);
                     addReminderInCalendar(timestamp, event);
+
+//                    if (result==true && SharedPreferencesCalenderSync.getInstance(getActivity()).getData("year")==selectedEventYear) {
+//                        cb_major_holidays.setBackground(context.getResources().getDrawable(R.drawable.checkbox_selector));
+//                        cb_major_holidays.setEnabled(false);
+//                    }
                 }
             }
             return null;
@@ -971,29 +772,28 @@ public class CalenderSyncFragment extends Fragment implements View.OnClickListen
 //            swSync.setClickable(false);
 
             if (cb_major_holidays.isChecked()) {
-                cb_major_holidays.setChecked(false);
+                cb_major_holidays.setChecked(true);
+
             }
             if (cb_minor_holidays.isChecked()) {
-                cb_minor_holidays.setChecked(false);
+                cb_minor_holidays.setChecked(true);
             }
             if (cb_rosh_chodesh.isChecked()) {
-                cb_rosh_chodesh.setChecked(false);
+                cb_rosh_chodesh.setChecked(true);
             }
             if (cb_weekly_parshiyot.isChecked()) {
-                cb_weekly_parshiyot.setChecked(false);
+                cb_weekly_parshiyot.setChecked(true);
             }
             if (cb_sefirat.isChecked()) {
-                cb_sefirat.setChecked(false);
+                cb_sefirat.setChecked(true);
             }
             if (cb_shabatot.isChecked()) {
-                cb_shabatot.setChecked(false);
+                cb_shabatot.setChecked(true);
             }
             if (cb_modern_holiday.isChecked()) {
-                cb_modern_holiday.setChecked(false);
+                cb_modern_holiday.setChecked(true);
             }
-//            if (cb_custom_events.isChecked()) {
-//                cb_custom_events.setChecked(false);
-//            }
+
         }
     }
 }

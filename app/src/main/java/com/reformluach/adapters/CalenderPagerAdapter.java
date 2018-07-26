@@ -67,7 +67,7 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
                     }
                 }
                 if(onCourseSelect != null) {
-                    onCourseSelect.onCourseSelected(bean.isSelected(), bean);
+                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
                 }
             }
         });
@@ -97,6 +97,6 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
     }
 
     public interface OnYearSelected {
-        void onCourseSelected(boolean isSelected, ModelForYear bean);
+        void onCourseSelected(boolean isSelected, ModelForYear bean,int pos);
     }
 }

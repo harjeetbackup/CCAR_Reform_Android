@@ -26,4 +26,7 @@
     <color name="color_gray">#ebebeb</color>
     <color name="color_gray_trans">#aaebebeb</color>
     <color name="color_gray_search">#c2c2c7</color>
+
+    <color name="shabbat_select_color">#f7eeaa</color>
+
 </resources>

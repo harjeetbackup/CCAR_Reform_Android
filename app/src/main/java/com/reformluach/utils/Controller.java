@@ -42,6 +42,7 @@ import com.reformluach.fragments.EventsHolidaysChildFragment;
 import com.reformluach.fragments.EventsParshiyotChildFragment;
 import com.reformluach.fragments.TodaysFragment;
 import com.reformluach.models.CustomEventsList;
+import com.reformluach.models.ParseIsraelItemBean;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -343,6 +344,15 @@ public class Controller extends Application {
         return arrayList;
     }
 
+    public ArrayList getEventsList() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(TAG, null);
+        Type type = new TypeToken<ArrayList<ParseIsraelItemBean>>() {
+        }.getType();
+        ArrayList<ParseIsraelItemBean> arrayList = gson.fromJson(json, type);
+        return arrayList;
+    }
     public void setArayList(ArrayList<CustomEventsList> arrayList) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPrefs.edit();
@@ -458,6 +468,22 @@ public class Controller extends Application {
 
     public long getUtcTimeInMillis(String datetime) {
         SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
+        Date date = null;
+        try {
+            date = sdf.parse(datetime);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        // getInstance() provides TZ info which can be used to adjust to UTC
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        // Get timezone offset then use it to adjust the return value
+        int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
+        return cal.getTimeInMillis() + offset - 19800000;
+    }
+
+    public long getUtcTimeInMillisEvents(String datetime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = sdf.parse(datetime);

@@ -58,56 +58,41 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         String category = model.getCategory();
         String title = model.getTitle();
 
-//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-//        Date strDate = null;
-//        try {
-//            strDate = sdf.parse(date);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        if (new Date().after(strDate)) {
-//            your_date_is_outdated = true;
-//        }
-//        else{
-//            your_date_is_outdated = false;
-//        }
-
-
         holder.tvEventName.setText(title);
-//        holder.tvEventName.setText(e);
-
-//        holder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
-
-
 
          if (title.equals("Shabbat HaGadol")){
-            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
-            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+//            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
+            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
         }
-        else if (title.equals("Shabbat Shekalim")){
-            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
-            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-        }else {
-            holder.tvEventSubtitle.setVisibility(View.GONE);
-        }
-//        holder.scrollToPosition(mAdapter.getItemCount() - 1); // update based on adapter
+        else if (title.equals("Shabbat Sh'kalim")){
+//            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
+//            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
+         }else if (title.equals("Shabbat Zachor")){
+//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Zachor should be read.");
+//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
-        Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
+         }else if (title.equals("Shabbat HaChodesh")){
+//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Hachodesh should be read.");
+//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorrow = calendar.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+         }else if (title.equals("Shabbat Shuva")){
+//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
+//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+         }else if (title.equals("Shabbat Parah")){
+//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
+//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+         }
+         else {
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
 
-        String todayAsString = dateFormat.format(today);
-        String tomorrowAsString = dateFormat.format(tomorrow);
-
-//        final int indexPosition = holder.getAdapterPosition();
-//        if (date.equals(formattedDate)){
-//
-//        }
-
+         }
 
 
         holder.llMain.setOnClickListener(new View.OnClickListener() {
@@ -134,12 +119,15 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         private  CustomtextViewFontRegular tvDate, tvEventName ,tvEventSubtitle;
         private LinearLayout llMain;
 
+        private LinearLayout linearLayout;
+
         ViewHolder(View itemView) {
             super(itemView);
             tvEventName = itemView.findViewById(R.id.tvEventName);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvEventSubtitle = itemView.findViewById(R.id.tvEventSubtitle);
             llMain = itemView.findViewById(R.id.linEventItems);
+            linearLayout = itemView.findViewById(R.id.linearMain);
         }
     }
 
