@@ -87,55 +87,48 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 //                    model.get(clickedPos).setSelected(sportsView.btnYear.isSelected());
 //                }
 
-//                ModelForYear bean = model.get(position);
-//                bean.setSelected(!isSelected);
-//                notifyDataSetChanged();
+                ModelForYear bean = model.get(position);
+                bean.setSelected(!isSelected);
+                notifyDataSetChanged();
+
 //
-//
-//                for(int i = 0; i<model.size(); i++) {
-//                    if(i == position) {
-//
-//                        model.get(position).setSelected(true);
-//                    }else {
-//                        model.get(i).setSelected(false);
-//                    }
-//                }
-//                if(onCourseSelect != null) {
-//                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
-//                }
-                selectedYear(position, !isSelected);
+                for(int i = 0; i<model.size(); i++) {
+                    if(i == position) {
+
+                        model.get(position).setSelected(true);
+                    }else {
+                        model.get(i).setSelected(false);
+                    }
+                }
+                if(onCourseSelect != null) {
+                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+                }
+//                selectedYear(position, !isSelected);
             }
         });
 
     }
 
 
-    class YearsView extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class YearsView extends RecyclerView.ViewHolder {
         private Button btnYear;
 
         YearsView(View itemView) {
             super(itemView);
             btnYear = itemView.findViewById(R.id.btnyear);
-            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-//            onCourseSelect.onCourseSelected(true,model.get(0),getAdapterPosition());
-        }
+
     }
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
+
 
     @Override
     public int getItemCount() {
         return model.size();
     }
 
-    private CalenderPagerAdapter.OnYearSelected onCourseSelect;
+    public CalenderPagerAdapter.OnYearSelected onCourseSelect;
 
     public void setOnYearSelect(CalenderPagerAdapter.OnYearSelected onCourseSelect) {
         this.onCourseSelect = onCourseSelect;
@@ -145,27 +138,24 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
         void onCourseSelected(boolean isSelected, ModelForYear bean,int pos);
     }
 
-    public void selectedYear(int position, boolean isSelected) {
-        ModelForYear bean = model.get(position);
-        bean.setSelected(!isSelected);
-        notifyDataSetChanged();
-
-
-        for(int i = 0; i<model.size(); i++) {
-            if(i == position) {
-
-                model.get(position).setSelected(true);
-            }else {
-                model.get(i).setSelected(false);
-            }
-        }
-        if(onCourseSelect != null) {
-            onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
-        }
-    }
-
-//    public interface getselectpos
-//    {
-//        void onItemClick(CintasHolder holder, int posicion);
+//    public void selectedYear(int position, boolean isSelected) {
+//        ModelForYear bean = model.get(position);
+//        bean.setSelected(!isSelected);
+//        notifyDataSetChanged();
+//
+//
+//        for(int i = 0; i<model.size(); i++) {
+//            if(i == position) {
+//
+//                model.get(position).setSelected(true);
+//            }else {
+//                model.get(i).setSelected(false);
+//            }
+//        }
+//        if(onCourseSelect != null) {
+//            onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+//        }
 //    }
+
+
 }

@@ -9,7 +9,7 @@ public class ParseDisporaItemBean implements Parcelable{
     /**
      * memo : The Jewish festival of rededication, also known as the Festival of Lights
      * date : 2017-01-01
-     * subcat : major
+     * subcat : getMajorHolidays
      * category : holiday
      * hebrew : חנוכה: יום ח׳
      * link : https://www.hebcal.com/holidays/chanukah
