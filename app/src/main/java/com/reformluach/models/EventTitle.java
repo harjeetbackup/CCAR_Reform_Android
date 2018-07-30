@@ -225,10 +225,11 @@ public  class EventTitle {
         if (subtitle.contains(":")){
         subtitle = subtitle.replaceAll(":","");
         }
-        else if (subtitle.contains("/")){
+        if (subtitle.contains("/")){
             subtitle =subtitle.replaceAll("/","-");
-        }else if (subtitle.contains("")){
-            subtitle =subtitle.replace("","_");
+        }
+        if (subtitle.contains("_")){
+            subtitle =subtitle.replace("_","");
         }
         return subtitle;
     }

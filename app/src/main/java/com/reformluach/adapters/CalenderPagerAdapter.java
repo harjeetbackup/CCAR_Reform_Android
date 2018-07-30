@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.reformluach.R;
 import com.reformluach.models.ModelForYear;
@@ -18,11 +19,14 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 
     Context context;
     ArrayList<ModelForYear> model;
+    private static Button lastChecked = null;
+    private static int lastCheckedPos = 0;
 
 
-    public CalenderPagerAdapter(Context context, ArrayList<ModelForYear> modelForYear) {
+    public CalenderPagerAdapter(Context context, ArrayList<ModelForYear> modelForYear,CalenderPagerAdapter.OnYearSelected onYearSelected) {
         this.context = context;
         this.model = modelForYear;
+        this.onCourseSelect = onYearSelected;
     }
 
 
@@ -38,6 +42,17 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 
         final ModelForYear modelForYear = model.get(position);
 
+//        sportsView.btnYear.setSelected(model.get(0).isSelected());
+//
+//        if(position == 0 && model.get(0).isSelected() && sportsView.btnYear.isSelected())
+//        {
+//            sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_selected_shape));
+//            lastChecked = sportsView.btnYear;
+//            lastCheckedPos = 0;
+//        }
+
+
+
         sportsView.btnYear.setText(modelForYear.getYear());
         final boolean isSelected = model.get(position).isSelected();
 
@@ -46,44 +61,74 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
             sportsView.btnYear.setTextColor(context.getResources().getColor(R.color.color_gray));
         }else {
             sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_shape));
-
         }
-
 
         sportsView.btnYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ModelForYear bean = model.get(position);
-                bean.setSelected(!isSelected);
-                notifyDataSetChanged();
 
-                for(int i = 0; i<model.size(); i++) {
-                    if(i == position) {
+//                int clickedPos = ((Integer)sportsView.btnYear.getTag()).intValue();
 
-                        model.get(position).setSelected(true);
-                    }else {
-                        model.get(i).setSelected(false);
-                    }
-                }
-                if(onCourseSelect != null) {
-                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
-                }
+//                if(sportsView.btnYear.isSelected())
+//                {
+//                    if(lastChecked != null)
+//                    {
+//                        lastChecked.setSelected(false);
+//                        model.get(lastCheckedPos).setSelected(false);
+//                    }
+//
+//                    lastChecked = sportsView.btnYear;
+//                    lastCheckedPos = clickedPos;
+//                }
+//                else {
+//                    lastChecked = null;
+//
+//                    model.get(clickedPos).setSelected(sportsView.btnYear.isSelected());
+//                }
+
+//                ModelForYear bean = model.get(position);
+//                bean.setSelected(!isSelected);
+//                notifyDataSetChanged();
+//
+//
+//                for(int i = 0; i<model.size(); i++) {
+//                    if(i == position) {
+//
+//                        model.get(position).setSelected(true);
+//                    }else {
+//                        model.get(i).setSelected(false);
+//                    }
+//                }
+//                if(onCourseSelect != null) {
+//                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+//                }
+                selectedYear(position, !isSelected);
             }
         });
 
     }
 
 
-    class YearsView extends RecyclerView.ViewHolder {
+    class YearsView extends RecyclerView.ViewHolder implements View.OnClickListener{
         private Button btnYear;
 
         YearsView(View itemView) {
             super(itemView);
             btnYear = itemView.findViewById(R.id.btnyear);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+//            onCourseSelect.onCourseSelected(true,model.get(0),getAdapterPosition());
         }
     }
 
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
 
     @Override
     public int getItemCount() {
@@ -99,4 +144,28 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
     public interface OnYearSelected {
         void onCourseSelected(boolean isSelected, ModelForYear bean,int pos);
     }
+
+    public void selectedYear(int position, boolean isSelected) {
+        ModelForYear bean = model.get(position);
+        bean.setSelected(!isSelected);
+        notifyDataSetChanged();
+
+
+        for(int i = 0; i<model.size(); i++) {
+            if(i == position) {
+
+                model.get(position).setSelected(true);
+            }else {
+                model.get(i).setSelected(false);
+            }
+        }
+        if(onCourseSelect != null) {
+            onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+        }
+    }
+
+//    public interface getselectpos
+//    {
+//        void onItemClick(CintasHolder holder, int posicion);
+//    }
 }

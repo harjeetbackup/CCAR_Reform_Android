@@ -2,6 +2,8 @@ package com.reformluach.utils;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+
 public class SharedPreferencesCalenderSync {
 
     private static SharedPreferencesCalenderSync userSave;
@@ -43,6 +45,13 @@ public class SharedPreferencesCalenderSync {
         return "";
     }
 
+//    public String getDataArrayList(ArrayList key)
+//    {
+//        if(sharedPreferences!=null){
+//            return sharedPreferences.getStringSet(key,"");
+//        }
+//        return "";
+//    }
 
     public void clearData()
     {

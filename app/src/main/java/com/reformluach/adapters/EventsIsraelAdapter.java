@@ -58,7 +58,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         String category = model.getCategory();
         String title = model.getTitle();
 
-        holder.tvEventName.setText(title);
+        holder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
 
          if (title.equals("Shabbat HaGadol")){
 //            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
