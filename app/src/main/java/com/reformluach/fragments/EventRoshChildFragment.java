@@ -276,15 +276,13 @@ public class EventRoshChildFragment extends Fragment  {
 
         });
         queue.add(objectRequest);
+
+
+
+
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if (eventsIsraelAdapter.getItemCount() == 0) {
-//            load();
-//        }
-//    }
+
 
     private EndlessScrollListener getRecyclerLoadMore() {
         return new EndlessScrollListener(layoutManager) {
@@ -300,7 +298,6 @@ public class EventRoshChildFragment extends Fragment  {
                 } else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                     if (eventsIsraelAdapter != null) {
                         pageCount = current_page + 1;
-
                     }
                     getAllEventsIsrael();
                 }
