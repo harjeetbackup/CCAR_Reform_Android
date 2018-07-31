@@ -40,7 +40,10 @@ import com.reformluach.R;
 import com.reformluach.adapters.AdapterCustomEventsList;
 import com.reformluach.adapters.CalenderPagerAdapter;
 import com.reformluach.models.CustomEventsList;
+import com.reformluach.models.EventDetailModel;
+import com.reformluach.models.ModelEventName;
 import com.reformluach.models.ModelForYear;
+import com.reformluach.models.ParseEventsModel;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
 import com.reformluach.typeface.CustomCheckBoxRegular;
@@ -83,6 +86,8 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
     private ArrayList<ParseIsraelItemBean> dataToSync = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> itemBeanArrayList = new ArrayList<>();
+
+    private ArrayList<EventDetailModel> eventNameArrayList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -266,9 +271,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             }
         });
 
-
-
-//
         setBgAccordingToMonth(controller.getMonth());
         if (controller.getArayList() != null && controller.getArayList().size() > 0) {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rvCalendar.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -318,6 +320,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+//                                EventDetailModel parseItemBean = null;
                                 ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
 
                                 parseItemBean.setTitle(jsonObject.optString("title"));
@@ -326,6 +329,13 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                                 parseItemBean.setSubcat(jsonObject.optString("subcat"));
 
                                 itemBeanArrayList.add(parseItemBean);
+
+//                                parseItemBean.setEventname(jsonObject.optString("title"));
+//                                parseItemBean.setEventdate(jsonObject.optString("date"));
+//                                parseItemBean.setEventCategory(jsonObject.optString("category"));
+//                                parseItemBean.setEventsubcategory(jsonObject.optString("subcat"));
+//
+//                                eventNameArrayList.add(parseItemBean);
 
                             }
 

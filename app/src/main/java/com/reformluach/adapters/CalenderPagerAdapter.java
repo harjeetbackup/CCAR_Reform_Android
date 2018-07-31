@@ -42,8 +42,9 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 
         final ModelForYear modelForYear = model.get(position);
 
-//        sportsView.btnYear.setSelected(model.get(0).isSelected());
-//
+        sportsView.btnYear.setSelected(model.get(0).isSelected());
+
+
 //        if(position == 0 && model.get(0).isSelected() && sportsView.btnYear.isSelected())
 //        {
 //            sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_selected_shape));
@@ -87,23 +88,23 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 //                    model.get(clickedPos).setSelected(sportsView.btnYear.isSelected());
 //                }
 
-                ModelForYear bean = model.get(position);
-                bean.setSelected(!isSelected);
-                notifyDataSetChanged();
-
+//                ModelForYear bean = model.get(position);
+//                bean.setSelected(!isSelected);
+//                notifyDataSetChanged();
 //
-                for(int i = 0; i<model.size(); i++) {
-                    if(i == position) {
-
-                        model.get(position).setSelected(true);
-                    }else {
-                        model.get(i).setSelected(false);
-                    }
-                }
-                if(onCourseSelect != null) {
-                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
-                }
-//                selectedYear(position, !isSelected);
+////
+//                for(int i = 0; i<model.size(); i++) {
+//                    if(i == position) {
+//
+//                        model.get(position).setSelected(true);
+//                    }else {
+//                        model.get(i).setSelected(false);
+//                    }
+//                }
+//                if(onCourseSelect != null) {
+//                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+//                }
+                selectedYear(position, !isSelected);
             }
         });
 
@@ -138,24 +139,24 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
         void onCourseSelected(boolean isSelected, ModelForYear bean,int pos);
     }
 
-//    public void selectedYear(int position, boolean isSelected) {
-//        ModelForYear bean = model.get(position);
-//        bean.setSelected(!isSelected);
-//        notifyDataSetChanged();
-//
-//
-//        for(int i = 0; i<model.size(); i++) {
-//            if(i == position) {
-//
-//                model.get(position).setSelected(true);
-//            }else {
-//                model.get(i).setSelected(false);
-//            }
-//        }
-//        if(onCourseSelect != null) {
-//            onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
-//        }
-//    }
+    public void selectedYear(int position, boolean isSelected) {
+        ModelForYear bean = model.get(position);
+        bean.setSelected(!isSelected);
+        notifyDataSetChanged();
+
+
+        for(int i = 0; i<model.size(); i++) {
+            if(i == position) {
+
+                model.get(position).setSelected(true);
+            }else {
+                model.get(i).setSelected(false);
+            }
+        }
+        if(onCourseSelect != null) {
+            onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+        }
+    }
 
 
 }

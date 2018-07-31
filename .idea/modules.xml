@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ReformLuach_Android.iml" filepath="$PROJECT_DIR$/ReformLuach_Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reformluanch.iml" filepath="$PROJECT_DIR$/reformluanch.iml" />
     </modules>
   </component>
 </project>

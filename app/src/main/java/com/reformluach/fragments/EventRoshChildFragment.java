@@ -237,28 +237,28 @@ public class EventRoshChildFragment extends Fragment  {
                                 parseItemBean.setDate(jsonObject.optString("date"));
 
 
-                                String recievedDate = jsonObject.optString("date");
-                                comparingDate= recievedDate;
+//                                String recievedDate = jsonObject.optString("date");
+//                                comparingDate= recievedDate;
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 parseItemBeans.add(parseItemBean);
                             }
 
-                            Calendar calendar = Calendar.getInstance();
-                            Date today = calendar.getTime();
+//                            Calendar calendar = Calendar.getInstance();
+//                            Date today = calendar.getTime();
+//
+//                            calendar.add(Calendar.DAY_OF_YEAR, 1);
+//                            Date tomorrow = calendar.getTime();
+//                            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+//
+//                            String todayAsString = dateFormat.format(today);
+//                            String tomorrowAsString = dateFormat.format(tomorrow);
 
-                            calendar.add(Calendar.DAY_OF_YEAR, 1);
-                            Date tomorrow = calendar.getTime();
-                            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-                            String todayAsString = dateFormat.format(today);
-                            String tomorrowAsString = dateFormat.format(tomorrow);
-
-                            if (comparingDate.contains(todayAsString) || comparingDate.contains(tomorrowAsString)) {
-                                int firstItem = layoutManager.findFirstVisibleItemPosition();
-                                View firstItemView = layoutManager.findViewByPosition(firstItem);
-                                float topOffset = firstItemView.getTop();
-                            }
+//                            if (comparingDate.contains(todayAsString) || comparingDate.contains(tomorrowAsString)) {
+//                                int firstItem = layoutManager.findFirstVisibleItemPosition();
+//                                View firstItemView = layoutManager.findViewByPosition(firstItem);
+//                                float topOffset = firstItemView.getTop();
+//                            }
 
                             eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
 
