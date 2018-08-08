@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,7 +27,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -37,10 +40,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.reformluach.R;
+import com.reformluach.activities.SettingsActivity;
 import com.reformluach.adapters.AdapterCustomEventsList;
 import com.reformluach.adapters.CalenderPagerAdapter;
+import com.reformluach.adapters.CalenderSyncEventsAdapter;
+import com.reformluach.models.CalenderSyncModel;
 import com.reformluach.models.CustomEventsList;
 import com.reformluach.models.EventDetailModel;
+import com.reformluach.models.EventListCalenderSync;
+import com.reformluach.models.MajorHolidays;
 import com.reformluach.models.ModelEventName;
 import com.reformluach.models.ModelForYear;
 import com.reformluach.models.ParseEventsModel;
@@ -57,18 +65,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
  * Created by Naveen Mishra on 11/30/2017.
  */
-public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapter.OnYearSelected {
+public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapter.OnYearSelected,CalenderSyncEventsAdapter.OnEventSelected,View.OnClickListener{
     public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
     private View calanderSyncFragmentView;
     private Context context;
-    private ArrayList<CustomEventsList> data = new ArrayList<>();
-    private ArrayList<CustomEventsList> datacustom = new ArrayList<>();
-//    private CheckBox cb_major_holidays, cb_minor_holidays, cb_rosh_chodesh, cb_weekly_parshiyot, cb_sefirat, cb_shabatot, cb_modern_holiday,cb_custom_events;
     private SwitchCompat swSync;
     private String eventdate, event;
     private long timestamp;
@@ -77,17 +83,20 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     private RecyclerView rvCalendar;
     private AdapterCustomEventsList adapter;
     private LinearLayout llMain;
+    private ImageButton imgBtnSettingCalender;
+    private Button btnDownloadEvents;
 
     CalenderPagerAdapter calenderPagerAdapter;
     RecyclerView recyclerViewYear;
 
-    CustomCheckBoxRegular cb_major_holidays, cb_minor_holidays, cb_rosh_chodesh, cb_weekly_parshiyot, cb_sefirat, cb_shabatot, cb_modern_holiday,cb_custom_events;
+    RecyclerView recyclerViewEventName;
+    CalenderSyncEventsAdapter calenderSyncEventsAdapter;
+
 
 
     private ArrayList<ParseIsraelItemBean> dataToSync = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> itemBeanArrayList = new ArrayList<>();
 
-    private ArrayList<EventDetailModel> eventNameArrayList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -182,6 +191,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
         }
 
+
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewYear.setLayoutManager(layoutManager);
@@ -193,42 +203,58 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         calenderPagerAdapter.setOnYearSelect(this);
 
 
+
+        final LinearLayoutManager layoutManagerEvent = new LinearLayoutManager(getActivity());
+        layoutManagerEvent.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewEventName.setLayoutManager(layoutManagerEvent);
+        layoutManagerEvent.setStackFromEnd(true);
+        layoutManagerEvent.setReverseLayout(false);
+
+        ArrayList<EventListCalenderSync> eventListCalenderSyncArrayList = new ArrayList<>();
+
+        // Add item to adapter
+        EventListCalenderSync newUser1 = new EventListCalenderSync("Major Holidays", "");
+        EventListCalenderSync newUser2 = new EventListCalenderSync("Minor Holidays", "(Tu B'Sh'vat, Lag Ba'Omer,...)");
+        EventListCalenderSync newUser3 = new EventListCalenderSync("Rosh Chodesh", "");
+        EventListCalenderSync newUser4 = new EventListCalenderSync("Weekly Parshiyot","");
+        EventListCalenderSync newUser5 = new EventListCalenderSync("Sefirat Ha'Omer","");
+        EventListCalenderSync newUser6 = new EventListCalenderSync("Special Shabatot","(Shabbat Sh'kalim, Zachor,...)");
+        EventListCalenderSync newUser7 = new EventListCalenderSync("Modern Holidays","(Yom HaShoah V'hag'vurah, Yom Ha'atzma'ut,...)");
+
+
+        eventListCalenderSyncArrayList.add(newUser1);
+        eventListCalenderSyncArrayList.add(newUser2);
+        eventListCalenderSyncArrayList.add(newUser3);
+        eventListCalenderSyncArrayList.add(newUser4);
+        eventListCalenderSyncArrayList.add(newUser5);
+        eventListCalenderSyncArrayList.add(newUser6);
+        eventListCalenderSyncArrayList.add(newUser7);
+
+
+        calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(),eventListCalenderSyncArrayList,this);
+        recyclerViewEventName.setAdapter(calenderSyncEventsAdapter);
     }
 
     @SuppressLint("NewApi")
     private void getIds(View calanderSyncFragmentView) {
         llMain = calanderSyncFragmentView.findViewById(R.id.llMain);
-        cb_major_holidays = calanderSyncFragmentView.findViewById(R.id.cb_major_holidays);
-        cb_minor_holidays = calanderSyncFragmentView.findViewById(R.id.cb_minor_holidays);
-        cb_rosh_chodesh = calanderSyncFragmentView.findViewById(R.id.cb_rosh_chodesh);
-        cb_weekly_parshiyot = calanderSyncFragmentView.findViewById(R.id.cb_weekly_parshiyot);
-        cb_sefirat = calanderSyncFragmentView.findViewById(R.id.cb_sefirat);
-        cb_shabatot = calanderSyncFragmentView.findViewById(R.id.cb_shabatot);
-        cb_modern_holiday = calanderSyncFragmentView.findViewById(R.id.cb_modern_holiday);
-        cb_custom_events = calanderSyncFragmentView.findViewById(R.id.cb_custom_events);
         swSync = calanderSyncFragmentView.findViewById(R.id.swSync);
         rvCalendar = calanderSyncFragmentView.findViewById(R.id.rvCalendar);
         recyclerViewYear = calanderSyncFragmentView.findViewById(R.id.rvYear);
+        recyclerViewEventName = calanderSyncFragmentView.findViewById(R.id.rvEvents);
+        imgBtnSettingCalender = calanderSyncFragmentView.findViewById(R.id.ImgBtnSettingCalender);
+        btnDownloadEvents = calanderSyncFragmentView.findViewById(R.id.btnDownloadEvents);
 
-        final ArrayList<ParseIsraelItemBean> majorList = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("majorHolidays");
-        final ArrayList<ParseIsraelItemBean> minorlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("minorHolidays");
-        final ArrayList<ParseIsraelItemBean> roshlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("roshchodesh");
-        final ArrayList<ParseIsraelItemBean> weeklylist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("weeklyparshiyot");
-        final ArrayList<ParseIsraelItemBean> omerlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("sefiratomer");
-        final ArrayList<ParseIsraelItemBean> shabbatlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("specialshabbat");
-        final ArrayList<ParseIsraelItemBean> modernlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("modernholidays");
+        btnDownloadEvents.setOnClickListener(this);
 
-        final String majorYear = SharedPreferencesCalenderSync.getInstance(getActivity()).getData("year");
-
-
-        if (cb_major_holidays.isChecked()) {
-            if (dataToSync.toString().equals(majorList) && setSelectedYear.equals(majorYear)) {
-                cb_major_holidays.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                cb_major_holidays.setEnabled(false);
-            }else if (!dataToSync.toString().equals(majorList)  && !setSelectedYear.equals(majorYear)){
-                cb_major_holidays.setEnabled(true);
+        imgBtnSettingCalender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
             }
-        }
+        });
+
 
         swSync.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -244,23 +270,12 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                             new CalenderAsync().execute();
                         } else {
                             compoundButton.setChecked(false);
-                            cb_custom_events.setChecked(false);
                             Toast.makeText(context, "No custom events found.", Toast.LENGTH_SHORT).show();
                         }
                     } else if (getSelectedCheckBox() != 0 && getSelectedCheckBox() != 7) {
                         callSelectedJsonMethod();
                         controller.PdStart(context, getString(R.string.sync), R.color.text_grey);
                         new CalenderAsync().execute();
-
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveData("year",setSelectedYear);
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync,"majorHolidays");
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync, "minorHolidays");
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync, "roshchodesh");
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync, "weeklyparshiyot");
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync, "sefiratomer");
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync, "specialshabbat");
-                            SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(dataToSync, "modernholidays");
-
 
                     }
                     else {
@@ -296,6 +311,27 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             }
     }
 
+
+    String getSelectedEvent = "";
+    CalenderSyncEventsAdapter.OnEventSelected onEventSelected;
+    @Override
+    public void onEventSelected(boolean isSelected, EventListCalenderSync bean, int pos) {
+        ArrayList<EventListCalenderSync> modelForYearArrayList = new ArrayList<>();
+        calenderSyncEventsAdapter.setOnEventSelect(onEventSelected);
+        if (isSelected ==true) {
+            getSelectedEvent = bean.getEventname();
+//            bean.setEventname(getSelectedEvent);
+//            modelForYearArrayList.add(bean);
+
+        }
+    }
+
+    private int getSelectedCheckBox() {
+
+
+        return 0;
+    }
+
     public void getAllEventsIsrael(String year) {
 
         String url = Url.israelUrlBeforeDate+setSelectedYear+Url.israelUrlAfterDate;
@@ -320,7 +356,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-//                                EventDetailModel parseItemBean = null;
                                 ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
 
                                 parseItemBean.setTitle(jsonObject.optString("title"));
@@ -330,12 +365,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                                 itemBeanArrayList.add(parseItemBean);
 
-//                                parseItemBean.setEventname(jsonObject.optString("title"));
-//                                parseItemBean.setEventdate(jsonObject.optString("date"));
-//                                parseItemBean.setEventCategory(jsonObject.optString("category"));
-//                                parseItemBean.setEventsubcategory(jsonObject.optString("subcat"));
-//
-//                                eventNameArrayList.add(parseItemBean);
 
                             }
 
@@ -354,80 +383,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         queue.add(objectRequest);
     }
 
-
-    public void getMajorHolidays(){
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            String subcategory = parseIsraelItemBean.getSubcat();
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") && subcategory!=null &&
-                     !subcategory.equalsIgnoreCase("null")
-                    && subcategory.equalsIgnoreCase("major")) {
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-
-        Log.i("",""+dataToSync);
-    }
-
-
-    public void getMinorHolidays(){
-
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                    parseIsraelItemBean.getSubcat().equalsIgnoreCase("minor")
-                    && !parseIsraelItemBean.getSubcat().equalsIgnoreCase("null") && parseIsraelItemBean.getSubcat()!=null) {
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-    }
-
-    public void getWeekendParshiyot(){
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("parashat")){
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-    }
-    public void getRoshChodesh(){
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("roshchodesh")){
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-    }
-    public void getSefiratHaOmer(){
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("omer")){
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-    }
-    public void getSpecialShabbat(){
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            String subcategory = parseIsraelItemBean.getSubcat();
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                    subcategory.equalsIgnoreCase("shabbat") && subcategory!=null
-                    && !subcategory.equalsIgnoreCase("null")){
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-    }
-    public void getModernHolidays(){
-        for(ParseIsraelItemBean parseIsraelItemBean : itemBeanArrayList) {
-
-            String subcategory = parseIsraelItemBean.getSubcat();
-            if (parseIsraelItemBean.getCategory().equalsIgnoreCase("holiday") &&
-                    subcategory.equalsIgnoreCase("modern") && subcategory!=null
-                    && !subcategory.equalsIgnoreCase("null")){
-                dataToSync.add(parseIsraelItemBean);
-            }
-        }
-    }
 
 
     private void getAllEventsDispora() {
@@ -545,31 +500,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         return calendarURI.toString();
     }
 
-    private int getSelectedCheckBox() {
-
-        if (cb_major_holidays.isChecked()) {
-            return 1;
-        }
-        if (cb_minor_holidays.isChecked()) {
-            return 2;
-        }
-        if (cb_rosh_chodesh.isChecked()) {
-            return 3;
-        }
-        if (cb_weekly_parshiyot.isChecked()) {
-            return 4;
-        }
-        if (cb_sefirat.isChecked()) {
-            return 5;
-        }
-        if (cb_shabatot.isChecked()) {
-            return 6;
-        }
-        if (cb_modern_holiday.isChecked()) {
-            return 7;
-        }
-        return 0;
-    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public boolean checkPermission() {
@@ -604,10 +534,82 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         }
     }
 
-//    @Override
-//    public void onClick(View view) {
-//
-//    }
+    @Override
+    public void onClick(View view) {
+     switch (view.getId()){
+         case R.id.btnDownloadEvents:
+
+
+//             int size = ((CalenderSyncEventsAdapter) recyclerViewEventName.getAdapter()).getItemCount();
+//             for (int i = 0; i < size; i++) {
+//                 if (((CalenderSyncEventsAdapter) recyclerViewEventName.getAdapter()).isItemChecked(i)) {
+//                     // Get each selected item
+//                     EventListCalenderSync carItem = ((CalenderSyncEventsAdapter) recyclerViewEventName.getAdapter()).getItem(i);
+                     // Do something with the item like save it to a selected items array.
+                    getCheckedItems();
+//                 }
+//             }
+
+
+     }
+    }
+
+    public List<ParseIsraelItemBean> getCheckedItems() {
+        List<ParseIsraelItemBean> checkedItems = new ArrayList<>();
+
+
+            for (ParseIsraelItemBean parseItemBean : itemBeanArrayList) {
+                    String eventTitle = parseItemBean.getTitle();
+                    String eventSubCateg = parseItemBean.getSubcat();
+                    String eventCateg = parseItemBean.getCategory();
+
+
+                    if (getSelectedEvent.equals("Major Holidays") ) {
+
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("major")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                   }
+
+                    if (getSelectedEvent.equals("Minor Holidays") ) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("minor")) {
+                            checkedItems.add(parseItemBean);
+                        }
+
+                    }
+
+                    if (getSelectedEvent.equals("Weekly Parshiyot")) {
+                        if (eventCateg.equals("parashat")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                    }
+
+                    if (getSelectedEvent.equals("Rosh Chodesh")) {
+                        if (eventCateg.equals("roshchodesh")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                    }
+
+                    if (getSelectedEvent.equals("Sefirat Ha'Omer") ) {
+                        if (eventCateg.equals("omer")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                    }
+
+                    if (getSelectedEvent.equals("Special Shabatot") ) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("shabbat")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                    }
+                    if (getSelectedEvent.equals("Modern Holidays") ) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("modern")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                    }
+
+            }
+        return checkedItems;
+    }
 
     @Override
     public void onResume() {
@@ -665,21 +667,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
 
     private void callSelectedJsonMethod() {
-        if (getSelectedCheckBox() == 1) {
-            getMajorHolidays();
-        } else if (getSelectedCheckBox() == 2) {
-            getMinorHolidays();
-        } else if (getSelectedCheckBox() == 3) {
-            getRoshChodesh();
-        } else if (getSelectedCheckBox() == 4) {
-            getWeekendParshiyot();
-        } else if (getSelectedCheckBox() == 5) {
-            getSefiratHaOmer();
-        } else if (getSelectedCheckBox() == 6) {
-            getSpecialShabbat();
-        } else if (getSelectedCheckBox() == 7) {
-            getModernHolidays();
-        }
 
     }
 
@@ -701,122 +688,8 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                     Log.e("Timestamp", "Timestamp" + timestamp);
                     addReminderInCalendar(timestamp, event);
 
-
-                    final ArrayList<ParseIsraelItemBean> majorList = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("majorHolidays");
-                    final ArrayList<ParseIsraelItemBean> minorlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("minorHolidays");
-                    final ArrayList<ParseIsraelItemBean> roshlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("roshchodesh");
-                    final ArrayList<ParseIsraelItemBean> weeklylist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("weeklyparshiyot");
-                    final ArrayList<ParseIsraelItemBean> omerlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("sefiratomer");
-                    final ArrayList<ParseIsraelItemBean> shabbatlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("specialshabbat");
-                    final ArrayList<ParseIsraelItemBean> modernlist = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("modernholidays");
-
-                    final String majorYear = SharedPreferencesCalenderSync.getInstance(getActivity()).getData("year");
-
-
-
-                        cb_major_holidays.setOnClickListener(new View.OnClickListener() {
-                            @SuppressLint("NewApi")
-                            @Override
-                            public void onClick(View v) {
-                                if (cb_major_holidays.isChecked()) {
-                                    if (dataToSync.toString().equals(majorList) && setSelectedYear.equals(majorYear)) {
-                                        cb_major_holidays.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                        cb_major_holidays.setEnabled(false);
-                                    }else if (!dataToSync.toString().equals(majorList)  && !setSelectedYear.equals(majorYear)){
-                                        cb_major_holidays.setEnabled(true);
-                                    }
-                                    }
-                                }
-                        });
-
-                        cb_minor_holidays.setOnClickListener(new View.OnClickListener() {
-                            @SuppressLint("NewApi")
-                            @Override
-                            public void onClick(View v) {
-                                if (cb_minor_holidays.isChecked()) {
-                                    if (dataToSync.toString().equals(minorlist) && setSelectedYear.equals(majorYear)) {
-                                        cb_minor_holidays.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                        cb_minor_holidays.setEnabled(false);
-                                    }else {
-                                        cb_minor_holidays.setEnabled(true);
-                                    }
-                                }
-                            }
-                        });
-                    cb_rosh_chodesh.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("NewApi")
-                        @Override
-                        public void onClick(View v) {
-                            if (cb_rosh_chodesh.isChecked()) {
-                                if (dataToSync.toString().equals(roshlist) && setSelectedYear.equals(majorYear)) {
-                                    cb_rosh_chodesh.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                    cb_rosh_chodesh.setEnabled(false);
-                                }else {
-                                    cb_rosh_chodesh.setEnabled(true);
-                                }
-                            }
-                        }
-                    });
-                    cb_weekly_parshiyot.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("NewApi")
-                        @Override
-                        public void onClick(View v) {
-                            if (cb_weekly_parshiyot.isChecked()) {
-                                if (dataToSync.toString().equals(weeklylist) && setSelectedYear.equals(majorYear)) {
-                                    cb_weekly_parshiyot.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                    cb_weekly_parshiyot.setEnabled(false);
-                                }else {
-                                    cb_weekly_parshiyot.setEnabled(true);
-                                }
-                            }
-                        }
-                    });
-                    cb_sefirat.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("NewApi")
-                        @Override
-                        public void onClick(View v) {
-                            if (cb_sefirat.isChecked()) {
-                                if (dataToSync.toString().equals(omerlist) && setSelectedYear.equals(majorYear)) {
-                                    cb_sefirat.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                    cb_sefirat.setEnabled(false);
-                                }else {
-                                    cb_sefirat.setEnabled(true);
-                                }
-                            }
-                        }
-                    });
-                    cb_shabatot.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("NewApi")
-                        @Override
-                        public void onClick(View v) {
-                            if (cb_shabatot.isChecked()) {
-                                if (dataToSync.toString().equals(shabbatlist) && setSelectedYear.equals(majorYear)) {
-                                    cb_shabatot.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                    cb_shabatot.setEnabled(false);
-                                }else {
-                                    cb_shabatot.setEnabled(true);
-                                }
-                            }
-                        }
-                    });
-                    cb_modern_holiday.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("NewApi")
-                        @Override
-                        public void onClick(View v) {
-                            if (cb_modern_holiday.isChecked()) {
-                                if (dataToSync.toString().equals(modernlist) && setSelectedYear.equals(majorYear)) {
-                                    cb_modern_holiday.setBackground(context.getDrawable(R.drawable.ic_check_box_blurr));
-                                    cb_modern_holiday.setEnabled(false);
-                                }else {
-                                    cb_modern_holiday.setEnabled(true);
-                                }
-                            }
-                        }
-                    });
-
                     }
                 }
-//            }
             return null;
         }
 
@@ -826,35 +699,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             super.onPostExecute(o);
             controller.PdStop();
             swSync.setChecked(false);
-
-
-            if (cb_major_holidays.isChecked()) {
-                    cb_major_holidays.setEnabled(false);
-            }
-            if (cb_minor_holidays.isChecked()) {
-                cb_minor_holidays.setEnabled(false);
-
-            }
-            if (cb_rosh_chodesh.isChecked()) {
-                cb_rosh_chodesh.setEnabled(false);
-
-            }
-            if (cb_weekly_parshiyot.isChecked()) {
-                cb_weekly_parshiyot.setEnabled(false);
-
-            }
-            if (cb_sefirat.isChecked()) {
-                cb_sefirat.setEnabled(false);
-
-            }
-            if (cb_shabatot.isChecked()) {
-                cb_shabatot.setEnabled(false);
-
-            }
-            if (cb_modern_holiday.isChecked()) {
-                cb_modern_holiday.setEnabled(false);
-
-            }
 
         }
     }

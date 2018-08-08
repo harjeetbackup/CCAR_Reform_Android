@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ParseIsraelItemBean implements Parcelable{
 
     /**
@@ -28,6 +30,16 @@ public class ParseIsraelItemBean implements Parcelable{
     private String memo;
     private String subcat;
     private boolean yomtov;
+
+    private List<MajorHolidays> majorHolidays;
+
+    public List<MajorHolidays> getMajorHolidays() {
+        return majorHolidays;
+    }
+
+    public void setMajorHolidays(List<MajorHolidays> group_members) {
+        this.majorHolidays = group_members;
+    }
 
     private EventTitle replaceTitle;
 
@@ -139,6 +151,7 @@ public class ParseIsraelItemBean implements Parcelable{
         this.title = in.readString();
         this.subcat = in.readString();
         this.replaceTitle = in.readParcelable(EventTitle.class.getClassLoader());
+        this.majorHolidays = in.readParcelable(MajorHolidays.class.getClassLoader());
 
     }
 
@@ -149,6 +162,7 @@ public class ParseIsraelItemBean implements Parcelable{
      parcel.writeString(this.title);
      parcel.writeString(this.subcat);
      parcel.writeParcelable((Parcelable) this.replaceTitle, i);
+     parcel.writeParcelable((Parcelable) this.majorHolidays,i);
 
 
     }

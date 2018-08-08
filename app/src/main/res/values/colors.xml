@@ -28,5 +28,6 @@
     <color name="color_gray_search">#c2c2c7</color>
 
     <color name="shabbat_select_color">#f7eeaa</color>
+    <!--<color name="download_btn_color">#0ec8da</color>-->
 
 </resources>

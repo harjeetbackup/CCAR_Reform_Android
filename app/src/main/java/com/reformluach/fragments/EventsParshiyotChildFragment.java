@@ -424,14 +424,14 @@ public class EventsParshiyotChildFragment extends Fragment  {
         super.onResume();
 
         if (isNeedToRefresh) {
-            isNeedToRefresh =false;
+            isNeedToRefresh =true;
             pageCount = 0;
         if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
             getAllEventsDispora();
            }
         }
         if (isNeedToRefresh) {
-            isNeedToRefresh = false;
+            isNeedToRefresh = true;
             pageCount = 0;
 
             if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {

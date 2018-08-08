@@ -1,8 +1,9 @@
 package com.reformluach.models;
 
-public class RoshChodeshModel {
+public class MajorHolidays {
+
     String title;
-    String eventdate;
+    String date;
 
     public String getTitle() {
         return title;
@@ -12,11 +13,11 @@ public class RoshChodeshModel {
         this.title = title;
     }
 
-    public String getEventdate() {
-        return eventdate;
+    public String getDate() {
+        return date;
     }
 
-    public void setEventdate(String eventdate) {
-        this.eventdate = eventdate;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

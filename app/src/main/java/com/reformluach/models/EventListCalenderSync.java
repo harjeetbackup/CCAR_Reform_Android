@@ -1,14 +1,32 @@
 package com.reformluach.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class EventListCalenderSync {
 
     String eventname;
+    String subTitle;
+    boolean isSelected;
 
-    public EventListCalenderSync(String eventname) {
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+
+    public EventListCalenderSync(String eventname, String subTitle) {
         this.eventname = eventname;
+        this.subTitle = subTitle;
     }
 
     public String getEventname() {
@@ -16,7 +34,6 @@ public class EventListCalenderSync {
     }
 
     public void setEventname(String eventname) {
-        this.eventname = eventname;
+        this.eventname =eventname;
     }
-
 }

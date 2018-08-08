@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
+    android:layout_weight="1"
     >
     <com.reformluach.typeface.CustomCheckBoxRegular
         android:id="@+id/checkboxEvents"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_25"
+        android:layout_marginLeft="@dimen/margin_15"
         android:button="@drawable/checkbox_selector"
         android:checked="false"
         android:padding="10dp"
         android:state_checked="false"
-        android:text="Major Holidays"
+        tools:text="Major Holidays"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/margin_13"/>
+        android:textSize="@dimen/margin_13"
+        android:layout_weight=".1"
+        />
+
+    <TextView
+        android:id="@+id/txtSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/margin_10"
+        android:textAllCaps="false"
+        android:textColor="@color/colorBlack"
+        tools:text="jhgddj"
+        android:gravity="left"
+        android:layout_weight=".7"
+        android:layout_marginLeft="@dimen/margin_18"
+
+        />
 </LinearLayout>

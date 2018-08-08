@@ -12,7 +12,7 @@ public class RequestURL {
     public static final String GET = "GET";
     public static final String PUT = "PUT";
     //Heroku
-    public static final String BASE_URL = "http://www.hebcal.com/converter/?cfg=json&";
+    public static final String BASE_URL = "https://www.hebcal.com/converter/?cfg=json&";
     // Local
     public static String DELETE = "DELETE";
 }

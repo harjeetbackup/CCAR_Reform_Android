@@ -54,7 +54,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         ivSettings.setOnClickListener(this);
 //        rlSetting.setOnClickListener(this);
         setBgAccordingToMonth(controller.getMonth());
-        wvAbout.loadUrl("file:///android_asset/about.html");
+        wvAbout.loadUrl("file:///android_asset/About.html");
     }
 
     private void setBgAccordingToMonth(int month) {

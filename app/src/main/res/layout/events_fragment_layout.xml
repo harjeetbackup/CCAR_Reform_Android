@@ -36,14 +36,25 @@
                 android:id="@+id/ImgBtnSetting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/sett"
+                android:src="@mipmap/reform_setting_icon"
                 android:layout_gravity="left"
                 android:background="@color/transparent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="12dp"
-
+                android:layout_marginTop="7dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R"
+                android:textSize="10sp"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="19dp"
+                android:layout_marginTop="8dp"
                 />
         </android.support.constraint.ConstraintLayout>
 

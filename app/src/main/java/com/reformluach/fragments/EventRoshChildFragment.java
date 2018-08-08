@@ -307,8 +307,6 @@ public class EventRoshChildFragment extends Fragment  {
     }
 
 
-
-
     private void getAllEventsDispora() {
 
         if (isFilterEnable){
@@ -585,7 +583,7 @@ public class EventRoshChildFragment extends Fragment  {
         super.onResume();
         if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected") ){
             if (isNeedToRefresh) {
-                isNeedToRefresh = false;
+                isNeedToRefresh = true;
                 pageCount = 0;
                 getAllEventsDispora();
             }
@@ -593,7 +591,7 @@ public class EventRoshChildFragment extends Fragment  {
         } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
 
             if (isNeedToRefresh) {
-                isNeedToRefresh = false;
+                isNeedToRefresh = true;
                 pageCount = 0;
                 getAllEventsIsrael();
             }

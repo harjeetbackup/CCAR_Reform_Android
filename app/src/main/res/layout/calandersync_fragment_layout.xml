@@ -2,32 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="200dp"
+        android:orientation="vertical"
 
-        <LinearLayout
+        >
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/margin_10">
+            android:layout_marginTop="20dp"
+
+            >
 
             <com.reformluach.typeface.CustomtextViewFontLight
+                android:id="@+id/txtCalenderSync"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_30"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginTop="20dp"
-                android:paddingLeft="@dimen/margin_10"
-                android:paddingRight="@dimen/margin_10"
                 android:text="Calender Sync"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/margin_18"
+                android:gravity="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/ImgBtnSettingCalender"
 
                 />
 
@@ -37,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/SCBSwitch"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 />
 
             <!--<Button-->
@@ -46,7 +51,32 @@
                 <!--android:src="@mipmap/dowload"-->
                 <!--android:background="@color/transparent"-->
                 <!--/>-->
-        </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/ImgBtnSettingCalender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/reform_setting_icon"
+                android:layout_gravity="left"
+                android:background="@color/transparent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="7dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R"
+                android:textSize="10sp"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="23dp"
+                android:layout_marginTop="14dp"
+                />
+        </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,13 +88,13 @@
     <com.reformluach.typeface.CustomtextViewFontRegular
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_30"
-            android:layout_marginRight="@dimen/margin_30"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
             android:padding="@dimen/margin_10"
             android:text="@string/calender_text"
             android:textColor="@color/colorWhite"
             android:textSize="14dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             />
 
         <android.support.v7.widget.RecyclerView
@@ -74,7 +104,7 @@
             android:scrollbars="horizontal"
             android:layout_marginTop="5dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginRight="24dp"
+            android:layout_marginRight="10dp"
 
 
             />
@@ -88,24 +118,60 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llMain"
+
+
+        >
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:layout_below="@+id/llMain"
-        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="left"
 
 
         />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
 
+        >
+    <Button
+        android:id="@+id/btnDownloadEvents"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_below="@+id/rvEvents"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/margin_80"
+        android:layout_marginRight="@dimen/margin_80"
+        android:text="Download"
+        android:textColor="@color/colorWhite"
+        android:textAllCaps="false"
+        android:textSize="@dimen/margin_18"
+        android:background="@drawable/download_btn_shape"
+        android:drawableRight="@mipmap/download_icon"
+        android:drawablePadding="-11dp"
+        android:paddingRight="22dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+
+        />
+    </LinearLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/llMain"
         android:layout_marginTop="5dp"
+
+        android:visibility="gone"
         >
 
         <LinearLayout
@@ -257,7 +323,9 @@
                     android:maxLines="1"
                     android:text="(Shabbat Sh'kalim, Zachor,...)"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/margin_9"/>
+                    android:textSize="@dimen/margin_9"
+
+                    />
             </LinearLayout>
 
             <View
@@ -345,7 +413,7 @@
                 android:id="@+id/rvCalendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_50"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:layout_marginRight="@dimen/margin_10"
                 android:layout_marginTop="@dimen/margin_8"/>
         </LinearLayout>
