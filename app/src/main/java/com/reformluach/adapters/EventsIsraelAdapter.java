@@ -58,40 +58,46 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         String category = model.getCategory();
         String title = model.getTitle();
 
+        String sameEventDay ="";
+
         holder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
 
          if (title.equals("Shabbat HaGadol")){
-//            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
+            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-//            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
         }
         else if (title.equals("Shabbat Sh'kalim")){
-//            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
-//            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
              holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
          }else if (title.equals("Shabbat Zachor")){
-//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Zachor should be read.");
-//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Zachor should be read.");
+             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
              holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
          }else if (title.equals("Shabbat HaChodesh")){
-//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Hachodesh should be read.");
-//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Hachodesh should be read.");
+             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
              holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
          }else if (title.equals("Shabbat Shuva")){
-//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
-//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
+             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
              holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
          }else if (title.equals("Shabbat Parah")){
-//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
-//             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
+             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+         }else if (title.equals("Shabbat Hachodesh") && title.equals("Shabbat Rosh Chodesh") == sameEventDay.equalsIgnoreCase(date) ){
+//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read){
+             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Rosh Codesh should be read.");
+             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
              holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
          }
          else {
              holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
-
          }
 
 
@@ -104,7 +110,6 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
                 intent.putExtra("eventDate", mPopulatingData.get(position).getDate());
                 ((Activity)context).startActivity(intent);
             }
-
         });
     }
 

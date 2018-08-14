@@ -47,14 +47,11 @@ public class SettingsActivity extends AppCompatActivity {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
-//                Intent intent = new Intent(SettingsActivity.this,EventsFragment.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("selected", "yes");
-//                intent.putExtras(bundle);
-////                setResult(RESULT_OK);
-//                startActivity(intent);
-                controller.animationBackward(context);
+//                onBackPressed();
+//                controller.animationBackward(context);
+                Intent intent = new Intent();
+                setResult(RESULT_OK);
+                finish();
             }
         });
 

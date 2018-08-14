@@ -42,7 +42,7 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 
         final ModelForYear modelForYear = model.get(position);
 
-        sportsView.btnYear.setSelected(model.get(0).isSelected());
+//        sportsView.btnYear.setSelected(model.get(0).isSelected());
 
 
 //        if(position == 0 && model.get(0).isSelected() && sportsView.btnYear.isSelected())
@@ -60,8 +60,12 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
         if (isSelected){
             sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_selected_shape));
             sportsView.btnYear.setTextColor(context.getResources().getColor(R.color.color_gray));
-        }else {
+        }else if (!isSelected){
             sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_shape));
+        }else {
+          sportsView.btnYear.setText(model.get(0).getYear());
+          sportsView.btnYear.setSelected(true);
+          sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_selected_shape));
         }
 
         sportsView.btnYear.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +123,6 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
             btnYear = itemView.findViewById(R.id.btnyear);
         }
 
-
     }
 
 
@@ -136,7 +139,7 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
     }
 
     public interface OnYearSelected {
-        void onCourseSelected(boolean isSelected, ModelForYear bean,int pos);
+        void onYearSelected(boolean isSelected, ModelForYear bean);
     }
 
     public void selectedYear(int position, boolean isSelected) {
@@ -154,7 +157,7 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
             }
         }
         if(onCourseSelect != null) {
-            onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
+            onCourseSelect.onYearSelected(bean.isSelected(), bean);
         }
     }
 

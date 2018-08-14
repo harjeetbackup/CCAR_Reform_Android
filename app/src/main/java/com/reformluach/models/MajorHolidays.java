@@ -4,6 +4,15 @@ public class MajorHolidays {
 
     String title;
     String date;
+    boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getTitle() {
         return title;

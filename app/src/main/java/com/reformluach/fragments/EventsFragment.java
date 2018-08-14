@@ -124,6 +124,7 @@ public class EventsFragment extends Fragment {
         viewPagerAdapterHome.addFrag(eventsParshiyotChildFragment, getString(R.string.eventparshiyot_childfragment_name));
         viewPagerAdapterHome.addFrag(eventsHolidaysFragment, getString(R.string.eventholidays_childfragment_name));
 
+
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(viewPagerAdapterHome);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

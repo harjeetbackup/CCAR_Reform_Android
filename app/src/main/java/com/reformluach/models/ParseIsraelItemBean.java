@@ -123,6 +123,36 @@ public class ParseIsraelItemBean implements Parcelable{
         this.yomtov = yomtov;
     }
 
+    public boolean isSpecialDayForSubtitle(){
+        String newtitle = EventTitle.replaceRecievedTitle(title) ;
+            if (newtitle.equalsIgnoreCase("Shabbat Parah") || newtitle.equalsIgnoreCase("Shabbat Sh'kalim") ||
+                    newtitle.equalsIgnoreCase("Shabbat HaGadol") || newtitle.equalsIgnoreCase("Shabbat Zachor") ||
+                    newtitle.equalsIgnoreCase("Shabbat HaChodesh") || newtitle.equalsIgnoreCase("Shabbat Shuva")
+                    || newtitle.equalsIgnoreCase("Shabbat Chanukah") || newtitle.startsWith("Chanukah")){
+                return true;
+        }
+//        else {
+//            return false;
+//        }
+        return false;
+    }
+
+    public boolean isComparableDayForSubTitle(){
+        String newtitle = EventTitle.replaceRecievedTitle(title) ;
+        if (newtitle.startsWith("Parashat") || newtitle.startsWith("parashat")){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isThreeEventsOfSpecialDayForSubTitle(){
+        String newtitle = EventTitle.replaceRecievedTitle(title) ;
+        if (newtitle.startsWith("Rosh Chodesh")){
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public int describeContents() {
         return 0;

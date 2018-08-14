@@ -3,6 +3,7 @@ package com.reformluach.models;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public  class EventTitle {
@@ -223,15 +224,33 @@ public  class EventTitle {
 
     public static final String replacetitleWithSpecialChar(String subtitle){
         if (subtitle.contains(":")){
-        subtitle = subtitle.replaceAll(":","");
+        subtitle = subtitle.replace(":","");
         }
         if (subtitle.contains("/")){
-            subtitle =subtitle.replaceAll("/","-");
+            subtitle =subtitle.replace("/","-");
         }
         if (subtitle.contains("_")){
             subtitle =subtitle.replace("_","");
         }
         return subtitle;
+    }
+
+
+    public static final void applySubTitleLogic(ArrayList<ParseIsraelItemBean> parseIsraelItemBean){
+
+        ArrayList<ParseIsraelItemBean> specialEvent = parseIsraelItemBean;
+        ArrayList<ParseIsraelItemBean> comparableEvent = parseIsraelItemBean;
+        ArrayList<ParseIsraelItemBean> threeSpecialEvent = parseIsraelItemBean;
+
+        for (int i=0;i<parseIsraelItemBean.size();i++){
+            if ( parseIsraelItemBean.get(i).isSpecialDayForSubtitle()) {
+                specialEvent = parseIsraelItemBean;
+            }
+            if (parseIsraelItemBean.get(i).isComparableDayForSubTitle()) {
+                comparableEvent = parseIsraelItemBean;
+            }
+        }
+
     }
 
     public static final String htmlFileUrl = "file:///android_asset/";
@@ -957,9 +976,7 @@ public  class EventTitle {
                         url = htmlFileUrl + "Sh'mini_Atzeret-Simchat_Torah.html";
                     }else if (eventName.contains("Sh'mini Atzeret-Simchat Torah") && eventDate.equals(days[6])) {
                         url = htmlFileUrl + "Sh'mini_Atzeret-Simchat_Torah_Shabbat.html";
-                    }
-
-                    else if ((eventName.contains("Shabbat Acharei Mot-K'doshim")) || (eventName.contains("Acharei")) || (eventName.contains("K'doshim")) && !eventDate.equals(days[5])) {
+                    } else if ((eventName.contains("Shabbat Acharei Mot-K'doshim")) || (eventName.contains("Acharei")) || (eventName.contains("K'doshim")) && !eventDate.equals(days[5])) {
                         url = htmlFileUrl + "Shabbat_Acharei_Mot-K'doshim.html";
                     } else if ((eventName.contains("Shabbat Acharei_Mot")) || (eventName.contains("Acharei Mot")) && !eventDate.equals(days[5])) {
                         url = htmlFileUrl + "Shabbat_Acharei_Mot.html";
@@ -1340,7 +1357,6 @@ public  class EventTitle {
                         url = htmlFileUrl + "Lag_Ba'Omer.html";
                     }
         }
-
         return url;
 
         }

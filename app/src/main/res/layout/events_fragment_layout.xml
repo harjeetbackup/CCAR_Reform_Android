@@ -153,12 +153,16 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:tabIndicatorColor="@color/text_blue"
             app:tabSelectedTextColor="@color/text_blue"
-            app:tabTextColor="@color/text_adapter"/>
+            app:tabTextColor="@color/text_adapter"
+
+            />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tab_layout"/>
+            android:layout_below="@id/tab_layout"
+
+            />
     </RelativeLayout>
 </RelativeLayout>
