@@ -71,11 +71,14 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
         sportsView.checkBoxEvent.setText(event.getEventname());
         sportsView.txtSubTitle.setText(event.getSubTitle());
 
-//        holder.setIsRecyclable(true);
         final boolean isSelected = syncArrayList.get(position).isSelected();
 
         if (isSelected){
             sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.checkboxsel));
+        }
+        else if (syncArrayList.get(position).isSync()){
+            sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.ic_synced_launcher));
+            sportsView.checkBoxEvent.setTextColor(context.getResources().getColor(R.color.color_gray));
         }
         else {
             sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.checkboxunsel));

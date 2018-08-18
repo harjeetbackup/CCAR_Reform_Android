@@ -45,17 +45,10 @@ import com.reformluach.activities.SettingsActivity;
 import com.reformluach.adapters.AdapterCustomEventsList;
 import com.reformluach.adapters.CalenderPagerAdapter;
 import com.reformluach.adapters.CalenderSyncEventsAdapter;
-import com.reformluach.models.CalenderSyncModel;
-import com.reformluach.models.CustomEventsList;
-import com.reformluach.models.EventDetailModel;
 import com.reformluach.models.EventListCalenderSync;
-import com.reformluach.models.MajorHolidays;
-import com.reformluach.models.ModelEventName;
 import com.reformluach.models.ModelForYear;
-import com.reformluach.models.ParseEventsModel;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
-import com.reformluach.typeface.CustomCheckBoxRegular;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
 import com.reformluach.utils.SharedPreferencesCalenderSync;
@@ -66,7 +59,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -117,7 +109,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 tvCalenderType.setText("D");
 
             } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                getAllEventsIsrael(setSelectedYear);
+                getAllEventsIsrael();
                 tvCalenderType.setText("I");
             }
 
@@ -194,6 +186,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             year = String.valueOf(yearCount);
 
             ModelForYear modelForYear = new ModelForYear();
+
             modelForYear.setYear(year);
             modelForYears.add(modelForYear);
 
@@ -271,7 +264,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 if (b) {
                     if (getSelectedCheckBox() == 7) {
                         callSelectedJsonMethod();
-//                        if (controller.getArayList() != null && controller.getArayList().size() > 0) {
                         if (controller.getEventsList() != null && controller.getEventsList().size() > 0) {
 
                             controller.PdStart(context, getString(R.string.sync), R.color.text_grey);
@@ -313,7 +305,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 setSelectedYear = bean.getYear();
                 bean.setYear(setSelectedYear);
                 modelForYearArrayList.add(bean);
-                getAllEventsIsrael(bean.getYear());
             }
     }
 
@@ -339,7 +330,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     ArrayList<ParseIsraelItemBean> checkedItems = new ArrayList<>();
 
     public ArrayList<ParseIsraelItemBean> getCheckedItems() {
-//        ArrayList<ParseIsraelItemBean> checkedItems = new ArrayList<>();
 
         final ArrayList<ParseIsraelItemBean> majorList = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("majorHolidays");
 
@@ -406,7 +396,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         return 0;
     }
 
-    public void getAllEventsIsrael(String year) {
+    public void getAllEventsIsrael() {
 
         String url = Url.israelUrlBeforeDate+setSelectedYear+Url.israelUrlAfterDate;
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -718,7 +708,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                     tvCalenderType.setText("D");
 
                 } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    getAllEventsIsrael(setSelectedYear);
+                    getAllEventsIsrael();
                     tvCalenderType.setText("I");
                 }
                 getIds(calanderSyncFragmentView);

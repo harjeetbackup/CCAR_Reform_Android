@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.reformluach.R;
 import com.reformluach.activities.EventDetailsActivity;
-import com.reformluach.models.EventsParsiyor;
 import com.reformluach.models.ParseIsraelItemBean;
 
 import java.util.ArrayList;

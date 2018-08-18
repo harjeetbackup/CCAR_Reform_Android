@@ -6,6 +6,15 @@ public class EventListCalenderSync {
     String eventname;
     String subTitle;
     boolean isSelected;
+    boolean isSync;
+
+    public boolean isSync() {
+        return isSync;
+    }
+
+    public void setSync(boolean sync) {
+        isSync = sync;
+    }
 
     public boolean isSelected() {
         return isSelected;

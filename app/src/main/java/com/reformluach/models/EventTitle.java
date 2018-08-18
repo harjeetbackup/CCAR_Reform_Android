@@ -1,10 +1,15 @@
 package com.reformluach.models;
 
 
+import com.reformluach.utils.AppDateUtil;
+
+import org.joda.time.DateTime;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public  class EventTitle {
 
@@ -182,24 +187,40 @@ public  class EventTitle {
             title=title.replace("Pesach I","Pesach Day 1 Weekday");
         }
 
+//        else if (title.contains("Chanukah: 1 Candle")){
+//            title=title.replace("Chanukah: 1 Candle","Erev Chanukah");
+//        }else if (title.contains("Chanukah: 8th Day")) {
+//            title = title.replace("Chanukah: 8th Day", "Chanukah 8 Weekday");
+//        } else if (title.contains("Chanukah: 2 Candles")){
+//            title=title.replace("Chanukah: 2 Candles","Chanukah_2_Weekday");
+//        }else if (title.contains("Chanukah: 3 Candles")){
+//            title=title.replace("Chanukah: 3 Candles","Chanukah_3_Weekday");
+//        }else if (title.contains("Chanukah: 4 Candles")){
+//            title=title.replace("Chanukah: 4 Candles","Chanukah_4_Weekday");
+//        }else if (title.contains("Chanukah: 5 Candles")){
+//            title=title.replace("Chanukah: 5 Candles","Chanukah_5_Weekday");
+//        }else if (title.contains("Chanukah: 6 Candles")){
+//            title=title.replace("Chanukah: 6 Candles","Chanukah_6_Weekday");
+//        }
         else if (title.contains("Chanukah: 1 Candle")){
             title=title.replace("Chanukah: 1 Candle","Erev Chanukah");
         }else if (title.contains("Chanukah: 8th Day")) {
             title = title.replace("Chanukah: 8th Day", "Chanukah 8 Weekday");
-        } else if (title.contains("Chanukah: 2 Candles")){
-            title=title.replace("Chanukah: 2 Candles","Chanukah_2_Weekday");
-        }else if (title.contains("Chanukah: 3 Candles")){
-            title=title.replace("Chanukah: 3 Candles","Chanukah_3_Weekday");
-        }else if (title.contains("Chanukah: 4 Candles")){
-            title=title.replace("Chanukah: 4 Candles","Chanukah_4_Weekday");
-        }else if (title.contains("Chanukah: 5 Candles")){
-            title=title.replace("Chanukah: 5 Candles","Chanukah_5_Weekday");
-        }else if (title.contains("Chanukah: 6 Candles")){
-            title=title.replace("Chanukah: 6 Candles","Chanukah_6_Weekday");
-        }else if (title.contains("Chanukah: 7 Candles")){
-            title=title.replace("Chanukah: 7 Candles","Chanukah_7_Weekday");
-        }else if (title.contains("Chanukah: 8 Candles")){
-            title=title.replace("Chanukah: 8 Candles","Chanukah_8_Weekday");
+        } else if (title.contains("Chanukah_2_Weekday")){
+            title=title.replace("Chanukah_2_Weekday","Chanukah: 2 Candles");
+        }else if (title.contains("Chanukah_3_Weekday")){
+            title=title.replace("Chanukah_3_Weekday","Chanukah: 3 Candles");
+        }else if (title.contains("Chanukah_4_Weekday")){
+            title=title.replace("Chanukah_4_Weekday","Chanukah: 4 Candles");
+        }else if (title.contains("Chanukah_4_Weekday")){
+            title=title.replace("Chanukah_4_Weekday","Chanukah: 5 Candles");
+        }else if (title.contains("Chanukah_6_Weekday")){
+            title=title.replace("Chanukah_6_Weekday","Chanukah: 6 Candles");
+        }
+        else if (title.contains("Chanukah_7_Weekday")){
+            title=title.replace("Chanukah_7_Weekday","Chanukah: 7 Candles");
+        }else if (title.contains("Chanukah_8_Weekday")){
+            title=title.replace("Chanukah_8_Weekday","Chanukah: 8 Candles");
         }
 
         else if (title.contains("Shabbat Chazon")){
@@ -230,28 +251,21 @@ public  class EventTitle {
             subtitle =subtitle.replace("/","-");
         }
         if (subtitle.contains("_")){
-            subtitle =subtitle.replace("_","");
+            subtitle =subtitle.replace("_"," ");
         }
         return subtitle;
     }
 
 
-    public static final void applySubTitleLogic(ArrayList<ParseIsraelItemBean> parseIsraelItemBean){
 
-        ArrayList<ParseIsraelItemBean> specialEvent = parseIsraelItemBean;
-        ArrayList<ParseIsraelItemBean> comparableEvent = parseIsraelItemBean;
-        ArrayList<ParseIsraelItemBean> threeSpecialEvent = parseIsraelItemBean;
-
-        for (int i=0;i<parseIsraelItemBean.size();i++){
-            if ( parseIsraelItemBean.get(i).isSpecialDayForSubtitle()) {
-                specialEvent = parseIsraelItemBean;
-            }
-            if (parseIsraelItemBean.get(i).isComparableDayForSubTitle()) {
-                comparableEvent = parseIsraelItemBean;
-            }
+    public static boolean isSameDay(String date1, String date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The dates must not be null");
         }
 
+        return isSameDay(date1, date2);
     }
+
 
     public static final String htmlFileUrl = "file:///android_asset/";
 
@@ -477,34 +491,37 @@ public  class EventTitle {
 //                wvDetails.loadUrl("file:///android_asset/Leil_Selichot.html");
 //            } else if (eventName.contains("Machar Chodesh")) {
 //                wvDetails.loadUrl("file:///android_asset/Machar_Chodesh.html");
-//            } else if (eventName.contains("Pesach Chol Hamoed Day 2")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_3.html");
-//            } else if (eventName.contains("Pesach Chol Hamoed Day 1")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_2.html");
-//            } else if (eventName.contains("Pesach Chol Hamoed Day 3")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_4.html");
-//            } else if (eventName.contains("Pesach I")) {
-//
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_1.html");
-//            } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Friday.html");
-//            } else if (eventName.contains("Pesach Chol HaMoed Day 5 Friday")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Chol_Hamoed_Day_5_Weekday.html");
-//            } else if (eventName.contains("Pesach_Day_1")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Day_1_Shabbat.html");
-//            } else if (eventName.contains("Pesach VIII")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Day_1_Weekday.html");
-//            } else if (eventName.contains("Pesach_Day_7")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Day_7_Shabbat.html");
-//            } else if (eventName.contains("Pesach VII")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Day_7.html");
-//            } else if (eventName.contains("Pesach Sheini")) {
-//                wvDetails.loadUrl("file:///android_asset/Pesach_Sheini.html");
-//            } else if ((eventName.contains("Purim Katan")) || (eventName.contains("Katan"))) {
-//                wvDetails.loadUrl("file:///android_asset/Purim_Katan.html");
-//            } else if (eventName.contains("Purim")) {
-//                wvDetails.loadUrl("file:///android_asset/Purim.html");
-//            } else if (eventName.contains("Rosh Hashana I")) {
+//            }
+
+         else if (eventName.contains("Pesach Chol Hamoed Day 2")) {
+                url = htmlFileUrl+ "Pesach_Chol_Hamoed_Day_3.html";
+            } else if (eventName.contains("Pesach Chol Hamoed Day 1")) {
+                url = htmlFileUrl+ "Pesach_Chol_Hamoed_Day_2.html";
+            } else if (eventName.contains("Pesach Chol Hamoed Day 3")) {
+                url = htmlFileUrl+ "Pesach_Chol_Hamoed_Day_4.html";
+            } else if (eventName.contains("Pesach I")) {
+
+                url = htmlFileUrl+"Pesach_Chol_Hamoed_Day_1.html";
+            } else if (eventName.contains("Pesach Chol Hamoed Day 4")) {
+                url = htmlFileUrl+"Pesach_Chol_Hamoed_Day_5_Friday.html";
+            } else if (eventName.contains("Pesach Chol HaMoed Day 5 Friday")) {
+                url = htmlFileUrl+"Pesach_Chol_Hamoed_Day_5_Weekday.html";
+            } else if (eventName.contains("Pesach_Day_1")) {
+                url = htmlFileUrl+"Pesach_Day_1_Shabbat.html";
+            } else if (eventName.contains("Pesach VIII")) {
+                url = htmlFileUrl+ "Pesach_Day_1_Weekday.html";
+            } else if (eventName.contains("Pesach_Day_7")) {
+                url = htmlFileUrl+"Pesach_Day_7_Shabbat.html";
+            } else if (eventName.contains("Pesach VII")) {
+                url = htmlFileUrl+"Pesach_Day_7.html";
+            } else if (eventName.contains("Pesach Sheini")) {
+                url = htmlFileUrl+"Pesach_Sheini.html";
+            } else if ((eventName.contains("Purim Katan")) || (eventName.contains("Katan"))) {
+                url = htmlFileUrl+"Purim_Katan.html";
+            } else if (eventName.contains("Purim")) {
+                url = htmlFileUrl+"Purim.html";
+            }
+//            else if (eventName.contains("Rosh Hashana I")) {
 //                wvDetails.loadUrl("file:///android_asset/Rosh_Hashanah_1.html");
 //            } else if (eventName.contains("Rosh Hashanah 2")) {
 //                wvDetails.loadUrl("file:///android_asset/Rosh_Hashanah_2.html");

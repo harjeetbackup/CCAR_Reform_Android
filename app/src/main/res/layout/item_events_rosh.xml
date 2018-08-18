@@ -61,7 +61,7 @@
             android:maxLines="2"
             android:textColor="@color/colorBlack"
             tools:text="ghffgh gjhgh kjgjhgjh kjhg"
-            android:layout_marginLeft="@dimen/margin_5"
+            android:layout_marginLeft="8dp"
             android:layout_marginRight="@dimen/margin_5"
             android:textSize="10dp"
             android:visibility="gone"
@@ -69,7 +69,7 @@
             />
 
         </LinearLayout>
-        />
+
     </LinearLayout>
 
     <View
