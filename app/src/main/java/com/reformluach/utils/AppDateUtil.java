@@ -13,6 +13,23 @@ public class AppDateUtil {
     public static final DateTime getDateTime(String source) {
         return DateTime.parse(source, ISODateTimeFormat.dateTimeParser());
     }
+
+
+    public static final DateTime getDateTimeParashat(String source) {
+        return DateTime.parse(source, ISODateTimeFormat.dateTimeParser());
+    }
+
+
+    public static final DateTime getDateTimeShabbat(String source) {
+        return DateTime.parse(source, ISODateTimeFormat.dateTimeParser());
+    }
+
+
+    public static final DateTime getDateTimeRoshchodesh(String source) {
+        return DateTime.parse(source, ISODateTimeFormat.dateTimeParser());
+    }
+
+
     public static final boolean isToday(DateTime dateTime) {
         if(dateTime == null) {
             return false;

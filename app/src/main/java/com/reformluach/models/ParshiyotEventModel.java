@@ -5,60 +5,18 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ParshiyotEventModel implements Parcelable{
 
-public class ParseIsraelItemBean implements Parcelable{
-
-    /**
-     * date : 2020-01-04
-     * link : https://www.hebcal.com/sedrot/vayigash
-     * leyning : {"7":"Genesis 47:11 - 47:27","5":"Genesis 45:28 - 46:27","6":"Genesis 46:28 - 47:10","4":"Genesis 45:19 - 45:27","torah":"Genesis 44:18 - 47:27","1":"Genesis 44:18 - 44:30","2":"Genesis 44:31 - 45:7","haftarah":"Ezekiel 37:15 - 37:28","3":"Genesis 45:8 - 45:18","maftir":"Genesis 47:25 - 47:27"}
-     * hebrew : פרשת ויגש
-     * category : parashat
-     * title : Parashat Vayigash
-     * memo : Fast commemorating the siege of Jerusalem
-     * subcat : fast
-     * yomtov : true
-     */
 
     private String date;
     private String link;
-    private LeyningBean leyning;
+    private ParseIsraelItemBean.LeyningBean leyning;
     private String hebrew;
     private String category;
     private String title;
     private String memo;
     private String subcat;
     private boolean yomtov;
-
-    private String parashatDate ;
-    private String roshChodesh ;
-    private String shabbat ;
-
-    public String getShabbat() {
-        return shabbat;
-    }
-
-    public void setShabbat(String shabbat) {
-        this.shabbat = shabbat;
-    }
-
-    public String getRoshChodesh() {
-        return roshChodesh;
-    }
-
-    public void setRoshChodesh(String roshChodesh) {
-            this.roshChodesh = roshChodesh;
-    }
-
-    public String getParashatDate() {
-        return parashatDate;
-    }
-
-    public void setParashatDate(String parashatDate) {
-            this.parashatDate = parashatDate;
-    }
 
     private EventTitle replaceTitle;
 
@@ -86,11 +44,11 @@ public class ParseIsraelItemBean implements Parcelable{
         this.link = link;
     }
 
-    public LeyningBean getLeyning() {
+    public ParseIsraelItemBean.LeyningBean getLeyning() {
         return leyning;
     }
 
-    public void setLeyning(LeyningBean leyning) {
+    public void setLeyning(ParseIsraelItemBean.LeyningBean leyning) {
         this.leyning = leyning;
     }
 
@@ -143,27 +101,43 @@ public class ParseIsraelItemBean implements Parcelable{
     }
 
     public boolean isSpecialDayForSubtitle(){
-            if (title.contains("Shabbat Parah") || title.contains("Shabbat Sh'kalim") ||
-                    title.contains("Shabbat HaGadol") || title.contains("Shabbat Zachor") ||
-                    title.contains("Shabbat HaChodesh") || title.contains("Shabbat Shuva")
-                    || title.contains("Shabbat Chanukah") || title.startsWith("Chanukah")){
-
-                return true;
+        String newtitle = EventTitle.replaceRecievedTitle(title) ;
+        if (newtitle.contains("Shabbat Parah") || newtitle.contains("Shabbat Sh'kalim") ||
+                newtitle.contains("Shabbat HaGadol") || newtitle.contains("Shabbat Zachor") ||
+                newtitle.contains("Shabbat HaChodesh") || newtitle.contains("Shabbat Shuva")
+                || newtitle.contains("Shabbat Chanukah") || newtitle.startsWith("Chanukah")){
+            return true;
         }
         return false;
     }
 
     public boolean isComparableDayForSubTitle(){
-        if (title.startsWith("Parashat") || category.startsWith("parashat")){
+        String newtitle = EventTitle.replaceRecievedTitle(title) ;
+        if (newtitle.startsWith("Parashat") || category.startsWith("parashat")){
             return true;
         }
         return false;
     }
 
     public boolean isThreeEventsOfSpecialDayForSubTitle(){
-        if (title.startsWith("Rosh Chodesh")){
+        String newtitle = EventTitle.replaceRecievedTitle(title) ;
+        if (newtitle.startsWith("Rosh Chodesh")){
             return true;
         }
+        return false;
+    }
+
+    public boolean isThreeEventsOfDaySameForSubTitle(){
+        String shabbatHachodeshDate =date;
+        String shabbatRoshChodeshDate =date;
+        String parashatDate =date;
+
+        if (category.equalsIgnoreCase("parashat") && title.startsWith("Parashat") && title.startsWith("Rosh Chodesh")){
+            if (parashatDate.equals(shabbatRoshChodeshDate)){
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -175,43 +149,37 @@ public class ParseIsraelItemBean implements Parcelable{
     }
 
 
-    public static final Parcelable.Creator<ParseIsraelItemBean> CREATOR = new Parcelable.Creator<ParseIsraelItemBean>() {
+    public static final Parcelable.Creator<ParshiyotEventModel> CREATOR = new Parcelable.Creator<ParshiyotEventModel>() {
         @Override
-        public ParseIsraelItemBean createFromParcel(Parcel source) {
-            return new ParseIsraelItemBean(source);
+        public ParshiyotEventModel createFromParcel(Parcel source) {
+            return new ParshiyotEventModel(source);
         }
 
         @Override
-        public ParseIsraelItemBean[] newArray(int size) {
-            return new ParseIsraelItemBean[size];
+        public ParshiyotEventModel[] newArray(int size) {
+            return new ParshiyotEventModel[size];
         }
     };
 
-    public ParseIsraelItemBean(){
+    public ParshiyotEventModel(){
 
     }
 
-    public ParseIsraelItemBean(Parcel in) {
+    public ParshiyotEventModel(Parcel in) {
         this.date = in.readString();
         this.category = in.readString();
         this.title = in.readString();
         this.subcat = in.readString();
-        this.parashatDate = in.readString();
-        this.roshChodesh = in.readString();
-        this.shabbat = in.readString();
         this.replaceTitle = in.readParcelable(EventTitle.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-     parcel.writeString(this.category);
-     parcel.writeString(this.date);
-     parcel.writeString(this.title);
-     parcel.writeString(this.subcat);
-     parcel.writeString(this.parashatDate);
-     parcel.writeString(this.roshChodesh);
-     parcel.writeString(this.shabbat);
-     parcel.writeParcelable((Parcelable) this.replaceTitle, i);
+        parcel.writeString(this.category);
+        parcel.writeString(this.date);
+        parcel.writeString(this.title);
+        parcel.writeString(this.subcat);
+        parcel.writeParcelable((Parcelable) this.replaceTitle, i);
     }
 
     public static class LeyningBean {
@@ -326,5 +294,4 @@ public class ParseIsraelItemBean implements Parcelable{
             this.maftir = maftir;
         }
     }
-
 }

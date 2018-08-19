@@ -47,7 +47,7 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
 
         final EventListCalenderSync event = syncArrayList.get(position);
 
-        final boolean isSync = event.isSynced();
+        final boolean isSync = event.isSync();
         final boolean isSelected = event.isSelected();
 
         sportsView.checkBoxEvent.setText(event.getEventname());
@@ -123,6 +123,16 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
 
     public ArrayList<EventListCalenderSync>  getdata() {
         return syncArrayList;
+    }
+
+    public ArrayList<EventListCalenderSync> getSelectedData() {
+        ArrayList<EventListCalenderSync> arrayList = new ArrayList<>();
+        for(EventListCalenderSync event : syncArrayList) {
+            if(event.isSelected()) {
+                arrayList.add(event);
+            }
+        }
+        return arrayList;
     }
 
     public CalenderSyncEventsAdapter.OnEventSelected onEventSelect;

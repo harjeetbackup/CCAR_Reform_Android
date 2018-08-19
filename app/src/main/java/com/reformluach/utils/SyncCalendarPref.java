@@ -25,12 +25,12 @@ public class SyncCalendarPref {
         mEditor = mSharedPreference.edit();
     }
 
-    public boolean isEventSynced(String year, String holidayCatType) {
-        return mSharedPreference.getBoolean(year+delimeter+holidayCatType, false);
+    public boolean isEventSynced(String year, String holidayCatType, String calType) {
+        return mSharedPreference.getBoolean(year+delimeter+holidayCatType+delimeter+calType, false);
     }
 
-    public void successEventSyncStatus(String year, String holidayCatType, boolean syncStatus) {
-        mEditor.putBoolean(year+delimeter+holidayCatType, syncStatus);
+    public void successEventSyncStatus(String year, String holidayCatType, boolean syncStatus, String calType) {
+        mEditor.putBoolean(year+delimeter+holidayCatType+delimeter+calType, syncStatus);
         mEditor.commit();
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 
 import com.reformluach.R;
 import com.reformluach.activities.EventDetailsActivity;
+import com.reformluach.models.EventBean;
 import com.reformluach.models.EventTitle;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.typeface.CustomtextViewFontRegular;
@@ -32,7 +34,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     private ArrayList<ParseIsraelItemBean> mAllActualData;
 
     private ReloadAllDataListener reloadAllDataListener;
-     boolean your_date_is_outdated;
+
 
     public EventsIsraelAdapter(Context context, ArrayList<ParseIsraelItemBean> data) {
         this.context = context;
@@ -50,68 +52,136 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     public void onBindViewHolder(final EventsIsraelAdapter.ViewHolder holder, final int position) {
         final ParseIsraelItemBean model = mPopulatingData.get(position);
 
+        if (model==null){
+            return;
+        }
+        String title = model.getTitle();
+
         DateTime dateTime = AppDateUtil.getDateTime(model.getDate());
         String date_ddMMyyyy = AppDateUtil.onlyDate_ddMMyyyy(dateTime);
         holder.tvDate.setText(date_ddMMyyyy);
 
-        String date = model.getDate();
-        String category = model.getCategory();
-        String title = model.getTitle();
 
-        String sameEventDay ="";
+
+        ArrayList<ParseIsraelItemBean> parashatEventsData = new ArrayList<>();
+        ArrayList<ParseIsraelItemBean> shabbatEventsData = new ArrayList<>();
+
+        for (int i=0;i<mAllActualData.size();i++) {
+
+            ParseIsraelItemBean parashatEvents = mAllActualData.get(i);
+
+                if (parashatEvents.getTitle().startsWith("Parashat")) {
+                    parashatEventsData.add(parashatEvents);
+
+                    Log.i("", "" + parashatEventsData.size());
+
+                }
+                if (parashatEvents.getTitle().equals("Shabbat Parah") ||
+                        parashatEvents.getTitle().equals("Shabbat Sh'kalim") ||
+                        parashatEvents.getTitle().equals("Shabbat HaGadol") || parashatEvents.getTitle().equals("Shabbat Zachor") ||
+                        parashatEvents.getTitle().equals("Shabbat HaChodesh") || parashatEvents.getTitle().equals("Shabbat Shuva")
+                        || parashatEvents.getTitle().equals("Shabbat Chanukah") || parashatEvents.getTitle().startsWith("Chanukah")) {
+
+
+                    shabbatEventsData.add(parashatEvents);
+                    Log.i("", "" + shabbatEventsData.size());
+
+                }
+
+            if (parashatEventsData.size() != 0 && shabbatEventsData.size() != 0) {
+
+                // Loop arrayList2 items
+                for (ParseIsraelItemBean shabbat : shabbatEventsData) {
+                    // Loop arrayList1 items
+                    boolean found = false;
+                    DateTime dateTimeShabbat = AppDateUtil.getDateTime(shabbat.getDate());
+                    String date_ddMMyyyyShabbat = AppDateUtil.onlyDate_ddMMyyyy(dateTimeShabbat);
+                    for (ParseIsraelItemBean parashat : parashatEventsData) {
+                        DateTime dateTimeParashat = AppDateUtil.getDateTime(parashat.getDate());
+                        String date_ddMMyyyyParashat = AppDateUtil.onlyDate_ddMMyyyy(dateTimeParashat);
+                        if (date_ddMMyyyyParashat.equals(date_ddMMyyyyShabbat)) {
+//                            if (parashat.getTitle().startsWith("Parashat")) {
+                                holder.tvEventSubtitle.setText("The Haftarah for " + shabbat.getTitle() + " should be read.");
+                                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+                                holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+                                found = true;
+//                            }else if (shabbat.getTitle().equals("Shabbat Parah") ||
+//                                    shabbat.getTitle().equals("Shabbat Sh'kalim") ||
+//                                    shabbat.getTitle().equals("Shabbat HaGadol") || shabbat.getTitle().equals("Shabbat Zachor") ||
+//                                    shabbat.getTitle().equals("Shabbat HaChodesh") || shabbat.getTitle().equals("Shabbat Shuva")
+//                                    || shabbat.getTitle().equals("Shabbat Chanukah") || shabbat.getTitle().startsWith("Chanukah")){
+//                                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//                                holder.tvEventSubtitle.setVisibility(View.GONE);
+//                            }
+                        }else {
+                            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+                            holder.tvEventSubtitle.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+
+
+
+
+
+
+//            if (parashatdate.equals(shabbatdate)) {
+//
+//                if (title.startsWith("Parashat")) {
+//                    holder.tvEventSubtitle.setText("The Haftarah for " + title + " should be read.");
+//                    holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//                    holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+//                }
+//            } else {
+//                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.white_transparency));
+//                holder.tvEventSubtitle.setVisibility(View.GONE);
+//            }
 
         holder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
 
-         if (title.equals("Shabbat HaGadol")){
-            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
-            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-        }
-        else if (title.equals("Shabbat Sh'kalim")){
-            holder.tvEventSubtitle.setText("The Haftarah for "+EventTitle.replaceRecievedTitle(title)+ " should be read.");
-            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//        if (model.isSpecialDayForSubtitle()){
+//            holder.tvEventSubtitle.setText("The Haftarah for " + EventTitle.replaceRecievedTitle(title)+ " should be read.");
+//            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+//        }else {
+//            holder.tvEventSubtitle.setVisibility(View.GONE);
+//            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.white_transparency));
+//        }
 
-         }else if (title.equals("Shabbat Zachor")){
-             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Zachor should be read.");
-             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
 
-         }else if (title.equals("Shabbat HaChodesh")){
-             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Hachodesh should be read.");
-             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//       if (model.isComparableDayForSubTitle() && model.isThreeEventsOfSpecialDayForSubTitle() ){
+//           holder.tvEventSubtitle.setText("The Haftarah for Shabbat Rosh Codesh should be read.");
+//           holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//           holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+//       }
 
-         }else if (title.equals("Shabbat Shuva")){
-             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
-             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-         }else if (title.equals("Shabbat Parah")){
-             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read.");
-             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-         }else if (title.equals("Shabbat Hachodesh") && title.equals("Shabbat Rosh Chodesh") == sameEventDay.equalsIgnoreCase(date) ){
-//             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Shuva should be read){
-             holder.tvEventSubtitle.setText("The Haftarah for Shabbat Rosh Codesh should be read.");
-             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-         }
-         else {
-             holder.llMain.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
-         }
+//       if (EventTitle.applyForSubtitleLogic(mAllActualData)){
+//           holder.tvEventSubtitle.setText("The Haftarah for Shabbat Rosh Codesh should be read.");
+//           holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//           holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+//       }
 
 
         holder.llMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(context, EventDetailsActivity.class);
                 intent.putExtra("eventName", mPopulatingData.get(position).getTitle());
                 intent.putExtra("eventType", mPopulatingData.get(position).getCategory());
                 intent.putExtra("eventDate", mPopulatingData.get(position).getDate());
                 ((Activity)context).startActivity(intent);
+
             }
         });
     }
+
+
 
 
 
