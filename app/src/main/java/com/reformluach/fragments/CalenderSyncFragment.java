@@ -45,20 +45,13 @@ import com.reformluach.activities.SettingsActivity;
 import com.reformluach.adapters.AdapterCustomEventsList;
 import com.reformluach.adapters.CalenderPagerAdapter;
 import com.reformluach.adapters.CalenderSyncEventsAdapter;
-import com.reformluach.models.CalenderSyncModel;
-import com.reformluach.models.CustomEventsList;
-import com.reformluach.models.EventDetailModel;
 import com.reformluach.models.EventListCalenderSync;
-import com.reformluach.models.MajorHolidays;
-import com.reformluach.models.ModelEventName;
 import com.reformluach.models.ModelForYear;
-import com.reformluach.models.ParseEventsModel;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
-import com.reformluach.typeface.CustomCheckBoxRegular;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
-import com.reformluach.utils.SharedPreferencesCalenderSync;
+import com.reformluach.utils.SyncCalendarPref;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +59,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -97,6 +91,9 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     private ArrayList<ParseIsraelItemBean> dataToSync = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> itemBeanArrayList = new ArrayList<>();
 
+    private ArrayList<ModelForYear> mYearsList = new ArrayList<>();
+    private Map<String, ArrayList<EventListCalenderSync>> mYearsHolidayCatMap = new HashMap<>();
+
 
     @Nullable
     @Override
@@ -117,7 +114,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 tvCalenderType.setText("D");
 
             } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                getAllEventsIsrael(setSelectedYear);
+                getAllEventsIsrael(mSelectedYear);
                 tvCalenderType.setText("I");
             }
 
@@ -146,58 +143,59 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         }
     }
 
-    private int getMonthInt(String month) {
-        if (month.equalsIgnoreCase("January")) {
-            return 1;
-        } else if (month.equalsIgnoreCase("February")) {
-            return 2;
-        } else if (month.equalsIgnoreCase("March")) {
-            return 3;
-        } else if (month.equalsIgnoreCase("April")) {
-            return 4;
-        } else if (month.equalsIgnoreCase("May")) {
-            return 5;
-        } else if (month.equalsIgnoreCase("June")) {
-            return 6;
-        } else if (month.equalsIgnoreCase("July")) {
-            return 7;
-        } else if (month.equalsIgnoreCase("August")) {
-            return 8;
-        } else if (month.equalsIgnoreCase("September")) {
-            return 9;
-        } else if (month.equalsIgnoreCase("October")) {
-            return 10;
-        } else if (month.equalsIgnoreCase("November")) {
-            return 11;
-        } else if (month.equalsIgnoreCase("December")) {
-            return 12;
-        }
-        return 0;
-    }
 
-
-    String setSelectedYear = "";
+    String mSelectedYear = "";
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvCalenderType = calanderSyncFragmentView.findViewById(R.id.txtCalenderType);
 
 
-        String year = "";
+//        String year = "";
 
         Calendar calendar = Calendar.getInstance();
-        int yearCount = calendar.get(Calendar.YEAR);
+        int year = calendar.get(Calendar.YEAR);
 
-
-        ArrayList<ModelForYear> modelForYears = new ArrayList<>();
-        for (int i=0;i<=3;i++){
-            year = String.valueOf(yearCount);
-
+        for (int i=0;i<=3;i++) {
             ModelForYear modelForYear = new ModelForYear();
-            modelForYear.setYear(year);
-            modelForYears.add(modelForYear);
+            String yearStr = ""+year;
+            modelForYear.setYear(yearStr);
+            if(i ==0) {
+                modelForYear.setSelected(true);
+                mSelectedYear = yearStr;
+            }
+            mYearsList.add(modelForYear);
 
-            yearCount = yearCount+1;
+
+            ArrayList<EventListCalenderSync> eventListCalenderSyncArrayList = new ArrayList<>();
+
+
+
+            // Add item to adapter
+            EventListCalenderSync newUser1 = new EventListCalenderSync("Major Holidays", "");
+            EventListCalenderSync newUser2 = new EventListCalenderSync("Minor Holidays", "(Tu B'Sh'vat, Lag Ba'Omer,...)");
+            EventListCalenderSync newUser3 = new EventListCalenderSync("Rosh Chodesh", "");
+            EventListCalenderSync newUser4 = new EventListCalenderSync("Weekly Parshiyot","");
+            EventListCalenderSync newUser5 = new EventListCalenderSync("Sefirat Ha'Omer","");
+            EventListCalenderSync newUser6 = new EventListCalenderSync("Special Shabatot","(Shabbat Sh'kalim, Zachor,...)");
+            EventListCalenderSync newUser7 = new EventListCalenderSync("Modern Holidays","(Yom HaShoah V'hag'vurah, Yom Ha'atzma'ut,...)");
+
+            eventListCalenderSyncArrayList.add(newUser1);
+            eventListCalenderSyncArrayList.add(newUser2);
+            eventListCalenderSyncArrayList.add(newUser3);
+            eventListCalenderSyncArrayList.add(newUser4);
+            eventListCalenderSyncArrayList.add(newUser5);
+            eventListCalenderSyncArrayList.add(newUser6);
+            eventListCalenderSyncArrayList.add(newUser7);
+
+            for(EventListCalenderSync event : eventListCalenderSyncArrayList) {
+                boolean isSync = SyncCalendarPref.getInstance(getActivity()).isEventSynced(yearStr, event.getEventname());
+                event.setSynced(isSync);
+            }
+
+            mYearsHolidayCatMap.put(""+year, eventListCalenderSyncArrayList);
+
+            year++;
         }
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -206,10 +204,9 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         layoutManager.setStackFromEnd(true);
         layoutManager.setReverseLayout(false);
 
-        calenderPagerAdapter = new CalenderPagerAdapter(getActivity(),modelForYears,this);
+        calenderPagerAdapter = new CalenderPagerAdapter(getActivity(), mYearsList,this);
         recyclerViewYear.setAdapter(calenderPagerAdapter);
         calenderPagerAdapter.setOnYearSelect(this);
-
 
 
         final LinearLayoutManager layoutManagerEvent = new LinearLayoutManager(getActivity());
@@ -218,28 +215,8 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         layoutManagerEvent.setStackFromEnd(true);
         layoutManagerEvent.setReverseLayout(false);
 
-        ArrayList<EventListCalenderSync> eventListCalenderSyncArrayList = new ArrayList<>();
-
-        // Add item to adapter
-        EventListCalenderSync newUser1 = new EventListCalenderSync("Major Holidays", "");
-        EventListCalenderSync newUser2 = new EventListCalenderSync("Minor Holidays", "(Tu B'Sh'vat, Lag Ba'Omer,...)");
-        EventListCalenderSync newUser3 = new EventListCalenderSync("Rosh Chodesh", "");
-        EventListCalenderSync newUser4 = new EventListCalenderSync("Weekly Parshiyot","");
-        EventListCalenderSync newUser5 = new EventListCalenderSync("Sefirat Ha'Omer","");
-        EventListCalenderSync newUser6 = new EventListCalenderSync("Special Shabatot","(Shabbat Sh'kalim, Zachor,...)");
-        EventListCalenderSync newUser7 = new EventListCalenderSync("Modern Holidays","(Yom HaShoah V'hag'vurah, Yom Ha'atzma'ut,...)");
-
-
-        eventListCalenderSyncArrayList.add(newUser1);
-        eventListCalenderSyncArrayList.add(newUser2);
-        eventListCalenderSyncArrayList.add(newUser3);
-        eventListCalenderSyncArrayList.add(newUser4);
-        eventListCalenderSyncArrayList.add(newUser5);
-        eventListCalenderSyncArrayList.add(newUser6);
-        eventListCalenderSyncArrayList.add(newUser7);
-
-
-        calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(),eventListCalenderSyncArrayList,this);
+        calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(),
+                mYearsHolidayCatMap.get(mSelectedYear),this);
         recyclerViewEventName.setAdapter(calenderSyncEventsAdapter);
     }
 
@@ -303,33 +280,23 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         }
     }
 
-    CalenderPagerAdapter.OnYearSelected onYearSelected;
     @Override
     public void onYearSelected(boolean isSelected, ModelForYear bean) {
-
-        ArrayList<ModelForYear> modelForYearArrayList = new ArrayList<>();
-        calenderPagerAdapter.setOnYearSelect(onYearSelected);
-            if (isSelected) {
-                setSelectedYear = bean.getYear();
-                bean.setYear(setSelectedYear);
-                modelForYearArrayList.add(bean);
-                getAllEventsIsrael(bean.getYear());
-            }
+        mSelectedYear = bean.getYear();
+        calenderSyncEventsAdapter.updateData(mYearsHolidayCatMap.get(mSelectedYear));
     }
 
-    ArrayList<EventListCalenderSync> eventSyncArrayList  = new ArrayList<>();
-    CalenderSyncEventsAdapter.OnEventSelected onEventSelected;
     @Override
-    public void onEventSelected(boolean isSelected,EventListCalenderSync bean) {
+    public void onEventSelected(EventListCalenderSync bean) {
 
-        eventSyncArrayList = calenderSyncEventsAdapter.getdata();
-        calenderSyncEventsAdapter.setOnEventSelect(onEventSelected);
 
     }
+
+
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btnDownloadEvents:
                 getCheckedItems();
                 new CalenderAsync().execute();
@@ -341,60 +308,58 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     public ArrayList<ParseIsraelItemBean> getCheckedItems() {
 //        ArrayList<ParseIsraelItemBean> checkedItems = new ArrayList<>();
 
-        final ArrayList<ParseIsraelItemBean> majorList = SharedPreferencesCalenderSync.getInstance(getActivity()).getArrayList("majorHolidays");
-
         for (ParseIsraelItemBean parseItemBean : itemBeanArrayList) {
             String eventSubCateg = parseItemBean.getSubcat();
             String eventCateg = parseItemBean.getCategory();
 
-                for (int i=0;i<eventSyncArrayList.size();i++){
+                /*for (int i=0;i<eventSyncArrayList.size();i++) {
                     EventListCalenderSync eventListCalenderSync = eventSyncArrayList.get(i);
 
                     boolean slectedEvent = eventSyncArrayList.get(i).isSelected();
-                if (eventListCalenderSync.getEventname().equals("Major Holidays") && slectedEvent==true) {
-                    if (eventCateg.equals("holiday") && eventSubCateg.equals("major")) {
-                        checkedItems.add(parseItemBean);
-                    }
-                }
-
-                if (eventListCalenderSync.getEventname().equals("Minor Holidays") && slectedEvent==true) {
-                    if (eventCateg.equals("holiday") && eventSubCateg.equals("minor")) {
-                        checkedItems.add(parseItemBean);
+                    if (eventListCalenderSync.getEventname().equals("Major Holidays") && slectedEvent == true) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("major")) {
+                            checkedItems.add(parseItemBean);
+                        }
                     }
 
-                }
+                    if (eventListCalenderSync.getEventname().equals("Minor Holidays") && slectedEvent == true) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("minor")) {
+                            checkedItems.add(parseItemBean);
+                        }
 
-                if (eventListCalenderSync.getEventname().equals("Weekly Parshiyot") && slectedEvent==true) {
-                    if (eventCateg.equals("parashat")) {
-                        checkedItems.add(parseItemBean);
                     }
-                }
 
-                if (eventListCalenderSync.getEventname().equals("Rosh Chodesh") && slectedEvent==true) {
-                    if (eventCateg.equals("roshchodesh")) {
-                        checkedItems.add(parseItemBean);
+                    if (eventListCalenderSync.getEventname().equals("Weekly Parshiyot") && slectedEvent == true) {
+                        if (eventCateg.equals("parashat")) {
+                            checkedItems.add(parseItemBean);
+                        }
                     }
-                }
 
-                if (eventListCalenderSync.getEventname().equals("Sefirat Ha'Omer") && slectedEvent==true) {
-                    if (eventCateg.equals("omer")) {
-                        checkedItems.add(parseItemBean);
+                    if (eventListCalenderSync.getEventname().equals("Rosh Chodesh") && slectedEvent == true) {
+                        if (eventCateg.equals("roshchodesh")) {
+                            checkedItems.add(parseItemBean);
+                        }
                     }
-                }
 
-                if (eventListCalenderSync.getEventname().equals("Special Shabatot") && slectedEvent==true) {
-                    if (eventCateg.equals("holiday") && eventSubCateg.equals("shabbat")) {
-                        checkedItems.add(parseItemBean);
+                    if (eventListCalenderSync.getEventname().equals("Sefirat Ha'Omer") && slectedEvent == true) {
+                        if (eventCateg.equals("omer")) {
+                            checkedItems.add(parseItemBean);
+                        }
                     }
-                }
-                if (eventListCalenderSync.getEventname().equals("Modern Holidays") && slectedEvent==true) {
-                    if (eventCateg.equals("holiday") && eventSubCateg.equals("modern")) {
-                        checkedItems.add(parseItemBean);
+
+                    if (eventListCalenderSync.getEventname().equals("Special Shabatot") && slectedEvent == true) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("shabbat")) {
+                            checkedItems.add(parseItemBean);
+                        }
                     }
-                }
+                    if (eventListCalenderSync.getEventname().equals("Modern Holidays") && slectedEvent == true) {
+                        if (eventCateg.equals("holiday") && eventSubCateg.equals("modern")) {
+                            checkedItems.add(parseItemBean);
+                        }
+                    }
 
 
-            }
+                }*/
 
         }
         return checkedItems;
@@ -408,7 +373,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
     public void getAllEventsIsrael(String year) {
 
-        String url = Url.israelUrlBeforeDate+setSelectedYear+Url.israelUrlAfterDate;
+        String url = Url.israelUrlBeforeDate+ mSelectedYear +Url.israelUrlAfterDate;
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -456,7 +421,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
     private void getAllEventsDispora() {
 
-        String url = Url.disporaUrlBeforeDate + setSelectedYear + Url.disporaUrlAfterDate;
+        String url = Url.disporaUrlBeforeDate + mSelectedYear + Url.disporaUrlAfterDate;
         // Try to parse JSON
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -684,8 +649,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                     addReminderInCalendar(timestamp, event);
 
                     }
-                SharedPreferencesCalenderSync.getInstance(getActivity()).saveArrayList(checkedItems,"CalenderEvent");
-                SharedPreferencesCalenderSync.getInstance(getActivity()).saveData(setSelectedYear,"EventYear");
                 }
             return null;
         }
@@ -718,7 +681,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                     tvCalenderType.setText("D");
 
                 } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    getAllEventsIsrael(setSelectedYear);
+                    getAllEventsIsrael(mSelectedYear);
                     tvCalenderType.setText("I");
                 }
                 getIds(calanderSyncFragmentView);

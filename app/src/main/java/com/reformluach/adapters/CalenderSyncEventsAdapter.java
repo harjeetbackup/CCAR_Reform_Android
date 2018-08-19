@@ -21,8 +21,6 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
     Context context;
 
     ArrayList<EventListCalenderSync> syncArrayList = new ArrayList<>();
-    ArrayList<EventListCalenderSync> selectedEventLists = new ArrayList<>();
-    private ArrayList<String> selectedIds = new ArrayList<>();
 
 
 
@@ -30,26 +28,6 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
         this.context = context;
         this.syncArrayList = arrayList;
         this.onEventSelect = onEventSelected;
-
-
-//        this.selectedEventLists = selectedEventLists;
-//
-//        if (selectedEventLists.size() >= 1) {
-//
-//            for (int i = 0; i < selectedEventLists.size(); i++) {
-//                selectedIds.add(selectedEventLists.get(i).getEventname());
-//            }
-//        }
-//
-//        for (EventListCalenderSync bean : syncArrayList) {
-//
-//            final String id = bean.getEventname();
-//
-//            if (selectedIds.contains(id)) {
-//                int indexOf = syncArrayList.indexOf(id);
-//                syncArrayList.get(indexOf).setSelected(true);
-//            }
-//        }
     }
 
     @Override
@@ -66,36 +44,36 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
     @Override
     public void onBindViewHolder(final EventsView holder, final int position) {
         final CalenderSyncEventsAdapter.EventsView sportsView = (CalenderSyncEventsAdapter.EventsView) holder;
-          EventListCalenderSync event = syncArrayList.get(position);
+
+        final EventListCalenderSync event = syncArrayList.get(position);
+
+        final boolean isSync = event.isSynced();
+        final boolean isSelected = event.isSelected();
 
         sportsView.checkBoxEvent.setText(event.getEventname());
         sportsView.txtSubTitle.setText(event.getSubTitle());
 
 //        holder.setIsRecyclable(true);
-        final boolean isSelected = syncArrayList.get(position).isSelected();
 
-        if (isSelected){
+        if(isSync) {
             sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.checkboxsel));
-        }
-        else {
+            sportsView.checkBoxEvent.setEnabled(false);
+        } else if(isSelected){
+            sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.checkboxsel));
+            sportsView.checkBoxEvent.setEnabled(true);
+        } else {
             sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.checkboxunsel));
+            sportsView.checkBoxEvent.setEnabled(true);
         }
 
         sportsView.checkBoxEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventListCalenderSync bean = syncArrayList.get(position);
-                syncArrayList.get(position).setSelected(!bean.isSelected());
-                bean.setEventname(syncArrayList.get(position).getEventname());
-                notifyDataSetChanged();
-
-                notifyItemChanged(position);
-
                     if (onEventSelect!=null) {
-                        onEventSelect.onEventSelected(isSelected,bean);
-                }
-                notifyDataSetChanged();
-
+                        event.setSelected(!event.isSelected());
+                        onEventSelect.onEventSelected(event);
+                        notifyDataSetChanged();
+                    }
             }
         });
 
@@ -138,6 +116,11 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
 //        }
 //    }
 
+    public void updateData(ArrayList<EventListCalenderSync> arrayList) {
+        syncArrayList = arrayList;
+        notifyDataSetChanged();
+    }
+
     public ArrayList<EventListCalenderSync>  getdata() {
         return syncArrayList;
     }
@@ -149,7 +132,7 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
     }
 
     public interface OnEventSelected {
-        void onEventSelected(boolean isSelected,EventListCalenderSync bean);
+        void onEventSelected(EventListCalenderSync bean);
     }
 
 //    public interface OnEventSelected {

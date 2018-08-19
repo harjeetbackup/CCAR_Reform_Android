@@ -6,6 +6,7 @@ public class EventListCalenderSync {
     String eventname;
     String subTitle;
     boolean isSelected;
+    boolean isSynced;
 
     public boolean isSelected() {
         return isSelected;
@@ -35,5 +36,13 @@ public class EventListCalenderSync {
 
     public void setEventname(String eventname) {
         this.eventname =eventname;
+    }
+
+    public boolean isSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(boolean synced) {
+        isSynced = synced;
     }
 }
