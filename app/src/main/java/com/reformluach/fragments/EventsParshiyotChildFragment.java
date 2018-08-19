@@ -49,7 +49,7 @@ public class EventsParshiyotChildFragment extends Fragment  {
     private View eventsParshiyotFragmentView;
     private Context context;
     private RecyclerView rv_events_parshiyot;
-    private EditText searchEditText;
+//    private EditText searchEditText;
     private Controller controller;
 
     private int yearCount = 0;
@@ -74,7 +74,7 @@ public class EventsParshiyotChildFragment extends Fragment  {
         context = eventsParshiyotFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
         rv_events_parshiyot = eventsParshiyotFragmentView.findViewById(R.id.rv_events_parshiyot);
-        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+//        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
 
         tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
         initViews(eventsParshiyotFragmentView);
@@ -132,13 +132,17 @@ public class EventsParshiyotChildFragment extends Fragment  {
             showFullData();
             isFilterEnable = false;
         }
+
+        if(isVisible) {
+            registerSearch();
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
-        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+//        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
     }
 
     private void getAllEventsReformParshiyot(){
@@ -440,71 +444,71 @@ public class EventsParshiyotChildFragment extends Fragment  {
             public void onClick(View v) {
 
                 if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
+//                    searchEditText.getText().clear();
                     isFilterEnable=false;
 //                    getAllEventsOfReformCalender();
                     getAllEventsReformParshiyot();
 
                 }
                 else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
+//                    searchEditText.getText().clear();
                     isFilterEnable=false;
                     getAllEventsDispora();
 
                 } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
+//                    searchEditText.getText().clear();
                     isFilterEnable=false;
                     getAllEventsIsrael();
                 }
-                if (searchEditText.getText().length()==0){
-                    searchEditText.getText().clear();
-                    showFullData();
-                    isFilterEnable=false;
-
-                }
+//                if (searchEditText.getText().length()==0){
+//                    searchEditText.getText().clear();
+//                    showFullData();
+//                    isFilterEnable=false;
+//
+//                }
             }
         });
 
 //
 
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-
-                    if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
-                            callRefreshIsrael(searchEditText.getText().toString());
-                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-                        }
-                    }
-                   else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
-                            callRefreshIsrael(searchEditText.getText().toString());
-                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-                        }
-                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
-                            callRefreshIsrael(searchEditText.getText().toString());
-                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-                        }
-
-                    }
-
-
-                    if (searchEditText.getText().length()==0){
-                        showFullData();
-                        isFilterEnable=false;
-
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
+//        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//
+//                    if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+//                        if (searchEditText.getText().length()!=0) {
+//                            callRefreshIsrael(searchEditText.getText().toString());
+//                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//                        }
+//                    }
+//                   else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//                        if (searchEditText.getText().length()!=0) {
+//                            callRefreshIsrael(searchEditText.getText().toString());
+//                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//                        }
+//                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+//                        if (searchEditText.getText().length()!=0) {
+//                            callRefreshIsrael(searchEditText.getText().toString());
+//                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+//                        }
+//
+//                    }
+//
+//
+//                    if (searchEditText.getText().length()==0){
+//                        showFullData();
+//                        isFilterEnable=false;
+//
+//                    }
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
 
     }
@@ -563,5 +567,51 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
     }
 
+    private void registerSearch() {
+        if((EventsFragment) getParentFragment() == null || ((EventsFragment) getParentFragment()).events_search_edittext == null ) {
+            return;
+        }
+        final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+                        if (searchEditText.getText().length()!=0) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
+                    }
+                    else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                        if (searchEditText.getText().length()!=0) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
+                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                        if (searchEditText.getText().length()!=0) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
+
+                    }
+
+                    if (searchEditText.getText().length()==0){
+                        showFullData();
+                        isFilterEnable=false;
+
+                    }
+
+                    return true;
+                }
+
+
+                return false;
+            }
+        });
+    }
 
 }
