@@ -68,65 +68,59 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
 
         for (int i=0;i<mAllActualData.size();i++) {
 
-            String comparingParashatDate = "";
-            String comparingShabbatDate = "";
-            String comparingShabbatTitle = "";
-
             ParseIsraelItemBean parashatEvents = mAllActualData.get(i);
-//            ParseIsraelItemBean shabbatEvents = mAllActualData.get(i);
 
-            if (parashatEvents.getTitle().startsWith("Parashat")) {
-                DateTime dateTimeComparing = AppDateUtil.getDateTime(parashatEvents.getDate());
-                String eventDate = AppDateUtil.onlyDate_ddMMyyyy(dateTimeComparing);
-                comparingParashatDate = eventDate;
-                parashatEventsData.add(parashatEvents);
-                String shabbatEventName = parashatEvents.getTitle();
+                if (parashatEvents.getTitle().startsWith("Parashat")) {
+                    parashatEventsData.add(parashatEvents);
 
-                Log.i("",""+parashatEventsData.size());
+                    Log.i("", "" + parashatEventsData.size());
 
                 }
-            if ( parashatEvents.getTitle().equals("Shabbat Parah") ||
-                    parashatEvents.getTitle().equals("Shabbat Sh'kalim") ||
-                    parashatEvents.getTitle().equals("Shabbat HaGadol") || parashatEvents.getTitle().equals("Shabbat Zachor") ||
-                    parashatEvents.getTitle().equals("Shabbat HaChodesh") || parashatEvents.getTitle().equals("Shabbat Shuva")
-                    || parashatEvents.getTitle().equals("Shabbat Chanukah") || parashatEvents.getTitle().startsWith("Chanukah")) {
-
-                String shabbatEventName = parashatEvents.getTitle();
-                String shabbatEventDate = parashatEvents.getDate();
-                DateTime dateTimeComparing = AppDateUtil.getDateTime(shabbatEventDate);
-                String shabbatConvertedEventDate = AppDateUtil.onlyDate_ddMMyyyy(dateTimeComparing);
-                comparingShabbatTitle = shabbatEventName;
-                comparingShabbatDate = shabbatConvertedEventDate;
-
-                shabbatEventsData.add(parashatEvents);
-                Log.i("",""+shabbatEventsData.size());
+                if (parashatEvents.getTitle().equals("Shabbat Parah") ||
+                        parashatEvents.getTitle().equals("Shabbat Sh'kalim") ||
+                        parashatEvents.getTitle().equals("Shabbat HaGadol") || parashatEvents.getTitle().equals("Shabbat Zachor") ||
+                        parashatEvents.getTitle().equals("Shabbat HaChodesh") || parashatEvents.getTitle().equals("Shabbat Shuva")
+                        || parashatEvents.getTitle().equals("Shabbat Chanukah") || parashatEvents.getTitle().startsWith("Chanukah")) {
 
 
+                    shabbatEventsData.add(parashatEvents);
+                    Log.i("", "" + shabbatEventsData.size());
+
+                }
+
+            if (parashatEventsData.size() != 0 && shabbatEventsData.size() != 0) {
+
+                // Loop arrayList2 items
+                for (ParseIsraelItemBean shabbat : shabbatEventsData) {
+                    // Loop arrayList1 items
+                    boolean found = false;
+                    DateTime dateTimeShabbat = AppDateUtil.getDateTime(shabbat.getDate());
+                    String date_ddMMyyyyShabbat = AppDateUtil.onlyDate_ddMMyyyy(dateTimeShabbat);
+                    for (ParseIsraelItemBean parashat : parashatEventsData) {
+                        DateTime dateTimeParashat = AppDateUtil.getDateTime(parashat.getDate());
+                        String date_ddMMyyyyParashat = AppDateUtil.onlyDate_ddMMyyyy(dateTimeParashat);
+                        if (date_ddMMyyyyParashat.equals(date_ddMMyyyyShabbat)) {
+//                            if (parashat.getTitle().startsWith("Parashat")) {
+                                holder.tvEventSubtitle.setText("The Haftarah for " + shabbat.getTitle() + " should be read.");
+                                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+                                holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+                                found = true;
+//                            }else if (shabbat.getTitle().equals("Shabbat Parah") ||
+//                                    shabbat.getTitle().equals("Shabbat Sh'kalim") ||
+//                                    shabbat.getTitle().equals("Shabbat HaGadol") || shabbat.getTitle().equals("Shabbat Zachor") ||
+//                                    shabbat.getTitle().equals("Shabbat HaChodesh") || shabbat.getTitle().equals("Shabbat Shuva")
+//                                    || shabbat.getTitle().equals("Shabbat Chanukah") || shabbat.getTitle().startsWith("Chanukah")){
+//                                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
+//                                holder.tvEventSubtitle.setVisibility(View.GONE);
+//                            }
+                        }else {
+                            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+                            holder.tvEventSubtitle.setVisibility(View.GONE);
+                        }
+                    }
+                }
             }
 
-//            if (parashatEventsData.size()!=0 && shabbatEventsData.size()!=0) {
-//
-//                if (comparingParashatDate.equals(comparingShabbatDate)) {
-//                if (parashatEvents.getTitle().startsWith("Parashat")) {
-//
-//
-//                        holder.tvEventSubtitle.setText("The Haftarah for " + comparingShabbatTitle + " should be read.");
-//                        holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-//                        holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//                if (shabbatEvents.getTitle().equals("Shabbat Parah") ||
-//                        shabbatEvents.getTitle().equals("Shabbat Sh'kalim") ||
-//                        shabbatEvents.getTitle().equals("Shabbat HaGadol") || shabbatEvents.getTitle().equals("Shabbat Zachor") ||
-//                        shabbatEvents.getTitle().equals("Shabbat HaChodesh") || shabbatEvents.getTitle().equals("Shabbat Shuva")
-//                        || shabbatEvents.getTitle().equals("Shabbat Chanukah") || shabbatEvents.getTitle().startsWith("Chanukah")) {
-//
-//                    if (comparingParashatDate.equals(comparingShabbatDate)) {
-//                        holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-//                        holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
 
         }
 

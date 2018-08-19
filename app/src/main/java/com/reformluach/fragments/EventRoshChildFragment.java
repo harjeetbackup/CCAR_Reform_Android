@@ -728,9 +728,6 @@ public class EventRoshChildFragment extends Fragment  {
                 pageCount = 0;
 
                 getAllEventsReform();
-//                getAllEventsDisporahTorah();
-//                getAllEventsDisporahTorahSpecial();
-//                getAllEventsOfReformCalender();
             }
 
         }
