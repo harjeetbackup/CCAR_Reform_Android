@@ -278,8 +278,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         recyclerViewYear.setAdapter(calenderPagerAdapter);
         calenderPagerAdapter.setOnYearSelect(this);
 
-
-
         final LinearLayoutManager layoutManagerEvent = new LinearLayoutManager(getActivity());
         layoutManagerEvent.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewEventName.setLayoutManager(layoutManagerEvent);

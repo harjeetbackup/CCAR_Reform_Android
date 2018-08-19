@@ -147,6 +147,7 @@ public class EventRoshChildFragment extends Fragment  {
 //        String todayAsString = dateFormat.format(today);
 //        String tomorrowAsString = dateFormat.format(tomorrow);
 //
+
 //        if (comparingDate.contains(todayAsString) || comparingDate.contains(tomorrowAsString)) {
 //            int firstItem = layoutManager.findFirstVisibleItemPosition();
 //            View firstItemView = layoutManager.findViewByPosition(firstItem);
