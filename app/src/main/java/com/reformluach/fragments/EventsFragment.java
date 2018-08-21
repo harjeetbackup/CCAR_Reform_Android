@@ -50,6 +50,7 @@ public class EventsFragment extends Fragment {
     private ImageButton imgBtnSetting;
     private TabLayout tabLayout;
     private boolean isVisible;
+    public TextView tvEventCalenderType;
 
 
     @Nullable
@@ -72,6 +73,8 @@ public class EventsFragment extends Fragment {
         tvDate = rootView.findViewById(R.id.tvDate);
         tvCancel = rootView.findViewById(R.id.tvCancelEvents);
         llMain = rootView.findViewById(R.id.llMain);
+
+        tvEventCalenderType = rootView.findViewById(R.id.tvEventCalenderType);
 
         imgBtnSetting = rootView.findViewById(R.id.ImgBtnSetting);
 

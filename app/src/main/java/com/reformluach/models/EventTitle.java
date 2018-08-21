@@ -272,9 +272,6 @@ public  class EventTitle {
     public static final String loadHtmlFile(String eventType,String eventName,String eventDate) {
         String url = null;
 
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-//        Date d = new Date();
-//        String dayOfTheWeek = sdf.format(d);
 
         DateFormat format = new SimpleDateFormat(eventDate);
     Calendar calendar = Calendar.getInstance();
@@ -294,8 +291,6 @@ public  class EventTitle {
 //        e04.setText(days[4]);
 //        e05.setText(days[5]);
 //        e06.setText(days[6]);
-//
-
 
     }
 

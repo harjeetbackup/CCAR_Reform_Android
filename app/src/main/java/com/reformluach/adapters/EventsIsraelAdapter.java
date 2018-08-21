@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapter.ViewHolder>{
     private final Context context;
@@ -48,6 +49,46 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         return new EventsIsraelAdapter.ViewHolder(view);
     }
 
+    private String getDay(String date_in_string_format){
+        DateFormat df = DateFormat.getDateInstance();
+        Date date;
+        try {
+            date = df.parse(date_in_string_format);
+        } catch (Exception e) {
+            Log.e("Error:","Exception " + e);
+            return null;
+        }
+        return new SimpleDateFormat("EEEE").format(date);
+    }
+
+    private Date getDateFromSpecificFormat(String dateStr, SimpleDateFormat sdf) {
+        try {
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
+    private int getYear(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.YEAR);
+    }
+
+    private int getMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        // return cal.get(Calendar.MONTH)-1;
+        return cal.get(Calendar.MONTH);
+    }
+
+    private int getDayOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
     @Override
     public void onBindViewHolder(final EventsIsraelAdapter.ViewHolder holder, final int position) {
         final ParseIsraelItemBean model = mPopulatingData.get(position);
@@ -62,6 +103,51 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         holder.tvDate.setText(date_ddMMyyyy);
 
 
+//        SimpleDateFormat inFormat = new SimpleDateFormat("dd-MM-yyyy");
+//        try {
+//            Date date = inFormat.parse(model.getDate());
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(date);
+//            String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
+//            String day = days[calendar.get(Calendar.DAY_OF_WEEK)];
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+
+        String dateStr = "";
+        if (mAllActualData.size() > 0) {
+            dateStr = model.getDate();
+        } else {
+//            long currentTimeInMillis = System.currentTimeMillis();
+//            Date date = new Date(currentTimeInMillis);
+//            dateStr = sdf.format(date);
+            dateStr = "01" ;
+        }
+        String my = dateStr.substring(2, dateStr.length());
+
+        String monthDateFromFirstDay = "01" + my;
+
+        Date date = getDateFromSpecificFormat(monthDateFromFirstDay, sdf);
+
+        // Uncomment following line, in case it should start from first selected date.
+
+
+        int iYear = getYear(date);
+        int iMonth = getMonth(date);
+        int iDay = 1;
+//
+//// Create a calendar object and set year and month
+        Calendar mycal = new GregorianCalendar(iYear, iMonth, iDay);
+        final String dayOfMonth = String.valueOf(mycal.get(Calendar.DAY_OF_WEEK));
+
+        if (dayOfMonth.equals("6")){
+         holder.tvEventName.setText(title+" Friday");
+        }
+        if (dayOfMonth.equals("7")){
+        holder.tvEventName.setText(title+" Saturday");
+        }
 
         ArrayList<ParseIsraelItemBean> parashatEventsData = new ArrayList<>();
         ArrayList<ParseIsraelItemBean> shabbatEventsData = new ArrayList<>();
@@ -74,7 +160,6 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
                     parashatEventsData.add(parashatEvents);
 
                     Log.i("", "" + parashatEventsData.size());
-
                 }
                 if (parashatEvents.getTitle().equals("Shabbat Parah") ||
                         parashatEvents.getTitle().equals("Shabbat Sh'kalim") ||
@@ -123,8 +208,6 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
 
 
         }
-
-
 
 
 
