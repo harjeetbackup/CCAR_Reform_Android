@@ -30,8 +30,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private CalenderSyncFragment calenderSyncFragment;
     private DateConverterFragment dateConverterFragment;
     private AboutFragment aboutFragment;
-    private DashboardFragment dashboardFragment;
-    private boolean mHasSaveInstanceState;
 
     @Nullable
     @Override
@@ -45,7 +43,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mHasSaveInstanceState = true;
         super.onSaveInstanceState(outState);
     }
 
@@ -56,7 +53,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         calenderSyncFragment = (CalenderSyncFragment) controller.getFragmentInstance(2);
         dateConverterFragment = (DateConverterFragment) controller.getFragmentInstance(3);
         aboutFragment = (AboutFragment) controller.getFragmentInstance(4);
-        dashboardFragment = (DashboardFragment) controller.getFragmentInstance(8);
         bottom_bar_parent = rootView.findViewById(R.id.bottom_bar_parent);
         today_parent = rootView.findViewById(R.id.today_parent);
         events_parent = rootView.findViewById(R.id.events_parent);
@@ -152,7 +148,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-        mHasSaveInstanceState = false;
 //        setupViewPager(viewPager);
     }
 

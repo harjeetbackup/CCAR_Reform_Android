@@ -9,13 +9,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -23,27 +20,22 @@ import android.widget.TextView;
 
 import com.reformluach.R;
 import com.reformluach.activities.SettingsActivity;
-import com.reformluach.adapters.EventsIsraelAdapter;
 import com.reformluach.adapters.ViewPagerAdapterHome;
-import com.reformluach.models.ParseIsraelItemBean;
-import com.reformluach.typeface.CustomEditTextRegular;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
-
-import java.util.ArrayList;
 
 /**
  * Created by Naveen Mishra on 11/30/2017.
  */
 public class EventsFragment extends Fragment {
     public EditText events_search_edittext;
-    private View eventsFragmentView;
+//    private View eventsFragmentView;
     private Context context;
     private ViewPager viewPager;
     private EventsParshiyotChildFragment eventsParshiyotChildFragment;
     private EventsHolidaysChildFragment eventsHolidaysFragment;
-    private EventRoshChildFragment eventRoshFragment;
-    private Controller controller;
+    private EventAllTabFragment mEventAllTabFragment;
+//    private Controller controller;
     public TextView tvEvent, tvDate, tvCancel;
     private LinearLayout llMain;
 
@@ -53,21 +45,27 @@ public class EventsFragment extends Fragment {
     public TextView tvEventCalenderType;
 
 
+    public EventsFragment () {
+        Log.i("", "");
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        eventsFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.events_fragment_layout, container, false);
+        View eventsFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.events_fragment_layout, container, false);
         context = eventsFragmentView.getContext();
-        controller = (Controller) context.getApplicationContext();
+//        controller = (Controller) context.getApplicationContext();
 
-        initialiseView(eventsFragmentView);
+//        initialiseView(eventsFragmentView);
         return eventsFragmentView;
     }
 
 
+
+
+
     private void initialiseView(View rootView) {
         viewPager = rootView.findViewById(R.id.viewPagerEvents);
-        setupViewPager(viewPager);
         tabLayout = rootView.findViewById(R.id.tab_layout);
         tvEvent = rootView.findViewById(R.id.tvEvent);
         tvDate = rootView.findViewById(R.id.tvDate);
@@ -87,7 +85,7 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        setBgAccordingToMonth(controller.getMonth());
+        setBgAccordingToMonth(Controller.getMonth());
 
 
         tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +95,8 @@ public class EventsFragment extends Fragment {
                 }
         });
         events_search_edittext = rootView.findViewById(R.id.events_search_edittext);
-        tvEvent.setText(controller.getPreferencesString((Activity) context, Appconstant.EVENTS_NAME));
-        tvDate.setText(controller.getPreferencesString((Activity) context, Appconstant.HEBREW_MONTH) + " " + getString(R.string.dot) + " " + controller.getPreferencesString((Activity) context, Appconstant.CURRENT_DATE_MONTH));
+        tvEvent.setText(Controller.getPreferencesString((Activity) context, Appconstant.EVENTS_NAME));
+        tvDate.setText(Controller.getPreferencesString((Activity) context, Appconstant.HEBREW_MONTH) + " " + getString(R.string.dot) + " " + Controller.getPreferencesString((Activity) context, Appconstant.CURRENT_DATE_MONTH));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         try {
             tabLayout.setupWithViewPager(viewPager);
@@ -108,20 +106,19 @@ public class EventsFragment extends Fragment {
     }
 
 
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-        if (menuVisible) {
-            Log.e("SetMenuVisibleFragment", menuVisible + " ");
 
-        }
-    }
     public void setupViewPager(ViewPager viewPager) {
-        eventsParshiyotChildFragment = (EventsParshiyotChildFragment) controller.getFragmentInstance(5);
-        eventsHolidaysFragment = (EventsHolidaysChildFragment) controller.getFragmentInstance(6);
-        eventRoshFragment = (EventRoshChildFragment) controller.getFragmentInstance(7);
+//        eventsParshiyotChildFragment = (EventsParshiyotChildFragment) controller.getFragmentInstance(5);
+//        eventsHolidaysFragment = (EventsHolidaysChildFragment) controller.getFragmentInstance(6);
+//        mEventAllTabFragment = (EventAllTabFragment) controller.getFragmentInstance(7);
+
+
+        eventsParshiyotChildFragment = new EventsParshiyotChildFragment();
+        eventsHolidaysFragment = new EventsHolidaysChildFragment();
+        mEventAllTabFragment = new EventAllTabFragment();
+
         ViewPagerAdapterHome viewPagerAdapterHome = new ViewPagerAdapterHome(getChildFragmentManager());
-        viewPagerAdapterHome.addFrag(eventRoshFragment, "All");
+        viewPagerAdapterHome.addFrag(mEventAllTabFragment, "All");
 
         viewPagerAdapterHome.addFrag(eventsParshiyotChildFragment, getString(R.string.eventparshiyot_childfragment_name));
         viewPagerAdapterHome.addFrag(eventsHolidaysFragment, getString(R.string.eventholidays_childfragment_name));
@@ -189,10 +186,10 @@ public class EventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-//        if (selected==true) {
-            setupViewPager(viewPager);
-            tabLayout.setupWithViewPager(viewPager);
-//        }
+////        if (selected==true) {
+//            setupViewPager(viewPager);
+//            tabLayout.setupWithViewPager(viewPager);
+////        }
 
     }
 
@@ -203,7 +200,10 @@ public class EventsFragment extends Fragment {
         isVisible = isVisibleToUser;
 
         if(isVisible && getView() != null) {
-            setupViewPager(viewPager);
+            if(viewPager == null) {
+                initialiseView(getView());
+                setupViewPager(viewPager);
+            }
         }
 
     }

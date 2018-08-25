@@ -36,7 +36,7 @@ import com.reformluach.fragments.AboutFragment;
 import com.reformluach.fragments.CalenderSyncFragment;
 import com.reformluach.fragments.DashboardFragment;
 import com.reformluach.fragments.DateConverterFragment;
-import com.reformluach.fragments.EventRoshChildFragment;
+import com.reformluach.fragments.EventAllTabFragment;
 import com.reformluach.fragments.EventsFragment;
 import com.reformluach.fragments.EventsHolidaysChildFragment;
 import com.reformluach.fragments.EventsParshiyotChildFragment;
@@ -73,9 +73,9 @@ public class Controller extends Application {
     private CalenderSyncFragment calenderSyncFragment;
     private DateConverterFragment dateConverterFragment;
     private AboutFragment aboutFragment;
-    private EventsHolidaysChildFragment eventsHolidaysChildFragment;
-    private EventsParshiyotChildFragment eventsParshiyotChildFragment;
-    private EventRoshChildFragment eventRoshChildFragment;
+//    private EventsHolidaysChildFragment eventsHolidaysChildFragment;
+//    private EventsParshiyotChildFragment eventsParshiyotChildFragment;
+//    private EventAllTabFragment eventRoshChildFragment;
     private DashboardFragment dashboardFragment;
     private CentralisedReplacer centralisedReplacer = new CentralisedReplacer();
     private SharedPreferenceFileAll sharedPreferenceFileAll;
@@ -234,12 +234,12 @@ public class Controller extends Application {
                 return dateConverterFragment;
             case 4:
                 return aboutFragment;
-            case 5:
+            /*case 5:
                 return eventsParshiyotChildFragment;
             case 6:
                 return eventsHolidaysChildFragment;
             case 7:
-                return eventRoshChildFragment;
+                return eventRoshChildFragment;*/
             case 8:
                 return dashboardFragment;
             default:
@@ -253,9 +253,9 @@ public class Controller extends Application {
         calenderSyncFragment = new CalenderSyncFragment();
         dateConverterFragment = new DateConverterFragment();
         aboutFragment = new AboutFragment();
-        eventsParshiyotChildFragment = new EventsParshiyotChildFragment();
-        eventsHolidaysChildFragment = new EventsHolidaysChildFragment();
-        eventRoshChildFragment = new EventRoshChildFragment();
+//        eventsParshiyotChildFragment = new EventsParshiyotChildFragment();
+//        eventsHolidaysChildFragment = new EventsHolidaysChildFragment();
+//        eventRoshChildFragment = new EventAllTabFragment();
         dashboardFragment = new DashboardFragment();
     }
 
@@ -320,7 +320,7 @@ public class Controller extends Application {
         }
     }
 
-    public int getMonth() {
+    public static int getMonth() {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         calendar.get(Calendar.MONTH);
         Log.e("Month Selected", "Month Selected" + calendar.get(Calendar.MONTH));

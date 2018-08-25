@@ -43,21 +43,20 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Created by Naveen Mishra on 12/1/2017.
  */
 
-public class EventRoshChildFragment extends Fragment  {
-    private View eventsHolidaysFragmentView;
+public class EventAllTabFragment extends Fragment  {
+//    private View eventsHolidaysFragmentView;
     private Context context;
     private RecyclerView rv_events_holiday;
 //    private EditText searchEditText;
     private Controller controller;
 
 
-    private EventsIsraelAdapter eventsIsraelAdapter;
+    private EventsIsraelAdapter mEventAllAdapter;
 
     int pageCount = 0;
     int mCurrentPage = -1;
@@ -67,9 +66,14 @@ public class EventRoshChildFragment extends Fragment  {
     private int yearCount = 0;
 
     private boolean isVisible;
-    public TextView tvCanc;
+//    public TextView tvCanc;
 
-    TextView tvEventCalenderType;
+//    TextView tvEventCalenderType;
+
+
+    public EventAllTabFragment () {
+        Log.i("", "");
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -77,16 +81,15 @@ public class EventRoshChildFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         super.onCreateView(inflater,container,savedInstanceState);
-        eventsHolidaysFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.eventrosh_fragment_layout, container, false);
+        View eventsHolidaysFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.eventrosh_fragment_layout, container, false);
         context = eventsHolidaysFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
 
         rv_events_holiday = eventsHolidaysFragmentView.findViewById(R.id.rv_events_rosh);
 //        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
-        tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
+//        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+//        tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
 //         It is initialising Views
-        initViews(eventsHolidaysFragmentView);
 
         pageCount = 0;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -95,11 +98,13 @@ public class EventRoshChildFragment extends Fragment  {
         myCal.setTime(date);
         yearCount = Integer.parseInt(sdf.format(date));
 
-        layoutManager = new LinearLayoutManager(getActivity());
 
-        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+
+
+
+        /*if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
             if (isVisible) {
-//                getAllEventsReform();
+                getAllEventsReform();
                 tvEventCalenderType.setText("R");
             }
         } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
@@ -113,9 +118,9 @@ public class EventRoshChildFragment extends Fragment  {
                 tvEventCalenderType.setText("I");
             }
         }else {
-//            getAllEventsReform();
+            getAllEventsReform();
             tvEventCalenderType.setText("R");
-        }
+        }*/
         return eventsHolidaysFragmentView;
     }
 
@@ -125,38 +130,42 @@ public class EventRoshChildFragment extends Fragment  {
 
 
 
-        eventsIsraelAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
+        mEventAllAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
+        layoutManager = new LinearLayoutManager(getActivity());
             rv_events_holiday.setLayoutManager(layoutManager);
-            rv_events_holiday.setAdapter(eventsIsraelAdapter);
+            rv_events_holiday.setAdapter(mEventAllAdapter);
 
-//        int top = 0;
-//        rv_events_holiday.smoothScrollToPosition(top); // for top
-
-//        int bottom = rv_events_holiday.getAdapter().getItemCount()-1;
 //
-//        RecyclerView.State state = new RecyclerView.State();
-//        layoutmanager.smoothScrollToPosition(rv_events_holiday, state, bottom);
-
-
-//        Calendar calendar = Calendar.getInstance();
-//        Date today = calendar.getTime();
-//
-//        calendar.add(Calendar.DAY_OF_YEAR, 1);
-//        Date tomorrow = calendar.getTime();
-//        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-//
-//        String todayAsString = dateFormat.format(today);
-//        String tomorrowAsString = dateFormat.format(tomorrow);
-//
-
-//        if (comparingDate.contains(todayAsString) || comparingDate.contains(tomorrowAsString)) {
-//            int firstItem = layoutManager.findFirstVisibleItemPosition();
-//            View firstItemView = layoutManager.findViewByPosition(firstItem);
-//            float topOffset = firstItemView.getTop();
-//        }
-
-//        initViews(eventsHolidaysFragmentView);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(!isVisible) {
+            return;
+        }
+
+        if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected") ){
+            pageCount = 0;
+            getAllEventsReform();
+
+        }
+        else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected") ){
+            pageCount = 0;
+            getAllEventsDispora();
+
+        } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+            pageCount = 0;
+            getAllEventsIsrael();
+        }
+        else {
+            pageCount = 0;
+            getAllEventsReform();
+        }
+
+    }
+
 
 
     @Override
@@ -164,27 +173,10 @@ public class EventRoshChildFragment extends Fragment  {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
 
-        if(isVisible && getView() != null) {
+        /*if(isVisible && getView() != null) {
+            makeServerRequest();
 
-            if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                getAllEventsReform();
-                tvEventCalenderType.setText("R");
-            }
-            else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                getAllEventsDispora();
-                tvEventCalenderType.setText("D");
-
-            } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                getAllEventsIsrael();
-                tvEventCalenderType.setText("I");
-            }else {
-                getAllEventsReform();
-                tvEventCalenderType.setText("R");
-            }
-            initViews(eventsHolidaysFragmentView);
-            showFullData();
-            isFilterEnable = false;
-        }
+        }*/
 
         if(isVisible) {
             registerSearch();
@@ -204,6 +196,30 @@ public class EventRoshChildFragment extends Fragment  {
 //            }
 //        }
 //    }
+
+
+    private void makeServerRequest() {
+
+        if(mEventAllAdapter != null  || mEventAllAdapter.getItemCount() > 0) {
+            return;
+        }
+
+        isFilterEnable = false;
+
+        if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+            getAllEventsReform();
+        }
+        else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            getAllEventsDispora();
+
+        } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+            getAllEventsIsrael();
+        }else {
+            getAllEventsReform();
+        }
+        showFullData();
+
+    }
 
     ArrayList<ParseIsraelItemBean> mAllEventsReformCalenderData = new ArrayList<>();
     private void getAllEventsReform() {
@@ -240,13 +256,14 @@ public class EventRoshChildFragment extends Fragment  {
                             public void onResponse(JSONObject response) {
                                 Log.i("Response", String.valueOf(response));
                                 if (getActivity() == null || getContext() == null || getView() == null) {
+                                    mIsLoading = false;
                                     return;
                                 }
                                 if (pageCount == 0) {
                                     rv_events_holiday.clearOnScrollListeners();
                                     rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
                                     rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-                                    eventsIsraelAdapter.clearPreviousData();
+                                    mEventAllAdapter.clearPreviousData();
                                 }
 
                                 mCurrentPage = pageCount;
@@ -281,18 +298,18 @@ public class EventRoshChildFragment extends Fragment  {
 //                                });
 
                                     }
-                                    eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                    mEventAllAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
                                     String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                     int position = 0;
                                     int count = 0;
-                                    for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                    for (int j = 0; j < mAllEventsReformCalenderData.size(); j++) {
                                         String eventDate = mAllEventsReformCalenderData.get(j).getDate();
                                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                                         try {
                                             Date date1 = sdf.parse(TodaysDate);
                                             Date date2 = sdf.parse(eventDate);
                                             if (date2.after(date1)) {
-                                                count = count+1;
+                                                count = count + 1;
 
                                                 if (count == 1) {
                                                     position = j;
@@ -306,20 +323,24 @@ public class EventRoshChildFragment extends Fragment  {
                                     rv_events_holiday.scrollToPosition(position);
 
 
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
+                                mIsLoading = false;
                             }
                         }
                         , new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("Response", String.valueOf(error));
+                        mIsLoading = false;
 
                     }
 
                 });
+
+
 
                 queue.add(objectRequest);
             }
@@ -362,7 +383,7 @@ public class EventRoshChildFragment extends Fragment  {
                                 rv_events_holiday.clearOnScrollListeners();
                                 rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
                                 rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-                                eventsIsraelAdapter.clearPreviousData();
+                                mEventAllAdapter.clearPreviousData();
                             }
                             mCurrentPage = pageCount;
 
@@ -404,7 +425,7 @@ public class EventRoshChildFragment extends Fragment  {
 //                                float topOffset = firstItemView.getTop();
 //                            }
 
-                                eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                mEventAllAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
                                 String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                 int position = 0;
                                 int count = 0;
@@ -447,34 +468,33 @@ public class EventRoshChildFragment extends Fragment  {
     }
 
 
+    private boolean mIsLoading;
+
 
     private EndlessScrollListener getRecyclerLoadMore() {
         return new EndlessScrollListener(layoutManager) {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onLoadMore(int current_page) {
-
-                if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                    if (eventsIsraelAdapter != null) {
-                        pageCount = current_page + 1;
-                    }
-                    getAllEventsReform();
+                if(mIsLoading) {
+                    return;
                 }
-                else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                if (mEventAllAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+                    pageCount = current_page + 1;
+                    mIsLoading = true;
+                    getAllEventsReform();
+                } else if (mEventAllAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
 
-                    if (eventsIsraelAdapter != null) {
-                        pageCount = current_page + 1;
-                    }
+                    mIsLoading = true;
+                    pageCount = current_page + 1;
                     getAllEventsDispora();
-                } else if (eventsIsraelAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    if (eventsIsraelAdapter != null) {
-                        pageCount = current_page + 1;
-                    }
+                } else if (mEventAllAdapter != null && controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    pageCount = current_page + 1;
+                    mIsLoading = true;
                     getAllEventsIsrael();
-                }else {
-                    if (eventsIsraelAdapter != null) {
-                        pageCount = current_page + 1;
-                    }
+                } else {
+                    pageCount = current_page + 1;
+                    mIsLoading = true;
                     getAllEventsReform();
                 }
             }
@@ -519,7 +539,7 @@ public class EventRoshChildFragment extends Fragment  {
                                 rv_events_holiday.clearOnScrollListeners();
                                 rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
                                 rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-                                eventsIsraelAdapter.clearPreviousData();
+                                mEventAllAdapter.clearPreviousData();
                             }
 
                             mCurrentPage = pageCount;
@@ -563,7 +583,7 @@ public class EventRoshChildFragment extends Fragment  {
 
                                 }
 
-                                eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                mEventAllAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
                                 String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                 int position = 0;
                                 int count = 0;
@@ -603,108 +623,29 @@ public class EventRoshChildFragment extends Fragment  {
 
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
-        setHasOptionsMenu(true);
-//        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-    }
-
-
-
-    private void initViews(View eventsHolidaysFragmentView) {
-       final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-//        TextView tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
-
-        tvCanc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
-                    isFilterEnable=false;
-                    getAllEventsReform();
-
-                }
-                else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                        searchEditText.getText().clear();
-                        isFilterEnable=false;
-                        getAllEventsDispora();
-
-                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                        searchEditText.getText().clear();
-                        isFilterEnable=false;
-                        getAllEventsIsrael();
-                }else {
-                    searchEditText.getText().clear();
-                    isFilterEnable=false;
-                    showFullData();
-
-                }
-            }
-        });
-    }
-
 
     boolean isFilterEnable = false;
     private void callRefreshIsrael(String s) {
         final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
-        ArrayList<ParseIsraelItemBean> parseItemBeans = eventsIsraelAdapter.getAllActualData();
+        ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
         for (int i = 0; i < parseItemBeans.size(); i++) {
             final String text = parseItemBeans.get(i).getTitle();
             if (text.contains(s)) {
                     filteredList.add(parseItemBeans.get(i));
             }
         }
-        eventsIsraelAdapter.clearPreviousData();
+        mEventAllAdapter.clearPreviousData();
         isFilterEnable =true;
-        eventsIsraelAdapter.showFilteredData(filteredList);
+        mEventAllAdapter.showFilteredData(filteredList);
     }
 
     public void showFullData(){
-        ArrayList<ParseIsraelItemBean> parseItemBeans = eventsIsraelAdapter.getAllActualData();
-        eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
+        ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
+        mEventAllAdapter.addMessege(parseItemBeans, pageCount);
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected") ){
-            if (isNeedToRefresh) {
-                isNeedToRefresh = true;
-                pageCount = 0;
-                getAllEventsReform();
-                tvEventCalenderType.setText("R");
-            }
 
-        }
-        else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected") ){
-            if (isNeedToRefresh) {
-                isNeedToRefresh = true;
-                pageCount = 0;
-                getAllEventsDispora();
-                tvEventCalenderType.setText("D");
-            }
-
-        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-
-            if (isNeedToRefresh) {
-                isNeedToRefresh = true;
-                pageCount = 0;
-                getAllEventsIsrael();
-                tvEventCalenderType.setText("I");
-            }
-        }else {
-            if (isNeedToRefresh) {
-                isNeedToRefresh = true;
-                pageCount = 0;
-                getAllEventsReform();
-                tvEventCalenderType.setText("R");
-            }
-        }
-
-    }
 
 
     private void registerSearch() {
@@ -712,6 +653,19 @@ public class EventRoshChildFragment extends Fragment  {
             return;
         }
         final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+        TextView tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+
+        TextView tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
+
+        if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+                tvEventCalenderType.setText("R");
+        } else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                tvEventCalenderType.setText("D");
+        } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                tvEventCalenderType.setText("I");
+        }else {
+            tvEventCalenderType.setText("R");
+        }
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -750,6 +704,36 @@ public class EventRoshChildFragment extends Fragment  {
                 return false;
             }
         });
+
+
+
+        tvCanc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    getAllEventsReform();
+
+                }
+                else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    getAllEventsDispora();
+
+                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    getAllEventsIsrael();
+                }else {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    showFullData();
+
+                }
+            }
+        });
+
     }
 
 
