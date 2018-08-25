@@ -3,8 +3,6 @@ package com.reformluach.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.widget.LinearLayout;
 
 import com.reformluach.R;
 import com.reformluach.activities.EventDetailsActivity;
-import com.reformluach.models.EventBean;
 import com.reformluach.models.EventTitle;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.typeface.CustomtextViewFontRegular;
@@ -30,24 +27,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapter.ViewHolder>{
+public class HolidaysEventRecyclerAdapter extends RecyclerView.Adapter<HolidaysEventRecyclerAdapter.ViewHolder>{
+
     private final Context context;
     private ArrayList<ParseIsraelItemBean> mPopulatingData;
     private ArrayList<ParseIsraelItemBean> mAllActualData;
 
-    private ReloadAllDataListener reloadAllDataListener;
+    private EventsIsraelAdapter.ReloadAllDataListener reloadAllDataListener;
 
 
-    public EventsIsraelAdapter(Context context, ArrayList<ParseIsraelItemBean> data) {
+    public HolidaysEventRecyclerAdapter(Context context, ArrayList<ParseIsraelItemBean> data) {
         this.context = context;
         this.mPopulatingData = data;
         mAllActualData = new ArrayList<>(mPopulatingData);
     }
 
     @Override
-    public EventsIsraelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HolidaysEventRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_events_rosh, parent, false);
-        return new EventsIsraelAdapter.ViewHolder(view);
+        return new HolidaysEventRecyclerAdapter.ViewHolder(view);
     }
 
     private String getDay(String date_in_string_format){
@@ -91,7 +89,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     }
 
     @Override
-    public void onBindViewHolder(final EventsIsraelAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final HolidaysEventRecyclerAdapter.ViewHolder holder, final int position) {
         final ParseIsraelItemBean model = mPopulatingData.get(position);
 
         if (model==null){
@@ -143,10 +141,10 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         final String dayOfMonth = String.valueOf(mycal.get(Calendar.DAY_OF_WEEK));
 
         if (dayOfMonth.equals("6")){
-         holder.tvEventName.setText(title+" Friday");
+            holder.tvEventName.setText(title+" Friday");
         }
         if (dayOfMonth.equals("7")){
-        holder.tvEventName.setText(title+" Saturday");
+            holder.tvEventName.setText(title+" Saturday");
         }
 
         final int positionList = holder.getAdapterPosition();
@@ -158,22 +156,22 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
 
             ParseIsraelItemBean filteredEvents = mAllActualData.get(i);
 
-                if (filteredEvents.getTitle().startsWith("Parashat")) {
-                    parashatEventsData.add(filteredEvents);
+            if (filteredEvents.getTitle().startsWith("Parashat")) {
+                parashatEventsData.add(filteredEvents);
 
-                    Log.i("", "" + parashatEventsData.size());
-                }
-                if (filteredEvents.getTitle().equals("Shabbat Parah") ||
-                        filteredEvents.getTitle().equals("Shabbat Sh'kalim") ||
-                        filteredEvents.getTitle().equals("Shabbat HaGadol") || filteredEvents.getTitle().equals("Shabbat Zachor") ||
-                        filteredEvents.getTitle().equals("Shabbat HaChodesh") || filteredEvents.getTitle().equals("Shabbat Shuva")
-                        || filteredEvents.getTitle().equals("Shabbat Chanukah") || filteredEvents.getTitle().startsWith("Chanukah")) {
+                Log.i("", "" + parashatEventsData.size());
+            }
+            if (filteredEvents.getTitle().equals("Shabbat Parah") ||
+                    filteredEvents.getTitle().equals("Shabbat Sh'kalim") ||
+                    filteredEvents.getTitle().equals("Shabbat HaGadol") || filteredEvents.getTitle().equals("Shabbat Zachor") ||
+                    filteredEvents.getTitle().equals("Shabbat HaChodesh") || filteredEvents.getTitle().equals("Shabbat Shuva")
+                    || filteredEvents.getTitle().equals("Shabbat Chanukah") || filteredEvents.getTitle().startsWith("Chanukah")) {
 
 
-                    shabbatEventsData.add(filteredEvents);
-                    Log.i("", "" + shabbatEventsData.size());
+                shabbatEventsData.add(filteredEvents);
+                Log.i("", "" + shabbatEventsData.size());
 
-                }
+            }
 
             if (parashatEventsData.size() != 0 && shabbatEventsData.size() != 0) {
 
@@ -266,7 +264,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private  CustomtextViewFontRegular tvDate, tvEventName ,tvEventSubtitle;
+        private CustomtextViewFontRegular tvDate, tvEventName ,tvEventSubtitle;
         private LinearLayout llMain;
 
         private LinearLayout linearLayout;
@@ -281,7 +279,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         }
     }
 
-    public void setReloadAllDataListener(ReloadAllDataListener reloadAllDataListener) {
+    public void setReloadAllDataListener(EventsIsraelAdapter.ReloadAllDataListener reloadAllDataListener) {
         this.reloadAllDataListener = reloadAllDataListener;
     }
 

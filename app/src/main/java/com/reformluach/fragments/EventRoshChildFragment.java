@@ -37,10 +37,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -97,7 +99,7 @@ public class EventRoshChildFragment extends Fragment  {
 
         if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
             if (isVisible) {
-                getAllEventsReform();
+//                getAllEventsReform();
                 tvEventCalenderType.setText("R");
             }
         } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
@@ -111,7 +113,7 @@ public class EventRoshChildFragment extends Fragment  {
                 tvEventCalenderType.setText("I");
             }
         }else {
-            getAllEventsReform();
+//            getAllEventsReform();
             tvEventCalenderType.setText("R");
         }
         return eventsHolidaysFragmentView;
@@ -156,6 +158,7 @@ public class EventRoshChildFragment extends Fragment  {
 //        initViews(eventsHolidaysFragmentView);
     }
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -186,9 +189,6 @@ public class EventRoshChildFragment extends Fragment  {
         if(isVisible) {
             registerSearch();
         }
-//        if (isVisible){
-//            registerCancel();
-//        }
 
     }
 
@@ -225,53 +225,51 @@ public class EventRoshChildFragment extends Fragment  {
             yearCount++;
         }
 
-
-        String urls[] = {Url.israelHolidayUrlBeforeDate + year + Url.israelHolidayUrlAfterDate,
-                Url.disporahTorahUrlBeforeDate + year + Url.disporahTorahUrlAfterDate,
-                Url.disporahTorahSpecialUrlBeforeDate + year + Url.disporahTorahSpecialUrlAfterDate};
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        for (int i = 0; i < urls.length; i++) {
-            final int j = i;
-            String urlarray = urls[i];
+            String urls[] = {Url.israelHolidayUrlBeforeDate + year + Url.israelHolidayUrlAfterDate,
+                    Url.disporahTorahUrlBeforeDate + year + Url.disporahTorahUrlAfterDate,
+                    Url.disporahTorahSpecialUrlBeforeDate + year + Url.disporahTorahSpecialUrlAfterDate};
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+            for (int i = 0; i < urls.length; i++) {
+                final int j = i;
+                String urlarray = urls[i];
 //        }
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, urlarray, null,
-                new Response.Listener<JSONObject>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Response", String.valueOf(response));
-                        if (getActivity() == null || getContext() == null || getView() == null) {
-                            return;
-                        }
-                        if (pageCount == 0) {
-                            rv_events_holiday.clearOnScrollListeners();
-                            rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
-                            rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-                            eventsIsraelAdapter.clearPreviousData();
-                        }
+                JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, urlarray, null,
+                        new Response.Listener<JSONObject>() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("Response", String.valueOf(response));
+                                if (getActivity() == null || getContext() == null || getView() == null) {
+                                    return;
+                                }
+                                if (pageCount == 0) {
+                                    rv_events_holiday.clearOnScrollListeners();
+                                    rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
+                                    rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
+                                    eventsIsraelAdapter.clearPreviousData();
+                                }
 
-                        mCurrentPage = pageCount;
+                                mCurrentPage = pageCount;
 
-                        try {
-                            JSONObject object = new JSONObject(String.valueOf(response));
+                                try {
+                                    JSONObject object = new JSONObject(String.valueOf(response));
 
-                            JSONArray jsonArray = object.getJSONArray("items");
-                            int dataLen = jsonArray.length();
-                            ArrayList<ParseIsraelItemBean> mAllEventsIsraelHoliday = new ArrayList<>();
+                                    JSONArray jsonArray = object.getJSONArray("items");
+                                    int dataLen = jsonArray.length();
 
-                            mAllEventsReformCalenderData.clear();
-                            for (int i = 0; i < dataLen; i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    mAllEventsReformCalenderData.clear();
+                                    for (int i = 0; i < dataLen; i++) {
+                                        JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
-                                parseItemBean.setTitle(jsonObject.optString("title"));
-                                parseItemBean.setDate(jsonObject.optString("date"));
+                                        ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
+                                        parseItemBean.setTitle(jsonObject.optString("title"));
+                                        parseItemBean.setDate(jsonObject.optString("date"));
 
-                                parseItemBean.setCategory(jsonObject.optString("category"));
-                                // add values to this collection
+                                        parseItemBean.setCategory(jsonObject.optString("category"));
+                                        // add values to this collection
 
-                                mAllEventsReformCalenderData.add(parseItemBean);
-                                /* Sorting in decreasing order*/
+                                        mAllEventsReformCalenderData.add(parseItemBean);
+                                        /* Sorting in decreasing order*/
 //                                Collections.sort(mAllEventsReformCalenderData, new Comparator<ParseIsraelItemBean>() {
 //                                    @Override
 //                                    public int compare(ParseIsraelItemBean o1, ParseIsraelItemBean o2) {
@@ -282,26 +280,49 @@ public class EventRoshChildFragment extends Fragment  {
 //                                    }
 //                                });
 
+                                    }
+                                    eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                    String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                    int position = 0;
+                                    int count = 0;
+                                    for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                        String eventDate = mAllEventsReformCalenderData.get(j).getDate();
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                        try {
+                                            Date date1 = sdf.parse(TodaysDate);
+                                            Date date2 = sdf.parse(eventDate);
+                                            if (date2.after(date1)) {
+                                                count = count+1;
+
+                                                if (count == 1) {
+                                                    position = j;
+                                                }
+                                            }
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    rv_events_holiday.scrollToPosition(position);
+
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
+                        , new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Response", String.valueOf(error));
+
                     }
-                }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Response", String.valueOf(error));
 
+                });
+
+                queue.add(objectRequest);
             }
-
-        });
-
-        queue.add(objectRequest);
-    }
 
     }
 
@@ -326,61 +347,46 @@ public class EventRoshChildFragment extends Fragment  {
             yearCount++;
         }
 
-
-        String url = Url.israelUrlBeforeDate + year + Url.israelUrlAfterDate;
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Response", String.valueOf(response));
-                        if (getActivity() == null || getContext() == null || getView() == null) {
-                            return;
-                        }
-
-                        if (pageCount ==0 ) {
-                            rv_events_holiday.clearOnScrollListeners();
-                            rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
-                            rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-                            eventsIsraelAdapter.clearPreviousData();
-                        }
-                        mCurrentPage = pageCount;
-
-                        try {
-                            JSONObject object = new JSONObject(String.valueOf(response));
-
-                            JSONArray jsonArray = object.getJSONArray("items");
-                            int dataLen = jsonArray.length();
-
-                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
-
-                            for (int i = 0; i < dataLen; i++) {
-
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
-                                parseItemBean.setTitle(jsonObject.optString("title"));
-                                parseItemBean.setDate(jsonObject.optString("date"));
-
-                                String recievedDate = jsonObject.optString("date");
-                                String recievedTitle = jsonObject.optString("title");
-                                if (recievedTitle.startsWith("Parashat")){
-                                    parseItemBean.setParashatDate(recievedDate);
-                                }
-                                if (recievedTitle.startsWith("Rosh Chodesh")){
-                                    parseItemBean.setRoshChodesh(recievedDate);
-                                }
-                                if (recievedTitle.equals("Shabbat Parah") || recievedTitle.equals("Shabbat Parah") ||
-                                        recievedTitle.equals("Shabbat Sh'kalim") ||
-                                        recievedTitle.equals("Shabbat HaGadol") || recievedTitle.equals("Shabbat Zachor") ||
-                                        recievedTitle.equals("Shabbat HaChodesh") || recievedTitle.equals("Shabbat Shuva")
-                                        || recievedTitle.equals("Shabbat Chanukah") || recievedTitle.startsWith("Chanukah")){
-                                    parseItemBean.setShabbat(recievedDate);
-                                }
-                                parseItemBean.setCategory(jsonObject.optString("category"));
-                                parseItemBeans.add(parseItemBean);
-
+            String url = Url.israelUrlBeforeDate + year + Url.israelUrlAfterDate;
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+            JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i("Response", String.valueOf(response));
+                            if (getActivity() == null || getContext() == null || getView() == null) {
+                                return;
                             }
+
+                            if (pageCount == 0) {
+                                rv_events_holiday.clearOnScrollListeners();
+                                rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
+                                rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
+                                eventsIsraelAdapter.clearPreviousData();
+                            }
+                            mCurrentPage = pageCount;
+
+                            try {
+                                JSONObject object = new JSONObject(String.valueOf(response));
+
+                                JSONArray jsonArray = object.getJSONArray("items");
+                                int dataLen = jsonArray.length();
+
+//                                ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
+
+                                mAllEventsReformCalenderData.clear();
+                                for (int i = 0; i < dataLen; i++) {
+
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                    ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
+                                    parseItemBean.setTitle(jsonObject.optString("title"));
+                                    parseItemBean.setDate(jsonObject.optString("date"));
+
+                                    parseItemBean.setCategory(jsonObject.optString("category"));
+                                    mAllEventsReformCalenderData.add(parseItemBean);
+
+                                }
 
 //                            Calendar calendar = Calendar.getInstance();
 //                            Date today = calendar.getTime();
@@ -398,22 +404,46 @@ public class EventRoshChildFragment extends Fragment  {
 //                                float topOffset = firstItemView.getTop();
 //                            }
 
-                            eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
+                                eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                int position = 0;
+                                int count = 0;
+                                for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                    String eventDate = mAllEventsReformCalenderData.get(j).getDate();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        Date date1 = sdf.parse(TodaysDate);
+                                        Date date2 = sdf.parse(eventDate);
+                                        if (date2.after(date1)) {
+                                            count = count+1;
+
+                                            if (count == 1) {
+                                                position = j;
+                                            }
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                rv_events_holiday.scrollToPosition(position);
 
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Response", String.valueOf(error));
-            }
-        });
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("Response", String.valueOf(error));
+                        }
+                    });
 
-        queue.add(objectRequest);
+            queue.add(objectRequest);
+
     }
 
 
@@ -472,86 +502,112 @@ public class EventRoshChildFragment extends Fragment  {
             year = String.valueOf(yearCount + 1);
             yearCount++;
         }
-        String url = Url.disporaUrlBeforeDate + year + Url.disporaUrlAfterDate;
-        // Try to parse JSON
+            String url = Url.disporaUrlBeforeDate + year + Url.disporaUrlAfterDate;
+            // Try to parse JSON
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Response", String.valueOf(response));
-                        if (getActivity() == null || getContext() == null || getView() == null) {
-                            return;
-                        }
-
-                        if (pageCount ==0 ) {
-                            rv_events_holiday.clearOnScrollListeners();
-                            rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
-                            rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
-                            eventsIsraelAdapter.clearPreviousData();
-                        }
-
-                        mCurrentPage = pageCount;
-
-
-                        try {
-                            JSONObject object = new JSONObject(String.valueOf(response));
-
-                            JSONArray jsonArray = object.getJSONArray("items");
-                            int dataLen = jsonArray.length();
-
-                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
-
-                            for (int i = 0; i < dataLen; i++) {
-
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
-                                parseItemBean.setTitle(jsonObject.optString("title"));
-                                parseItemBean.setDate(jsonObject.optString("date"));
-                                parseItemBean.setCategory(jsonObject.optString("category"));
-
-                                String recievedDate = jsonObject.optString("date");
-                                String recievedTitle = jsonObject.optString("title");
-                                if (recievedTitle.startsWith("Parashat")){
-                                    parseItemBean.setParashatDate(recievedDate);
-                                }
-                                if (recievedTitle.startsWith("Rosh Chodesh")){
-                                    parseItemBean.setRoshChodesh(recievedDate);
-                                }
-                                if (recievedTitle.equals("Shabbat Parah") || recievedTitle.equals("Shabbat Parah") ||
-                                        recievedTitle.equals("Shabbat Sh'kalim") ||
-                                        recievedTitle.equals("Shabbat HaGadol") || recievedTitle.equals("Shabbat Zachor") ||
-                                        recievedTitle.equals("Shabbat HaChodesh") || recievedTitle.equals("Shabbat Shuva")
-                                        || recievedTitle.equals("Shabbat Chanukah") || recievedTitle.startsWith("Chanukah")){
-                                    parseItemBean.setShabbat(recievedDate);
-                                }
-
-                                parseItemBeans.add(parseItemBean);
-
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+            JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i("Response", String.valueOf(response));
+                            if (getActivity() == null || getContext() == null || getView() == null) {
+                                return;
                             }
 
-                        eventsIsraelAdapter.addMessege(parseItemBeans, pageCount);
+                            if (pageCount == 0) {
+                                rv_events_holiday.clearOnScrollListeners();
+                                rv_events_holiday.removeOnScrollListener(getRecyclerLoadMore());
+                                rv_events_holiday.addOnScrollListener(getRecyclerLoadMore());
+                                eventsIsraelAdapter.clearPreviousData();
+                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            mCurrentPage = pageCount;
+
+
+                            try {
+                                JSONObject object = new JSONObject(String.valueOf(response));
+
+                                JSONArray jsonArray = object.getJSONArray("items");
+                                int dataLen = jsonArray.length();
+
+//                                ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
+
+                                mAllEventsReformCalenderData.clear();
+                                for (int i = 0; i < dataLen; i++) {
+
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                                    ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
+                                    parseItemBean.setTitle(jsonObject.optString("title"));
+                                    parseItemBean.setDate(jsonObject.optString("date"));
+                                    parseItemBean.setCategory(jsonObject.optString("category"));
+
+                                    String recievedDate = jsonObject.optString("date");
+                                    String recievedTitle = jsonObject.optString("title");
+                                    if (recievedTitle.startsWith("Parashat")) {
+                                        parseItemBean.setParashatDate(recievedDate);
+                                    }
+                                    if (recievedTitle.startsWith("Rosh Chodesh")) {
+                                        parseItemBean.setRoshChodesh(recievedDate);
+                                    }
+                                    if (recievedTitle.equals("Shabbat Parah") || recievedTitle.equals("Shabbat Parah") ||
+                                            recievedTitle.equals("Shabbat Sh'kalim") ||
+                                            recievedTitle.equals("Shabbat HaGadol") || recievedTitle.equals("Shabbat Zachor") ||
+                                            recievedTitle.equals("Shabbat HaChodesh") || recievedTitle.equals("Shabbat Shuva")
+                                            || recievedTitle.equals("Shabbat Chanukah") || recievedTitle.startsWith("Chanukah")) {
+                                        parseItemBean.setShabbat(recievedDate);
+                                    }
+
+                                    mAllEventsReformCalenderData.add(parseItemBean);
+
+                                }
+
+                                eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                int position = 0;
+                                int count = 0;
+                                for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                    String eventDate = mAllEventsReformCalenderData.get(j).getDate();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        Date date1 = sdf.parse(TodaysDate);
+                                        Date date2 = sdf.parse(eventDate);
+                                        if (date2.after(date1)) {
+                                            count = count+1;
+
+                                            if (count == 1) {
+                                                position = j;
+                                            }
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                rv_events_holiday.scrollToPosition(position);
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Response", String.valueOf(error));
-            }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.i("Response", String.valueOf(error));
+                }
 
-        });
-        queue.add(objectRequest);
+            });
+            queue.add(objectRequest);
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+        setHasOptionsMenu(true);
 //        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
     }
 
@@ -579,7 +635,12 @@ public class EventRoshChildFragment extends Fragment  {
                         searchEditText.getText().clear();
                         isFilterEnable=false;
                         getAllEventsIsrael();
-                    }
+                }else {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    showFullData();
+
+                }
             }
         });
     }
@@ -657,27 +718,27 @@ public class EventRoshChildFragment extends Fragment  {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
+                        if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }
                     else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
+                        if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
+                        if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }
 
-                    if (searchEditText.getText().length()==0){
+                    if (searchEditText.getText().toString().isEmpty()){
                         showFullData();
                         isFilterEnable=false;
                     }

@@ -66,7 +66,7 @@ public class EventsFragment extends Fragment {
 
 
     private void initialiseView(View rootView) {
-        viewPager = rootView.findViewById(R.id.viewPager);
+        viewPager = rootView.findViewById(R.id.viewPagerEvents);
         setupViewPager(viewPager);
         tabLayout = rootView.findViewById(R.id.tab_layout);
         tvEvent = rootView.findViewById(R.id.tvEvent);
@@ -94,7 +94,6 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                     events_search_edittext.setText("");
-
                 }
         });
         events_search_edittext = rootView.findViewById(R.id.events_search_edittext);
@@ -114,14 +113,14 @@ public class EventsFragment extends Fragment {
         super.setMenuVisibility(menuVisible);
         if (menuVisible) {
             Log.e("SetMenuVisibleFragment", menuVisible + " ");
+
         }
     }
-    ViewPagerAdapterHome viewPagerAdapterHome;
     public void setupViewPager(ViewPager viewPager) {
         eventsParshiyotChildFragment = (EventsParshiyotChildFragment) controller.getFragmentInstance(5);
         eventsHolidaysFragment = (EventsHolidaysChildFragment) controller.getFragmentInstance(6);
         eventRoshFragment = (EventRoshChildFragment) controller.getFragmentInstance(7);
-         viewPagerAdapterHome = new ViewPagerAdapterHome(getChildFragmentManager());
+        ViewPagerAdapterHome viewPagerAdapterHome = new ViewPagerAdapterHome(getChildFragmentManager());
         viewPagerAdapterHome.addFrag(eventRoshFragment, "All");
 
         viewPagerAdapterHome.addFrag(eventsParshiyotChildFragment, getString(R.string.eventparshiyot_childfragment_name));
@@ -208,23 +207,23 @@ public class EventsFragment extends Fragment {
         }
 
     }
-
+//
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         clearTabSetup();
     }
-
+//
     private void clearTabSetup() {
-        viewPagerAdapterHome =null;
+        ViewPagerAdapterHome viewPagerAdapterHome =null;
         viewPager = null;
     }
-
-    public void openEventsAllTab() {
-        if(viewPager != null) {
-            viewPager.setCurrentItem(0);
-        }
-    }
+//
+//    public void openEventsAllTab() {
+//        if(viewPager != null) {
+//            viewPager.setCurrentItem(0);
+//        }
+//    }
 
 
     public void openEventsParshiyotTab() {

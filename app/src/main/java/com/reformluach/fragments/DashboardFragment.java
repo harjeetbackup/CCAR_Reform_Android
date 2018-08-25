@@ -1,6 +1,7 @@
 package com.reformluach.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -81,13 +82,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         setupViewPager(viewPager);
     }
 
+    ViewPagerAdapterHomeDash viewPagerAdapterHomeDash;
     private void setupViewPager(ViewPager viewPager) {
         todaysFragment = (TodaysFragment) controller.getFragmentInstance(0);
         eventsFragment = (EventsFragment) controller.getFragmentInstance(1);
         calenderSyncFragment = (CalenderSyncFragment) controller.getFragmentInstance(2);
         dateConverterFragment = (DateConverterFragment) controller.getFragmentInstance(3);
         aboutFragment = (AboutFragment) controller.getFragmentInstance(4);
-        ViewPagerAdapterHomeDash viewPagerAdapterHomeDash = new ViewPagerAdapterHomeDash(getChildFragmentManager());
+        viewPagerAdapterHomeDash = new ViewPagerAdapterHomeDash(getChildFragmentManager());
         viewPagerAdapterHomeDash.addFrag(todaysFragment);
         viewPagerAdapterHomeDash.addFrag(eventsFragment);
         viewPagerAdapterHomeDash.addFrag(calenderSyncFragment);
@@ -151,7 +153,32 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public void onResume() {
         super.onResume();
         mHasSaveInstanceState = false;
+//        setupViewPager(viewPager);
     }
+
+    boolean isVisible;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        isVisible = isVisibleToUser;
+
+        if(isVisible && getView() != null) {
+            setupViewPager(viewPager);
+        }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        clearTabSetup();
+    }
+
+//    private void clearTabSetup() {
+//        viewPagerAdapterHomeDash =null;
+//        viewPager = null;
+//    }
 
     public void selectChanger(Object... args) {
         int imageTodays, imageEvents, imageCalenderSync, imageDateConverter, imageAbout, textTodays, textEvents, textCalenderSync, textDateConverter, textAbout;
@@ -181,4 +208,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public void onDestroy() {
         super.onDestroy();
     }
+
+
 }

@@ -37,10 +37,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Naveen Mishra on 12/1/2017.
@@ -238,6 +240,29 @@ public class EventsHolidaysChildFragment extends Fragment {
 
                                 }
                                 eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData, pageCount);
+                                String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                int position = 0;
+                                int count = 0;
+                                for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                    String eventDate = mAllEventsReformCalenderData.get(j).getDate();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        Date date1 = sdf.parse(TodaysDate);
+                                        Date date2 = sdf.parse(eventDate);
+                                        if (date2.after(date1)) {
+                                            count = count+1;
+
+                                            if (count == 1) {
+                                                position = j;
+                                            }
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                rv_events_holiday.scrollToPosition(position);
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -301,8 +326,10 @@ public class EventsHolidaysChildFragment extends Fragment {
                             JSONArray jsonArray = object.getJSONArray("items");
                             int dataLen = jsonArray.length();
 
-                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
 
+//                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
+
+                            mAllEventsReformCalenderData.clear();
                             for (int i = 0; i < dataLen; i++) {
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -314,10 +341,34 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 if (parseItemBean.getCategory().equalsIgnoreCase("holiday")) {
-                                    parseItemBeans.add(parseItemBean);
+                                    mAllEventsReformCalenderData.add(parseItemBean);
                                 }
                             }
-                            eventsIsraelAdapter.addMessege(parseItemBeans,pageCount);
+                            eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData,pageCount);
+
+                            String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                            int position = 0;
+                            int count = 0;
+                            for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                String eventDate = mAllEventsReformCalenderData.get(j).getDate();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Date date1 = sdf.parse(TodaysDate);
+                                    Date date2 = sdf.parse(eventDate);
+                                    if (date2.after(date1)) {
+                                        count = count+1;
+
+                                        if (count == 1) {
+                                            position = j;
+                                        }
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            rv_events_holiday.scrollToPosition(position);
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -380,8 +431,9 @@ public class EventsHolidaysChildFragment extends Fragment {
                             JSONArray jsonArray = object.getJSONArray("items");
                             int dataLen = jsonArray.length();
 
-                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
+//                            ArrayList<ParseIsraelItemBean> parseItemBeans = new ArrayList<>();
 
+                            mAllEventsReformCalenderData.clear();
                             for (int i = 0; i < dataLen; i++) {
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -393,10 +445,33 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 parseItemBean.setCategory(jsonObject.optString("category"));
 
                                 if (parseItemBean.getCategory().equalsIgnoreCase("holiday")) {
-                                    parseItemBeans.add(parseItemBean);
+                                    mAllEventsReformCalenderData.add(parseItemBean);
                                 }
                             }
-                            eventsIsraelAdapter.addMessege(parseItemBeans,pageCount);
+                            eventsIsraelAdapter.addMessege(mAllEventsReformCalenderData,pageCount);
+                            String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                            int position = 0;
+                            int count = 0;
+                            for (int j=0; j<mAllEventsReformCalenderData.size(); j++) {
+                                String eventDate = mAllEventsReformCalenderData.get(j).getDate();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Date date1 = sdf.parse(TodaysDate);
+                                    Date date2 = sdf.parse(eventDate);
+                                    if (date2.after(date1)) {
+                                        count = count+1;
+
+                                        if (count == 1) {
+                                            position = j;
+                                        }
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            rv_events_holiday.scrollToPosition(position);
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -552,20 +627,20 @@ public class EventsHolidaysChildFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
+                        if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }
                     else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
+                        if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                        if (searchEditText.getText().length()!=0) {
+                        if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
@@ -573,7 +648,7 @@ public class EventsHolidaysChildFragment extends Fragment {
 
                     }
 
-                    if (searchEditText.getText().length()==0){
+                    if (searchEditText.getText().toString().isEmpty()){
                         showFullData();
                         isFilterEnable=false;
 
