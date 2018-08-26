@@ -80,10 +80,6 @@ public class EventAllTabFragment extends Fragment  {
         controller = (Controller) context.getApplicationContext();
 
         mRecyclerView = eventsHolidaysFragmentView.findViewById(R.id.rv_events_rosh);
-//        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-//        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
-//        tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
-//         It is initialising Views
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
@@ -91,37 +87,12 @@ public class EventAllTabFragment extends Fragment  {
         myCal.setTime(date);
         mCurrentYear = Integer.parseInt(sdf.format(date));
 
-
-
-
-
-        /*if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-            if (isVisible) {
-                getAllEventsReform();
-                tvEventCalenderType.setText("R");
-            }
-        } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-          if (isVisible) {
-              getAllEventsDispora();
-              tvEventCalenderType.setText("D");
-          }
-        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-            if (isVisible) {
-                getAllEventsIsrael();
-                tvEventCalenderType.setText("I");
-            }
-        }else {
-            getAllEventsReform();
-            tvEventCalenderType.setText("R");
-        }*/
         return eventsHolidaysFragmentView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
 
         mEventAllAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
         layoutManager = new LinearLayoutManager(getActivity());
@@ -362,7 +333,6 @@ public class EventAllTabFragment extends Fragment  {
                         if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
                             mCurrentYear = year+1;
                             Collections.sort(mReformDataList);
-                            // TODO, sorting logic based on date ascending order
                             mEventAllAdapter.addMessege(mReformDataList, year);
                         }
 
