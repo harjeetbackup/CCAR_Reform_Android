@@ -5,10 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-public class ParseIsraelItemBean implements Parcelable{
+public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelItemBean>{
 
     /**
      * date : 2020-01-04
@@ -35,6 +34,53 @@ public class ParseIsraelItemBean implements Parcelable{
     private String parashatDate ;
     private String roshChodesh ;
     private String shabbat ;
+
+    private boolean isHighlighted;
+    private String subTitle;
+
+    private int actualIndex = -1;
+
+    private Date dateTime;
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date datetime) {
+        this.dateTime = datetime;
+    }
+
+    @Override
+    public int compareTo(ParseIsraelItemBean o) {
+        if(getDateTime() == null || o== null || o.getDateTime() == null){
+            return 0;
+        }
+        return getDateTime().compareTo(o.getDateTime());
+    }
+
+    public int getActualIndex() {
+        return actualIndex;
+    }
+
+    public void setActualIndex(int mIndex) {
+        this.actualIndex = mIndex;
+    }
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        isHighlighted = highlighted;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
 
     public String getShabbat() {
         return shabbat;

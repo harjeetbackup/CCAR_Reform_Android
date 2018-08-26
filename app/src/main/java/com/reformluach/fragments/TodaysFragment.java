@@ -84,6 +84,7 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
                     controller.savePreferencesString(context, Appconstant.CURRENT_DATE_MONTH, getMonthString(finalMonth) + " " + date);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(context, "Error occurred!", Toast.LENGTH_SHORT).show();
                 }
             }
 

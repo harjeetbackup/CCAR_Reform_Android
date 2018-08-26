@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,28 +95,15 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     @Override
     public void onBindViewHolder(final EventsIsraelAdapter.ViewHolder holder, final int position) {
         final ParseIsraelItemBean model = mPopulatingData.get(position);
+        final boolean isHighlighted = model.isHighlighted();
+        final String subTitle = model.getSubTitle();
 
-        if (model==null){
-            return;
-        }
         String title = model.getTitle();
 
         DateTime dateTime = AppDateUtil.getDateTime(model.getDate());
         String date_ddMMyyyy = AppDateUtil.onlyDate_ddMMyyyy(dateTime);
         holder.tvDate.setText(date_ddMMyyyy);
 
-
-//        SimpleDateFormat inFormat = new SimpleDateFormat("dd-MM-yyyy");
-//        try {
-//            Date date = inFormat.parse(model.getDate());
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(date);
-//            String[] days = new String[] { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
-//            String day = days[calendar.get(Calendar.DAY_OF_WEEK)];
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         String dateStr = "";
@@ -149,72 +138,19 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         holder.tvEventName.setText(title+" Saturday");
         }
 
-        final int positionList = holder.getAdapterPosition();
-
-        ArrayList<ParseIsraelItemBean> parashatEventsData = new ArrayList<>();
-        ArrayList<ParseIsraelItemBean> shabbatEventsData = new ArrayList<>();
-
-        for (int i=0;i<mAllActualData.size();i++) {
-
-            ParseIsraelItemBean filteredEvents = mAllActualData.get(i);
-
-                if (filteredEvents.getTitle().startsWith("Parashat")) {
-                    parashatEventsData.add(filteredEvents);
-
-                    Log.i("", "" + parashatEventsData.size());
-                }
-                if (filteredEvents.getTitle().equals("Shabbat Parah") ||
-                        filteredEvents.getTitle().equals("Shabbat Sh'kalim") ||
-                        filteredEvents.getTitle().equals("Shabbat HaGadol") || filteredEvents.getTitle().equals("Shabbat Zachor") ||
-                        filteredEvents.getTitle().equals("Shabbat HaChodesh") || filteredEvents.getTitle().equals("Shabbat Shuva")
-                        || filteredEvents.getTitle().equals("Shabbat Chanukah") || filteredEvents.getTitle().startsWith("Chanukah")) {
-
-
-                    shabbatEventsData.add(filteredEvents);
-                    Log.i("", "" + shabbatEventsData.size());
-
-                }
-
-            if (parashatEventsData.size() != 0 && shabbatEventsData.size() != 0) {
-
-                // Loop arrayList2 items
-                for (ParseIsraelItemBean shabbat : shabbatEventsData) {
-                    // Loop arrayList1 items
-                    boolean found = false;
-                    DateTime dateTimeShabbat = AppDateUtil.getDateTime(shabbat.getDate());
-                    String date_ddMMyyyyShabbat = AppDateUtil.onlyDate_ddMMyyyy(dateTimeShabbat);
-                    for (ParseIsraelItemBean parashat : parashatEventsData) {
-                        DateTime dateTimeParashat = AppDateUtil.getDateTime(parashat.getDate());
-                        String date_ddMMyyyyParashat = AppDateUtil.onlyDate_ddMMyyyy(dateTimeParashat);
-                        if (date_ddMMyyyyParashat.equals(date_ddMMyyyyShabbat) ) {
-                            if (parashat.getTitle().startsWith("Parashat")) {
-                                holder.tvEventSubtitle.setText("The Haftarah for " + parashat.getTitle() + " should be read.");
-                                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-                                holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-                            }
-                            if (shabbat.getTitle().equals("Shabbat Parah") ||
-                                    shabbat.getTitle().equals("Shabbat Sh'kalim") ||
-                                    shabbat.getTitle().equals("Shabbat HaGadol") || shabbat.getTitle().equals("Shabbat Zachor") ||
-                                    shabbat.getTitle().equals("Shabbat HaChodesh") || shabbat.getTitle().equals("Shabbat Shuva")
-                                    || shabbat.getTitle().equals("Shabbat Chanukah") || shabbat.getTitle().startsWith("Chanukah")) {
-                                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-                                holder.tvEventSubtitle.setVisibility(View.GONE);
-                            }
-                        }
-//
-                        else if (!date_ddMMyyyyParashat.equals(date_ddMMyyyyShabbat)){
-                            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
-                            holder.tvEventSubtitle.setVisibility(View.GONE);
-                        }else {
-                            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
-                            holder.tvEventSubtitle.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
-
-
+        if(isHighlighted) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
         }
+
+        if(subTitle != null && !TextUtils.isEmpty(subTitle)) {
+            holder.tvEventSubtitle.setText(subTitle);
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvEventSubtitle.setVisibility(View.GONE);
+        }
+
 
 
         holder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
@@ -296,6 +232,9 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
 
     public void addMessege(ArrayList<ParseIsraelItemBean> postsDataBeans, int year) {
         mPopulatingData.addAll(postsDataBeans);
+
+        Log.i("Ashwani", "Size :: "+mPopulatingData.size()+" :: Year :: "+year);
+
         notifyDataSetChanged();
         mAllActualData = new ArrayList<>(mPopulatingData);
 

@@ -63,7 +63,7 @@ public class EventsHolidaysChildFragment extends Fragment {
 
     EventsIsraelAdapter eventsIsraelAdapter;
     private boolean isVisible;
-    public TextView tvCanc;
+//    public TextView tvCanc;
     TextView tvEventCalenderType;
 
 
@@ -79,10 +79,10 @@ public class EventsHolidaysChildFragment extends Fragment {
         controller = (Controller) context.getApplicationContext();
         rv_events_holiday = eventsHolidaysFragmentView.findViewById(R.id.rv_events_holiday);
 //        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+//        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
         tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
 //         It is initialising Views
-        initViews(eventsHolidaysFragmentView);
+//
 
         pageCount = 0;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -93,28 +93,28 @@ public class EventsHolidaysChildFragment extends Fragment {
 
         layoutManager = new LinearLayoutManager(getActivity());
 
-        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-            getAllEventsReformHoliday();
-            tvEventCalenderType.setText("R");
-        }
-        else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-            if (isVisible) {
-                getAllEventsDispora();
-                tvEventCalenderType.setText("D");
-            }
-        }else if (controller.getPreferencesString((Activity) context,Appconstant.ISRAEL).equalsIgnoreCase("selected")){
-            if (isVisible) {
-                getAllEventsIsrael();
-                tvEventCalenderType.setText("I");
-            }
-          else {
-                if (isVisible) {
-                    getAllEventsReformHoliday();
-                    tvEventCalenderType.setText("R");
-                }
-            }
-
-        }
+//        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+//            getAllEventsReformHoliday();
+//            tvEventCalenderType.setText("R");
+//        }
+//        else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//            if (isVisible) {
+//                getAllEventsDispora();
+//                tvEventCalenderType.setText("D");
+//            }
+//        }else if (controller.getPreferencesString((Activity) context,Appconstant.ISRAEL).equalsIgnoreCase("selected")){
+//            if (isVisible) {
+//                getAllEventsIsrael();
+//                tvEventCalenderType.setText("I");
+//            }
+//          else {
+//                if (isVisible) {
+//                    getAllEventsReformHoliday();
+//                    tvEventCalenderType.setText("R");
+//                }
+//            }
+//
+//        }
 
 
         return eventsHolidaysFragmentView;
@@ -136,22 +136,19 @@ public class EventsHolidaysChildFragment extends Fragment {
         if(isVisible && getView() != null) {
             if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
                 getAllEventsReformHoliday();
-                tvEventCalenderType.setText("R");
+
             }
             else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
                 getAllEventsDispora();
-                tvEventCalenderType.setText("D");
 
             } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                 getAllEventsIsrael();
-                tvEventCalenderType.setText("I");
 
             }else {
                 getAllEventsReformHoliday();
-                tvEventCalenderType.setText("R");
 
             }
-            initViews(eventsHolidaysFragmentView);
+//
             showFullData();
             isFilterEnable = false;
         }
@@ -166,7 +163,7 @@ public class EventsHolidaysChildFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+//        tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
 //        searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
 
     }
@@ -195,7 +192,7 @@ public class EventsHolidaysChildFragment extends Fragment {
         for (int i = 0; i < urls.length; i++) {
             final int j = i;
             String urlarray = urls[i];
-//        String url = Url.israelHolidayUrlBeforeDate + year + Url.israelHolidayUrlAfterDate;
+//        String url = Url.israelHolidayUrlBeforeDate + year + Url.israelHolidayyUrlAfterDate;
             RequestQueue queue = Volley.newRequestQueue(getActivity());
             JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, urlarray, null,
                     new Response.Listener<JSONObject>() {
@@ -523,38 +520,38 @@ public class EventsHolidaysChildFragment extends Fragment {
         };
     }
 
-    private void initViews(View eventsHolidaysFragmentView) {
-        final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-
-        tvCanc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
-                    isFilterEnable=false;
-                    getAllEventsReformHoliday();
-
-                }
-                else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
-                    isFilterEnable=false;
-                    getAllEventsDispora();
-
-                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                    searchEditText.getText().clear();
-                    isFilterEnable=false;
-                    getAllEventsIsrael();
-                }
-//                if (searchEditText.getText().length()==0){
+//    private void initViews(View eventsHolidaysFragmentView) {
+//        final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
+//
+//        tvCanc.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
 //                    searchEditText.getText().clear();
-//                    showFullData();
 //                    isFilterEnable=false;
+//                    getAllEventsReformHoliday();
 //
 //                }
-            }
-        });
-
-    }
+//                else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//                    searchEditText.getText().clear();
+//                    isFilterEnable=false;
+//                    getAllEventsDispora();
+//
+//                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+//                    searchEditText.getText().clear();
+//                    isFilterEnable=false;
+//                    getAllEventsIsrael();
+//                }
+////                if (searchEditText.getText().length()==0){
+////                    searchEditText.getText().clear();
+////                    showFullData();
+////                    isFilterEnable=false;
+////
+////                }
+//            }
+//        });
+//
+//    }
 
     private void callRefreshIsrael(String s) {
         final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
@@ -586,7 +583,6 @@ public class EventsHolidaysChildFragment extends Fragment {
 
             if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
                 getAllEventsReformHoliday();
-                tvEventCalenderType.setText("R");
             }
         }
         else if (isNeedToRefresh) {
@@ -594,7 +590,6 @@ public class EventsHolidaysChildFragment extends Fragment {
             pageCount = 0;
             if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
                 getAllEventsDispora();
-                tvEventCalenderType.setText("R");
             }
         }
         else if (isNeedToRefresh) {
@@ -602,14 +597,12 @@ public class EventsHolidaysChildFragment extends Fragment {
             pageCount = 0;
             if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                 getAllEventsIsrael();
-                tvEventCalenderType.setText("R");
             }
         }else {
             if (isNeedToRefresh) {
                 isNeedToRefresh = true;
                 pageCount = 0;
                 getAllEventsReformHoliday();
-                tvEventCalenderType.setText("R");
 
             }
         }
@@ -621,7 +614,17 @@ public class EventsHolidaysChildFragment extends Fragment {
             return;
         }
         final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
-
+        TextView tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
+        TextView tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
+        if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+            tvEventCalenderType.setText("R");
+        } else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            tvEventCalenderType.setText("D");
+        } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+            tvEventCalenderType.setText("I");
+        }else {
+            tvEventCalenderType.setText("R");
+        }
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -661,5 +664,33 @@ public class EventsHolidaysChildFragment extends Fragment {
                 return false;
             }
         });
+
+        tvCanc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    getAllEventsReformHoliday();
+
+                }
+                else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    getAllEventsDispora();
+
+                } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    getAllEventsIsrael();
+                }else {
+                    searchEditText.getText().clear();
+                    isFilterEnable=false;
+                    showFullData();
+
+                }
+            }
+        });
+
     }
 }
