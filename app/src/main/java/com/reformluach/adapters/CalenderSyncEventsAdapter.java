@@ -22,8 +22,6 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
 
     ArrayList<EventListCalenderSync> syncArrayList = new ArrayList<>();
 
-
-
     public CalenderSyncEventsAdapter(Context context, ArrayList<EventListCalenderSync> arrayList ,CalenderSyncEventsAdapter.OnEventSelected onEventSelected) {
         this.context = context;
         this.syncArrayList = arrayList;
@@ -59,7 +57,6 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
             sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.synced_event));
             sportsView.checkBoxEvent.setTextColor(context.getResources().getColor(R.color.color_gray_search));
             sportsView.txtSubTitle.setTextColor(context.getResources().getColor(R.color.color_gray_search));
-
             sportsView.checkBoxEvent.setEnabled(false);
         } else if(isSelected){
             sportsView.checkBoxEvent.setButtonDrawable(context.getResources().getDrawable(R.mipmap.checkboxsel));
@@ -102,26 +99,6 @@ public class CalenderSyncEventsAdapter extends RecyclerView.Adapter<CalenderSync
         }
     }
 
-//    public void updateData(ArrayList<EventListCalenderSync> list) {
-//        if (syncArrayList!= null) {
-//            syncArrayList.clear();
-//            syncArrayList.addAll(list);
-//
-//            for (EventListCalenderSync bean : this.selectedEventLists) {
-//
-//                final String id = bean.getEventname();
-//
-//                if (selectedIds.contains(id)) {
-//                    EventListCalenderSync bean1 = selectedEventLists.get(0);
-//                    bean1.setEventname(id);
-//                    int indexOf = syncArrayList.indexOf(bean1);
-//                    syncArrayList.get(indexOf).setSelected(true);
-//                }
-//            }
-//
-//            notifyDataSetChanged();
-//        }
-//    }
 
     public void updateData(ArrayList<EventListCalenderSync> arrayList) {
         syncArrayList = arrayList;

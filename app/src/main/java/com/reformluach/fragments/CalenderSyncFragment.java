@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -17,8 +18,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +34,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.reformluach.R;
 import com.reformluach.activities.SettingsActivity;
@@ -69,7 +71,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
 //    private View calanderSyncFragmentView;
     private Context context;
-    private SwitchCompat swSync;
     private String eventdate, event;
     private long timestamp;
     private ContentResolver resolver;
@@ -87,8 +88,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     RecyclerView recyclerViewEventName;
     CalenderSyncEventsAdapter calenderSyncEventsAdapter;
 
-    private ArrayList<ParseIsraelItemBean> itemBeanArrayList = new ArrayList<>();
-
     private ArrayList<ModelForYear> mYearsList = new ArrayList<>();
     private Map<String, ArrayList<EventListCalenderSync>> mYearsHolidayCatMap = new HashMap<>();
     String mSelectedYear = "";
@@ -100,22 +99,33 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     private ArrayList<ParseIsraelItemBean> mIsarailDataList = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> mDesporaDataList = new ArrayList<>();
 
+    View calanderSyncFragmentView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View calanderSyncFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.calandersync_fragment_layout, container, false);
+        calanderSyncFragmentView = getView() != null ? getView() : inflater.inflate(R.layout.calandersync_fragment_layout, container, false);
         context = calanderSyncFragmentView.getContext();
         controller = (Controller) context.getApplicationContext();
+        tvCalenderType = calanderSyncFragmentView.findViewById(R.id.txtCalenderType);
+        recyclerViewEventName = calanderSyncFragmentView.findViewById(R.id.rvEvents);
+        recyclerViewYear = calanderSyncFragmentView.findViewById(R.id.rvYear);
 
         getIds(calanderSyncFragmentView);
 
+        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+            tvCalenderType.setText("R");
+        } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            tvCalenderType.setText("D");
+        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+            tvCalenderType.setText("I");
+        }
+        else {
+            tvCalenderType.setText("R");
+        }
         return calanderSyncFragmentView;
 
-            }
-
-
-
+    }
 
 
     private void getServerCall(final int year) {
@@ -149,7 +159,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         mIsLoading2 = true;
 
 
-        Toast.makeText(getActivity(), "Request", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "Request", Toast.LENGTH_LONG).show();
 
         for(String url : urls) {
 
@@ -282,89 +292,23 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvCalenderType = getView().findViewById(R.id.txtCalenderType);
 
 
 //        String year = "";
 
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-
-        final String selectedCalendar = getSelectedCalendar(controller);
-          mYearsList.clear();
-        for (int i = 0; i <= 3; i++) {
-            ModelForYear modelForYear = new ModelForYear();
-            String yearStr = "" + year;
-            modelForYear.setYear(yearStr);
-            if (i == 0) {
-                modelForYear.setSelected(true);
-                mSelectedYear = yearStr;
-            }
-            mYearsList.add(modelForYear);
+        getCalEventList();
 
 
-            ArrayList<EventListCalenderSync> eventListCalenderSyncArrayList = new ArrayList<>();
-
-
-            // Add item to mAdapter
-            EventListCalenderSync event1 = new EventListCalenderSync("Major Holidays", "");
-            EventListCalenderSync newUser2 = new EventListCalenderSync("Minor Holidays", "(Tu B'Sh'vat, Lag Ba'Omer,...)");
-            EventListCalenderSync newUser3 = new EventListCalenderSync("Rosh Chodesh", "");
-            EventListCalenderSync newUser4 = new EventListCalenderSync("Weekly Parshiyot", "");
-            EventListCalenderSync newUser5 = new EventListCalenderSync("Sefirat Ha'Omer", "");
-            EventListCalenderSync newUser6 = new EventListCalenderSync("Special Shabatot", "(Shabbat Sh'kalim, Zachor,...)");
-            EventListCalenderSync newUser7 = new EventListCalenderSync("Modern Holidays", "(Yom HaShoah V'hag'vurah, Yom Ha'atzma'ut,...)");
-
-            eventListCalenderSyncArrayList.add(event1);
-            eventListCalenderSyncArrayList.add(newUser2);
-            eventListCalenderSyncArrayList.add(newUser3);
-            eventListCalenderSyncArrayList.add(newUser4);
-            eventListCalenderSyncArrayList.add(newUser5);
-            eventListCalenderSyncArrayList.add(newUser6);
-            eventListCalenderSyncArrayList.add(newUser7);
-
-            for (EventListCalenderSync event : eventListCalenderSyncArrayList) {
-                boolean isSync = SyncCalendarPref.getInstance(getActivity()).isEventSynced(yearStr, event.getEventname(), selectedCalendar);
-                event.setSync(isSync);
-            }
-
-            mYearsHolidayCatMap.put("" + year, eventListCalenderSyncArrayList);
-
-            year++;
-        }
-
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerViewYear.setLayoutManager(layoutManager);
-        layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(false);
-
-        calenderPagerAdapter = new CalenderPagerAdapter(getActivity(), mYearsList, this);
-        recyclerViewYear.setAdapter(calenderPagerAdapter);
-        calenderPagerAdapter.setOnYearSelect(this);
-
-
-        final LinearLayoutManager layoutManagerEvent = new LinearLayoutManager(getActivity());
-        layoutManagerEvent.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerViewEventName.setLayoutManager(layoutManagerEvent);
-        layoutManagerEvent.setStackFromEnd(true);
-        layoutManagerEvent.setReverseLayout(false);
-
-        calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(),
-                mYearsHolidayCatMap.get(mSelectedYear), this);
-        recyclerViewEventName.setAdapter(calenderSyncEventsAdapter);
     }
 
     @SuppressLint("NewApi")
     private void getIds(View calanderSyncFragmentView) {
         llMain = calanderSyncFragmentView.findViewById(R.id.llMain);
-        swSync = calanderSyncFragmentView.findViewById(R.id.swSync);
         rvCalendar = calanderSyncFragmentView.findViewById(R.id.rvCalendar);
-        recyclerViewYear = calanderSyncFragmentView.findViewById(R.id.rvYear);
-        recyclerViewEventName = calanderSyncFragmentView.findViewById(R.id.rvEvents);
+//        recyclerViewYear = calanderSyncFragmentView.findViewById(R.id.rvYear);
+//        recyclerViewEventName = calanderSyncFragmentView.findViewById(R.id.rvEvents);
         imgBtnSettingCalender = calanderSyncFragmentView.findViewById(R.id.ImgBtnSettingCalender);
         btnDownloadEvents = calanderSyncFragmentView.findViewById(R.id.btnDownloadEvents);
-
 
         imgBtnSettingCalender.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -590,6 +534,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume() {
         super.onResume();
@@ -599,7 +544,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         }
 
 
-        if(mSelectedCalType != null || !mSelectedCalType.equals(HttpCall.getSelectedCalendarType(getActivity())) ) {
+        if(mSelectedCalType == null || !mSelectedCalType.equalsIgnoreCase(HttpCall.getSelectedCalendarType(getActivity())) || !mSelectedCalType.equals("null")) {
             mSelectedCalType = HttpCall.getSelectedCalendarType(getActivity());
 
 //            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(rvCalendar.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -623,9 +568,24 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
        if (isVisible ){
            getServerCall(Integer.parseInt(mSelectedYear));
-
+           getSelectedCalendar(controller);
        }
 
+       if (isVisible){
+           if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+               tvCalenderType.setText("R");
+           } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+               tvCalenderType.setText("D");
+           } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+               tvCalenderType.setText("I");
+           }
+           else {
+               tvCalenderType.setText("R");
+           }
+       }
+
+       getIds(calanderSyncFragmentView);
+        getCalEventList();
 }
 
 
@@ -671,14 +631,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     }
 
 
-
-
-//    private void callSelectedJsonMethod() {
-//
-//    }
-
-
-
     public class CalenderAsync extends AsyncTask {
 
         private HashMap<String, ArrayList<ParseIsraelItemBean>> mapEvent;
@@ -718,6 +670,12 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                     }
                     SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
+                    for (int i=0; i<mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {
+                       if (mYearsHolidayCatMap.get(mSelectedYear).get(i).getEventname().equalsIgnoreCase(key)) {
+                           mYearsHolidayCatMap.get(mSelectedYear).get(i).setSync(true);
+                           mYearsHolidayCatMap.get(mSelectedYear).get(i).setSelected(false);
+                       }
+                    }
                 }
             }
             return null;
@@ -728,9 +686,11 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             controller.PdStop();
-//            swSync.setChecked(false);
-            btnDownloadEvents.setEnabled(false);
+            calenderSyncEventsAdapter.updateData(mYearsHolidayCatMap.get(mSelectedYear));
+            btnDownloadEvents.setEnabled(true);
         }
+
+
     }
 
     private boolean isVisible;
@@ -741,36 +701,38 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         isVisible = isVisibleToUser;
         if (isVisibleToUser){
             if(isVisible && getView() != null) {
-
                 getIds(getView());
+//                registerCalenderType();
 
             }
             }
 
 
-          if (isVisible) {
+          if (isVisible ) {
             if(shouldRequestDataAgain()) {
                 getServerCall(Integer.parseInt(mSelectedYear));
-                registerCalenderType();
+//                registerCalenderType();
             }
           }
 
+
     }
 
 
-    public void registerCalenderType(){
-        tvCalenderType = getView().findViewById(R.id.txtCalenderType);
-
-        if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-            tvCalenderType.setText("R");
-        } else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-            tvCalenderType.setText("D");
-        } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-            tvCalenderType.setText("I");
-        }else {
-            tvCalenderType.setText("R");
-        }
-    }
+//    public void registerCalenderType(){
+//        tvCalenderType = getView().findViewById(R.id.txtCalenderType);
+//
+//        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+//            tvCalenderType.setText("R");
+//        } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+//            tvCalenderType.setText("D");
+//        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+//            tvCalenderType.setText("I");
+//        }
+//        else {
+//            tvCalenderType.setText("R");
+//        }
+//    }
 
         private String getSelectedCalendar(Controller controller) {
 
@@ -780,9 +742,11 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 return Appconstant.DIASPORA;
             } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                 return Appconstant.ISRAEL;
-            } else {
+            }
+            else {
                 return Appconstant.REFORM;
             }
+//            return "";
         }
 
 
@@ -794,7 +758,8 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 return mDesporaDataList;
             } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                 return mIsarailDataList;
-            } else {
+            }
+            else {
                 return mReformDataList;
             }
         }
@@ -810,6 +775,76 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             } else {
                 return mReformDataList.size()==0;
             }
+        }
+
+        public void getCalEventList() {
+
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+
+            final String selectedCalendar = getSelectedCalendar(controller);
+            mYearsList.clear();
+            for (int i = 0; i <= 3; i++) {
+                ModelForYear modelForYear = new ModelForYear();
+                String yearStr = "" + year;
+                modelForYear.setYear(yearStr);
+                if (i == 0) {
+                    modelForYear.setSelected(true);
+                    mSelectedYear = yearStr;
+                }
+                mYearsList.add(modelForYear);
+
+
+                ArrayList<EventListCalenderSync> eventListCalenderSyncArrayList = new ArrayList<>();
+
+
+                // Add item to mAdapter
+                EventListCalenderSync event1 = new EventListCalenderSync("Major Holidays", "");
+                EventListCalenderSync newUser2 = new EventListCalenderSync("Minor Holidays", "(Tu B'Sh'vat, Lag Ba'Omer,...)");
+                EventListCalenderSync newUser3 = new EventListCalenderSync("Rosh Chodesh", "");
+                EventListCalenderSync newUser4 = new EventListCalenderSync("Weekly Parshiyot", "");
+                EventListCalenderSync newUser5 = new EventListCalenderSync("Sefirat Ha'Omer", "");
+                EventListCalenderSync newUser6 = new EventListCalenderSync("Special Shabatot", "(Shabbat Sh'kalim, Zachor,...)");
+                EventListCalenderSync newUser7 = new EventListCalenderSync("Modern Holidays", "(Yom HaShoah V'hag'vurah, Yom Ha'atzma'ut,...)");
+
+                eventListCalenderSyncArrayList.add(event1);
+                eventListCalenderSyncArrayList.add(newUser2);
+                eventListCalenderSyncArrayList.add(newUser3);
+                eventListCalenderSyncArrayList.add(newUser4);
+                eventListCalenderSyncArrayList.add(newUser5);
+                eventListCalenderSyncArrayList.add(newUser6);
+                eventListCalenderSyncArrayList.add(newUser7);
+
+                for (EventListCalenderSync event : eventListCalenderSyncArrayList) {
+                    boolean isSync = SyncCalendarPref.getInstance(getActivity()).isEventSynced(yearStr, event.getEventname(), selectedCalendar);
+                    event.setSync(isSync);
+                }
+
+                mYearsHolidayCatMap.put("" + year, eventListCalenderSyncArrayList);
+
+                year++;
+            }
+
+            final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recyclerViewYear.setLayoutManager(layoutManager);
+            layoutManager.setStackFromEnd(true);
+            layoutManager.setReverseLayout(false);
+
+            calenderPagerAdapter = new CalenderPagerAdapter(getActivity(), mYearsList, this);
+            recyclerViewYear.setAdapter(calenderPagerAdapter);
+            calenderPagerAdapter.setOnYearSelect(this);
+
+
+            final LinearLayoutManager layoutManagerEvent = new LinearLayoutManager(getActivity());
+            layoutManagerEvent.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerViewEventName.setLayoutManager(layoutManagerEvent);
+            layoutManagerEvent.setStackFromEnd(true);
+            layoutManagerEvent.setReverseLayout(false);
+
+            calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(),
+                    mYearsHolidayCatMap.get(mSelectedYear), this);
+            recyclerViewEventName.setAdapter(calenderSyncEventsAdapter);
         }
 
 }

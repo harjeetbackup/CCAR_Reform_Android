@@ -31,9 +31,6 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
     private String subcat;
     private boolean yomtov;
 
-    private String parashatDate ;
-    private String roshChodesh ;
-    private String shabbat ;
 
     private boolean isHighlighted;
     private String subTitle;
@@ -82,29 +79,6 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
         this.subTitle = subTitle;
     }
 
-    public String getShabbat() {
-        return shabbat;
-    }
-
-    public void setShabbat(String shabbat) {
-        this.shabbat = shabbat;
-    }
-
-    public String getRoshChodesh() {
-        return roshChodesh;
-    }
-
-    public void setRoshChodesh(String roshChodesh) {
-            this.roshChodesh = roshChodesh;
-    }
-
-    public String getParashatDate() {
-        return parashatDate;
-    }
-
-    public void setParashatDate(String parashatDate) {
-            this.parashatDate = parashatDate;
-    }
 
     private EventTitle replaceTitle;
 
@@ -188,32 +162,6 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
         this.yomtov = yomtov;
     }
 
-    public boolean isSpecialDayForSubtitle(){
-            if (title.contains("Shabbat Parah") || title.contains("Shabbat Sh'kalim") ||
-                    title.contains("Shabbat HaGadol") || title.contains("Shabbat Zachor") ||
-                    title.contains("Shabbat HaChodesh") || title.contains("Shabbat Shuva")
-                    || title.contains("Shabbat Chanukah") || title.startsWith("Chanukah")){
-
-                return true;
-        }
-        return false;
-    }
-
-    public boolean isComparableDayForSubTitle(){
-        if (title.startsWith("Parashat") || category.startsWith("parashat")){
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isThreeEventsOfSpecialDayForSubTitle(){
-        if (title.startsWith("Rosh Chodesh")){
-            return true;
-        }
-        return false;
-    }
-
-
 
     @Override
     public int describeContents() {
@@ -242,9 +190,6 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
         this.category = in.readString();
         this.title = in.readString();
         this.subcat = in.readString();
-        this.parashatDate = in.readString();
-        this.roshChodesh = in.readString();
-        this.shabbat = in.readString();
         this.replaceTitle = in.readParcelable(EventTitle.class.getClassLoader());
     }
 
@@ -254,9 +199,6 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
      parcel.writeString(this.date);
      parcel.writeString(this.title);
      parcel.writeString(this.subcat);
-     parcel.writeString(this.parashatDate);
-     parcel.writeString(this.roshChodesh);
-     parcel.writeString(this.shabbat);
      parcel.writeParcelable((Parcelable) this.replaceTitle, i);
     }
 

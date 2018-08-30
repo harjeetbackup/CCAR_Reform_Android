@@ -39,6 +39,12 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
+    private String month;
+    private String date;
+    private String year;
+
+    private String eventDate;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +54,10 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
         getIds(todaysFragmentView);
         if (controller.isOnline(context)) {
             callApi(controller.getMonth(), controller.getDate(), controller.getYear());
+            month = String.valueOf(controller.getMonth());
+            date = String.valueOf(controller.getDate());
+            year = String.valueOf(controller.getYear());
+            eventDate = year+"-"+date+"-"+month;
         } else {
             Toast.makeText(context, getString(R.string.please_check_internet), Toast.LENGTH_SHORT).show();
         }
@@ -174,6 +184,7 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(context, EventDetailsActivity.class);
                 intent.putExtra("eventType", "Todays");
                 intent.putExtra("eventName", eventName);
+                intent.putExtra("eventDate",eventDate);
                 startActivity(intent);
                 break;
         }

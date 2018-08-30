@@ -47,7 +47,6 @@ import java.util.TreeMap;
  */
 
 public class EventAllTabFragment extends Fragment  {
-//    private View eventsHolidaysFragmentView;
     private Context context;
     private RecyclerView mRecyclerView;
 //    private EditText searchEditText;
@@ -114,7 +113,6 @@ public class EventAllTabFragment extends Fragment  {
             mEventAllAdapter.clearPreviousData();
         }
 
-
         if(mEventAllAdapter.getItemCount() == 0) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
             Date date = new Date();
@@ -127,9 +125,12 @@ public class EventAllTabFragment extends Fragment  {
             mIsLoading2 = false;
             getServerCall(mCurrentYear);
 
-            registerSearch();
+//            registerSearch();
         }
 
+        if (isVisible){
+            registerSearch();
+        }
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -151,9 +152,27 @@ public class EventAllTabFragment extends Fragment  {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
 
+        if (!isVisible){
+            return;
+        }
         if(isVisible) {
             registerSearch();
         }
+
+        if (isVisible){
+            getServerCall(mCurrentYear);
+        }
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//
+//                if (!recyclerView.canScrollVertically(1)) {
+//                    getServerCall(mCurrentYear);
+//
+//                }
+//            }
+//        });
 
     }
 
@@ -201,20 +220,20 @@ public class EventAllTabFragment extends Fragment  {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+                    if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }
-                    else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+                    else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
-                    } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+                    } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
                             callRefreshIsrael(searchEditText.getText().toString());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -222,11 +241,11 @@ public class EventAllTabFragment extends Fragment  {
                         }
                     }
 
-                    if (searchEditText.getText().toString().isEmpty()){
-                        showFullData();
+                    if (searchEditText.getText().length()==0){
+//                        showFullData();
+                        getServerCall(mCurrentYear);
                         isFilterEnable=false;
                     }
-
                     return true;
                 }
 
@@ -241,7 +260,8 @@ public class EventAllTabFragment extends Fragment  {
             @Override
             public void onClick(View v) {
                 searchEditText.setText("");
-                showFullData();
+//                showFullData();
+                getServerCall(mCurrentYear);
                 isFilterEnable=false;
             }
         });
@@ -250,7 +270,7 @@ public class EventAllTabFragment extends Fragment  {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private ArrayList<ParseIsraelItemBean> mReformDataList = null;
+    private ArrayList<ParseIsraelItemBean> mReformDataList = new ArrayList<>();
 
     private void getServerCall(final int year) {
 
@@ -280,7 +300,7 @@ public class EventAllTabFragment extends Fragment  {
         mIsLoading1 = true;
         mIsLoading2 = true;
 
-        Toast.makeText(getActivity(), "Request", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "Request", Toast.LENGTH_LONG).show();
 
         for(String url : urls) {
 
@@ -334,12 +354,58 @@ public class EventAllTabFragment extends Fragment  {
                             mCurrentYear = year+1;
                             Collections.sort(mReformDataList);
                             mEventAllAdapter.addMessege(mReformDataList, year);
+
+                            String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                            int position = 0;
+                            int count = 0;
+                            for (int j=0; j<mReformDataList.size(); j++) {
+                                String eventDate = mReformDataList.get(j).getDate();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Date date1 = sdf.parse(TodaysDate);
+                                    Date date2 = sdf.parse(eventDate);
+                                    if (date2.after(date1)) {
+                                        count = count+1;
+
+                                        if (count == 1) {
+                                            position = j;
+                                        }
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            mRecyclerView.scrollToPosition(position);
                         }
 
                     } else if (from.equals(Appconstant.ISRAEL) || from.equals(Appconstant.DIASPORA)) {
                         mCurrentYear = year+1;
                         mIsLoading0 = false;
                         mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
+
+                        String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                        int position = 0;
+                        int count = 0;
+                        for (int j=0; j<allEventsReformCalenderData.size(); j++) {
+                            String eventDate = allEventsReformCalenderData.get(j).getDate();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                Date date1 = sdf.parse(TodaysDate);
+                                Date date2 = sdf.parse(eventDate);
+                                if (date2.after(date1)) {
+                                    count = count+1;
+
+                                    if (count == 1) {
+                                        position = j;
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        mRecyclerView.scrollToPosition(position);
                     }
 
 
@@ -384,9 +450,6 @@ public class EventAllTabFragment extends Fragment  {
         }
         return urlModel;
     }
-
-
-
 
 
 }

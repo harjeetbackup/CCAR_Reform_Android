@@ -54,31 +54,6 @@ public class EventDetailsActivity extends AppCompatActivity implements View.OnCl
         }
         getIds();
 
-
-//        // Get calendar set to current date and time
-//        Calendar c = GregorianCalendar.getInstance();
-//
-//        System.out.println("Current week = " + Calendar.FRIDAY);
-//
-//// Set the calendar to monday of the current week
-//        c.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-//
-//// Print dates of the current week starting on Monday
-//        DateFormat df = new SimpleDateFormat("EEEE", Locale.getDefault());
-//
-//        friday = df.format(c.getTime());
-//        c.add(Calendar.DATE, 6);
-//
-
-//        Calendar c = GregorianCalendar.getInstance();
-//        Date date = Calendar.getInstance().getTime();
-//        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy EEEE");
-//        try {
-//            date= df.parse(eventDate);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        String formattedDate = df.format(c);
     }
 
     private void getIds() {

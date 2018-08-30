@@ -52,8 +52,10 @@ public class HttpCall {
                                     ParseIsraelItemBean parseItemBean = new ParseIsraelItemBean();
                                     String title = jsonObject.optString("title");
                                     String date = jsonObject.optString("date");
+                                    String subCategory = jsonObject.optString("subcat");
                                     parseItemBean.setTitle(title);
                                     parseItemBean.setDate(date);
+                                    parseItemBean.setSubcat(subCategory);
                                     parseItemBean.setActualIndex(i);
 
                                     parseItemBean.setCategory(jsonObject.optString("category"));

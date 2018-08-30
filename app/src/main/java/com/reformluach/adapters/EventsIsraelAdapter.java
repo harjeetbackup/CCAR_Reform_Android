@@ -37,7 +37,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     private ArrayList<ParseIsraelItemBean> mPopulatingData;
     private ArrayList<ParseIsraelItemBean> mAllActualData;
 
-    private ReloadAllDataListener reloadAllDataListener;
+//    private ReloadAllDataListener reloadAllDataListener;
 
 
     public EventsIsraelAdapter(Context context, ArrayList<ParseIsraelItemBean> data) {
@@ -52,45 +52,6 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         return new EventsIsraelAdapter.ViewHolder(view);
     }
 
-    private String getDay(String date_in_string_format){
-        DateFormat df = DateFormat.getDateInstance();
-        Date date;
-        try {
-            date = df.parse(date_in_string_format);
-        } catch (Exception e) {
-            Log.e("Error:","Exception " + e);
-            return null;
-        }
-        return new SimpleDateFormat("EEEE").format(date);
-    }
-
-    private Date getDateFromSpecificFormat(String dateStr, SimpleDateFormat sdf) {
-        try {
-            return sdf.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Date();
-    }
-
-    private int getYear(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.YEAR);
-    }
-
-    private int getMonth(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        // return cal.get(Calendar.MONTH)-1;
-        return cal.get(Calendar.MONTH);
-    }
-
-    private int getDayOfMonth(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.DAY_OF_MONTH);
-    }
 
     @Override
     public void onBindViewHolder(final EventsIsraelAdapter.ViewHolder holder, final int position) {
@@ -104,39 +65,25 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         String date_ddMMyyyy = AppDateUtil.onlyDate_ddMMyyyy(dateTime);
         holder.tvDate.setText(date_ddMMyyyy);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String[] out = model.getDate().split("-");
+        int s1 = Integer.parseInt(out[2]);
+        int s2 = Integer.parseInt(out[1]) - 1;
+        String yr = out[0];
+        char a, b, c, d;
+        a = yr.charAt(0);
+        b = yr.charAt(1);
+        c = yr.charAt(2);
+        d = yr.charAt(3);
+        int s3 = Character.getNumericValue(a)*1000 +
+                Character.getNumericValue(b)*100 +
+                Character.getNumericValue(c)*10 +
+                Character.getNumericValue(d);
 
-        String dateStr = "";
-        if (mAllActualData.size() > 0) {
-            dateStr = model.getDate();
-        } else {
-//            long currentTimeInMillis = System.currentTimeMillis();
-//            Date date = new Date(currentTimeInMillis);
-//            dateStr = sdf.format(date);
-            dateStr = "01" ;
-        }
-        String my = dateStr.substring(2, dateStr.length());
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(s3, s2, s1);
 
-        String monthDateFromFirstDay = "01" + my;
+        int days = calendar1.get(Calendar.DAY_OF_WEEK);
 
-        Date date = getDateFromSpecificFormat(monthDateFromFirstDay, sdf);
-
-        // Uncomment following line, in case it should start from first selected date.
-
-
-        int iYear = getYear(date);
-        int iMonth = getMonth(date);
-        int iDay = 1;
-//// Create a calendar object and set year and month
-        Calendar mycal = new GregorianCalendar(iYear, iMonth, iDay);
-        final String dayOfMonth = String.valueOf(mycal.get(Calendar.DAY_OF_WEEK));
-
-        if (dayOfMonth.equals("6")){
-         holder.tvEventName.setText(title+" Friday");
-        }
-        if (dayOfMonth.equals("7")){
-        holder.tvEventName.setText(title+" Saturday");
-        }
 
         if(isHighlighted) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
@@ -145,7 +92,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         }
 
         if(subTitle != null && !TextUtils.isEmpty(subTitle)) {
-            holder.tvEventSubtitle.setText(subTitle);
+            holder.tvEventSubtitle.setText("The Haftarah for "+subTitle +" should be read.");
             holder.tvEventSubtitle.setVisibility(View.VISIBLE);
         } else {
             holder.tvEventSubtitle.setVisibility(View.GONE);
@@ -153,29 +100,59 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
 
 
 
+        if (title.equals("Sukkot 2 Weekday") && days==7){
+            title.replace("Sukkot 2 Weekday","Chol Hamoed Sukkot Shabbat");
+            holder.tvEventSubtitle.setText("The Haftarah for Sukkot 2 should be read.");
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+
+        }
+
+        if (title.equals("Sukkot 3 Weekday") && days==7){
+            title.replace("Sukkot 3 Weekday","Chol Hamoed Sukkot Shabbat");
+            holder.tvEventSubtitle.setText("The Haftarah for Sukkot 3 should be read.");
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+        }else {
+            holder.tvEventSubtitle.setVisibility(View.GONE);
+        }
+
+        if (title.equals("Sukkot 4 Weekday") && days==7){
+            title.replace("Sukkot 4 Weekday","Chol Hamoed Sukkot Shabbat");
+            holder.tvEventSubtitle.setText("The Haftarah for Sukkot 4 should be read.");
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+            }else {
+            holder.tvEventSubtitle.setVisibility(View.GONE);
+           }
+            if (title.equals("Sukkot 5 Weekday") && days==7){
+            title.replace("Sukkot 5 Weekday","Chol Hamoed Sukkot Shabbat");
+            holder.tvEventSubtitle.setText("The Haftarah for Sukkot 5 should be read.");
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+            }else {
+            holder.tvEventSubtitle.setVisibility(View.GONE);
+            }
+            if (title.equals("Sukkot 6 Weekday") && days==7){
+            title.replace("Sukkot 6 Weekday","Chol Hamoed Sukkot Shabbat");
+            holder.tvEventSubtitle.setText("The Haftarah for Sukkot 6 should be read.");
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+            }else {
+                holder.tvEventSubtitle.setVisibility(View.GONE);
+            }
+
+        if (title.equals("Chanukah 2nd Night") && days==7){
+//            title.replace("Chanukah 2nd Night","Chol Hamoed Sukkot Shabbat");
+            holder.tvEventSubtitle.setText("The Haftarah for Chanukah: 2nd Night should be read.");
+            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.shabbat_select_color));
+        }else {
+            holder.tvEventSubtitle.setVisibility(View.GONE);
+        }
+
         holder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
-
-//        if (model.isSpecialDayForSubtitle()){
-//            holder.tvEventSubtitle.setText("The Haftarah for " + EventTitle.replaceRecievedTitle(title)+ " should be read.");
-//            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-//            holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-//        }else {
-//            holder.tvEventSubtitle.setVisibility(View.GONE);
-//            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.white_transparency));
-//        }
-
-
-//       if (model.isComparableDayForSubTitle() && model.isThreeEventsOfSpecialDayForSubTitle() ){
-//           holder.tvEventSubtitle.setText("The Haftarah for Shabbat Rosh Codesh should be read.");
-//           holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-//           holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-//       }
-
-//       if (EventTitle.applyForSubtitleLogic(mAllActualData)){
-//           holder.tvEventSubtitle.setText("The Haftarah for Shabbat Rosh Codesh should be read.");
-//           holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.shabbat_select_color));
-//           holder.tvEventSubtitle.setVisibility(View.VISIBLE);
-//       }
 
 
         holder.llMain.setOnClickListener(new View.OnClickListener() {
@@ -193,13 +170,26 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
     }
 
 
+//
+//    public void removeItem(int position) {
+//        mPopulatingData.remove(position);
+//        // notify the item removed by position
+//        // to perform recycler view delete animations
+//        // NOTE: don't call notifyDataSetChanged()
+//        notifyItemRemoved(position);
+//    }
 
 
 
     @Override
     public int getItemCount() {
+        if (mPopulatingData == null) {
+            return 0;
+        }
         return mPopulatingData.size();
     }
+
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private  CustomtextViewFontRegular tvDate, tvEventName ,tvEventSubtitle;
@@ -217,9 +207,9 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<EventsIsraelAdapte
         }
     }
 
-    public void setReloadAllDataListener(ReloadAllDataListener reloadAllDataListener) {
-        this.reloadAllDataListener = reloadAllDataListener;
-    }
+//    public void setReloadAllDataListener(ReloadAllDataListener reloadAllDataListener) {
+//        this.reloadAllDataListener = reloadAllDataListener;
+//    }
 
     public interface ReloadAllDataListener {
         void refreshAllIsraelData();

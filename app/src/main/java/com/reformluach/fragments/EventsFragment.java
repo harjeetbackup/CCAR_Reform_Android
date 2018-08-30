@@ -186,10 +186,10 @@ public class EventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-////        if (selected==true) {
+//        if (selected==true) {
 //            setupViewPager(viewPager);
 //            tabLayout.setupWithViewPager(viewPager);
-////        }
+//        }
 
     }
 
