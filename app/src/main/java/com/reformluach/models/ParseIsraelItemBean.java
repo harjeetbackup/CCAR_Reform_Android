@@ -39,6 +39,19 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
 
     private Date dateTime;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ParseIsraelItemBean))
+            return false;
+
+        return this.title == ((ParseIsraelItemBean) obj).getTitle();
+    }
+
+    @Override
+    public int hashCode() {
+        return title.hashCode();
+    }
+
     public Date getDateTime() {
         return dateTime;
     }
@@ -49,7 +62,7 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
 
     @Override
     public int compareTo(ParseIsraelItemBean o) {
-        if(getDateTime() == null || o== null || o.getDateTime() == null){
+        if(getDateTime() == null || o == null || o.getDateTime() == null){
             return 0;
         }
         return getDateTime().compareTo(o.getDateTime());
@@ -135,7 +148,7 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
     }
 
     public void setTitle(String title) {
-        this.title = EventTitle.replaceRecievedTitle(title);
+        this.title = EventTitle.funcspellChangedForTitle(title);
     }
 
     public String getMemo() {
@@ -190,6 +203,7 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
         this.category = in.readString();
         this.title = in.readString();
         this.subcat = in.readString();
+        this.subTitle = in.readString();
         this.replaceTitle = in.readParcelable(EventTitle.class.getClassLoader());
     }
 
@@ -199,6 +213,7 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
      parcel.writeString(this.date);
      parcel.writeString(this.title);
      parcel.writeString(this.subcat);
+     parcel.writeString(this.subTitle);
      parcel.writeParcelable((Parcelable) this.replaceTitle, i);
     }
 

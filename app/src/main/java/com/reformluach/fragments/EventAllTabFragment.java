@@ -26,6 +26,7 @@ import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
+import com.reformluach.utils.EventManager;
 import com.reformluach.utils.HttpCall;
 import com.reformluach.utils.RequestCall;
 import com.reformluach.utils.UrlModel;
@@ -36,11 +37,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * Created by Naveen Mishra on 12/1/2017.
@@ -160,6 +166,7 @@ public class EventAllTabFragment extends Fragment  {
         }
 
         if (isVisible){
+
             getServerCall(mCurrentYear);
         }
 //        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -201,6 +208,7 @@ public class EventAllTabFragment extends Fragment  {
         if((EventsFragment) getParentFragment() == null || ((EventsFragment) getParentFragment()).events_search_edittext == null ) {
             return;
         }
+
         final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
         TextView tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
 
@@ -215,6 +223,8 @@ public class EventAllTabFragment extends Fragment  {
         }else {
             tvEventCalenderType.setText("R");
         }
+
+
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -239,11 +249,15 @@ public class EventAllTabFragment extends Fragment  {
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
+                    } else {
+                        if (!searchEditText.getText().toString().isEmpty()) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
                     }
-
                     if (searchEditText.getText().length()==0){
-//                        showFullData();
-                        getServerCall(mCurrentYear);
+                        showFullData();
                         isFilterEnable=false;
                     }
                     return true;
@@ -260,8 +274,8 @@ public class EventAllTabFragment extends Fragment  {
             @Override
             public void onClick(View v) {
                 searchEditText.setText("");
-//                showFullData();
-                getServerCall(mCurrentYear);
+                mEventAllAdapter.clearPreviousData();
+                showFullData();
                 isFilterEnable=false;
             }
         });
@@ -271,6 +285,8 @@ public class EventAllTabFragment extends Fragment  {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private ArrayList<ParseIsraelItemBean> mReformDataList = new ArrayList<>();
+    private ArrayList<ParseIsraelItemBean> mReformDataListEvent = new ArrayList<>();
+    private ArrayList<ParseIsraelItemBean> mSpecialDisporaEvent = new ArrayList<>();
 
     private void getServerCall(final int year) {
 
@@ -305,6 +321,7 @@ public class EventAllTabFragment extends Fragment  {
         for(String url : urls) {
 
             HttpCall.getAllEventsReform(from, getActivity(), new RequestCall() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onSuccess(String from, String url, int pageCount, ArrayList<ParseIsraelItemBean> allEventsReformCalenderData) {
 
@@ -332,7 +349,7 @@ public class EventAllTabFragment extends Fragment  {
 
                         if(mReformDataList != null) {
 
-                            DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                             for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
                                 String dateStr = bean.getDate();
 
@@ -344,16 +361,70 @@ public class EventAllTabFragment extends Fragment  {
                                 }
 
                                 bean.setDateTime(date);
-
                             }
 
+//                            if (url0.equals(url) || url1.equals(url)){
+//                                mReformDataListEvent.addAll(allEventsReformCalenderData);
+//                            }
+//                            if (url1.equals(url) || url2.equals(url) ){
+//                                mSpecialDisporaEvent.addAll(allEventsReformCalenderData);
+//
+//                            }
+//
+//                            if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
+//                                mCurrentYear = year+1;
+//                                Collections.sort(mSpecialDisporaEvent);
+//
+//                                EventManager.getSpecailDisporaTorahEvents(mSpecialDisporaEvent);
+//
+//                                mReformDataListEvent.addAll( EventManager.getSpecailDisporaTorahEvents(mSpecialDisporaEvent));
+//                                Collections.sort(mReformDataListEvent);
+//                             }
+//                            if (!mIsLoading2 || !mIsLoading0 || !mIsLoading1) {
+//                                if (mReformDataList.size() !=0) {
+//                                    mReformDataListSpecialDisporaTorah.clear();
+//                                    for (int i=0; i<allEventsReformCalenderData.size(); i++) {
+//
+//                                        for (int j=0; j<mReformDataList.size(); j++){
+//
+//                                            if (!allEventsReformCalenderData.get(i).getTitle().equals(mReformDataList.get(j).getTitle()) &&
+//                                                    !allEventsReformCalenderData.get(i).getDate().equals(mReformDataList.get(j).getDate()
+//                                                    )){
+//                                                mReformDataListSpecialDisporaTorah.add(allEventsReformCalenderData.get(i));
+//                                            } else {
+//
+//                                                Log.i("ELEMENT","0");
+//                                            }
+//                                        }
+//                                    }
+//                                    mReformDataList.addAll(mReformDataListSpecialDisporaTorah);
+//                                } else {
+//                                    mReformDataList.addAll(allEventsReformCalenderData);
+//                                }
+//
+//                            }
+
+
                             mReformDataList.addAll(allEventsReformCalenderData);
+
                         }
 
                         if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
                             mCurrentYear = year+1;
                             Collections.sort(mReformDataList);
+//                            Collections.sort(mReformDataListEvent);
+//                            mReformDataList = mReformDataList.stream().distinct().collect(Collectors.toCollection(Collectors.toList()));
+//                            for (int i=0 ;i<mReformDataList.size(); i++){
+//                                for (int j=i+1; j<mReformDataList.size(); j++){
+//                                    if (mReformDataList.get(i).equals(mReformDataList.get(j))){
+//                                        mReformDataList.remove(j);
+//                                        j--;
+//                                    }
+//                                }
+//                            }
                             mEventAllAdapter.addMessege(mReformDataList, year);
+
+//                            mEventAllAdapter.addMessege(mReformDataList, year);
 
                             String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                             int position = 0;
@@ -406,6 +477,7 @@ public class EventAllTabFragment extends Fragment  {
                         }
 
                         mRecyclerView.scrollToPosition(position);
+
                     }
 
 
@@ -422,6 +494,8 @@ public class EventAllTabFragment extends Fragment  {
         }
 
     }
+
+
 
     private UrlModel getUrls(String year) {
         UrlModel urlModel = new UrlModel();
@@ -450,6 +524,7 @@ public class EventAllTabFragment extends Fragment  {
         }
         return urlModel;
     }
+
 
 
 }

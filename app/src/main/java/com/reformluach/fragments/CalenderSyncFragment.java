@@ -192,7 +192,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                         if (mReformDataList != null) {
 
-                            DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                             for (ParseIsraelItemBean bean : allEventsReformCalenderData) {
                                 String dateStr = bean.getDate();
 
@@ -304,7 +304,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     @SuppressLint("NewApi")
     private void getIds(View calanderSyncFragmentView) {
         llMain = calanderSyncFragmentView.findViewById(R.id.llMain);
-        rvCalendar = calanderSyncFragmentView.findViewById(R.id.rvCalendar);
 //        recyclerViewYear = calanderSyncFragmentView.findViewById(R.id.rvYear);
 //        recyclerViewEventName = calanderSyncFragmentView.findViewById(R.id.rvEvents);
         imgBtnSettingCalender = calanderSyncFragmentView.findViewById(R.id.ImgBtnSettingCalender);
@@ -524,9 +523,10 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             case MY_PERMISSIONS_REQUEST_WRITE_CALENDAR:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     addReminderInCalendar(timestamp, event);
+//                    btnDownloadEvents.setEnabled(true);
+
                 } else {
                     //code for deny
-//                    swSync.setEnabled(false);
                     btnDownloadEvents.setEnabled(false);
                 }
                 break;
@@ -667,7 +667,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                         timestamp = controller.getUtcTimeInMillisEvents(eventdate);
                         Log.e("Timestamp", "Timestamp" + timestamp);
                         addReminderInCalendar(timestamp, event);
-
                     }
                     SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
                     for (int i=0; i<mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {
@@ -711,7 +710,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
           if (isVisible ) {
             if(shouldRequestDataAgain()) {
                 getServerCall(Integer.parseInt(mSelectedYear));
-//                registerCalenderType();
+                registerCalenderType();
             }
           }
 
@@ -719,20 +718,20 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     }
 
 
-//    public void registerCalenderType(){
+    public void registerCalenderType(){
 //        tvCalenderType = getView().findViewById(R.id.txtCalenderType);
-//
-//        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-//            tvCalenderType.setText("R");
-//        } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-//            tvCalenderType.setText("D");
-//        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-//            tvCalenderType.setText("I");
-//        }
-//        else {
-//            tvCalenderType.setText("R");
-//        }
-//    }
+
+        if (controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
+            tvCalenderType.setText("R");
+        } else if (controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
+            tvCalenderType.setText("D");
+        } else if (controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
+            tvCalenderType.setText("I");
+        }
+        else {
+            tvCalenderType.setText("R");
+        }
+    }
 
         private String getSelectedCalendar(Controller controller) {
 

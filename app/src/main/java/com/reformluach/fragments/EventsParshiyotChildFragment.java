@@ -202,6 +202,15 @@ public class EventsParshiyotChildFragment extends Fragment  {
         final EditText searchEditText = ((EventsFragment) getParentFragment()).events_search_edittext;
         TextView tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
 
+        TextView tvEventsName = ((EventsFragment) getParentFragment()).tvEvent;
+
+        tvEventsName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickOnEventScrolledToTop(pos);
+            }
+        });
+
         TextView tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
 
         if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
@@ -237,11 +246,16 @@ public class EventsParshiyotChildFragment extends Fragment  {
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
+                    }else {
+                        if (!searchEditText.getText().toString().isEmpty()) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
                     }
 
                     if (searchEditText.getText().length()==0){
-//                        showFullData();
-                        getServerCall(mCurrentYear);
+                        showFullData();
                         isFilterEnable=false;
                     }
                     return true;
@@ -257,9 +271,9 @@ public class EventsParshiyotChildFragment extends Fragment  {
         tvCanc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mEventAllAdapter.clearPreviousData();
                 searchEditText.setText("");
-//                showFullData();
-                getServerCall(mCurrentYear);
+                showFullData();
                 isFilterEnable=false;
             }
         });
@@ -272,6 +286,7 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
     ArrayList<ParseIsraelItemBean> mParshiyotDataList = new ArrayList<>();
 
+    int pos;
     private void getServerCall(final int year) {
 
         if (getActivity() == null || getContext() == null || getView() == null || isFilterEnable) {
@@ -332,7 +347,7 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
                         if(mReformDataList != null) {
 
-                            DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                             mParshiyotDataList.clear();
 
                             for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
@@ -379,9 +394,11 @@ public class EventsParshiyotChildFragment extends Fragment  {
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
+                                pos = position;
                             }
 
                             mRecyclerView.scrollToPosition(position);
+                            clickOnEventScrolledToTop(pos);
                         }
 
                     } else if (from.equals(Appconstant.ISRAEL) || from.equals(Appconstant.DIASPORA)) {
@@ -389,7 +406,7 @@ public class EventsParshiyotChildFragment extends Fragment  {
                         mIsLoading0 = false;
 
                         if (mReformDataList!=null) {
-                            DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                             mParshiyotDataList.clear();
                             for (ParseIsraelItemBean bean : allEventsReformCalenderData) {
                                 String dateStr = bean.getDate();
@@ -407,7 +424,7 @@ public class EventsParshiyotChildFragment extends Fragment  {
                             }
                         }
                         mReformDataList.addAll(mParshiyotDataList);
-                        Collections.sort(mReformDataList);
+//                        Collections.sort(mReformDataList);
 
                         mEventAllAdapter.addMessege(mParshiyotDataList, year);
                         String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -429,9 +446,12 @@ public class EventsParshiyotChildFragment extends Fragment  {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            pos = position;
                         }
 
                         mRecyclerView.scrollToPosition(position);
+                        clickOnEventScrolledToTop(pos);
+
                     }
 
 
@@ -477,5 +497,10 @@ public class EventsParshiyotChildFragment extends Fragment  {
         return urlModel;
     }
 
+    public void clickOnEventScrolledToTop(int position){
+
+        mRecyclerView.scrollToPosition(position);
+
+    }
 
 }

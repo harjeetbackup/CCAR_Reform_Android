@@ -48,7 +48,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Naveen Mishra on 12/1/2017.
@@ -230,6 +234,15 @@ public class EventsHolidaysChildFragment extends Fragment {
             tvEventCalenderType.setText("R");
         }
 
+        final TextView tvEventsName = ((EventsFragment) getParentFragment()).tvEvent;
+
+        tvEventsName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickOnEventScrolledToTop(pos);
+            }
+        });
+
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -253,6 +266,12 @@ public class EventsHolidaysChildFragment extends Fragment {
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
+                    }else {
+                        if (!searchEditText.getText().toString().isEmpty()) {
+                            callRefreshIsrael(searchEditText.getText().toString());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                        }
                     }
 
                     if (searchEditText.getText().length()==0){
@@ -273,6 +292,7 @@ public class EventsHolidaysChildFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 searchEditText.setText("");
+                mEventAllAdapter.clearPreviousData();
                 showFullData();
                 isFilterEnable=false;
             }
@@ -284,8 +304,8 @@ public class EventsHolidaysChildFragment extends Fragment {
 
     private ArrayList<ParseIsraelItemBean> mReformDataList = new ArrayList<>();
     String eventCate ;
-    ArrayList<ParseIsraelItemBean> mParshiyotDataList = new ArrayList<>();
-
+    ArrayList<ParseIsraelItemBean> mHolidaysReformDataList = new ArrayList<>();
+    int pos;
     private void getServerCall(final int year) {
 
         if (getActivity() == null || getContext() == null || getView() == null || isFilterEnable) {
@@ -346,9 +366,10 @@ public class EventsHolidaysChildFragment extends Fragment {
 
                         if(mReformDataList != null) {
 
-                            DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-                            mParshiyotDataList.clear();
+                            mHolidaysReformDataList.clear();
+//                            mReformDataList.clear();
                             for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
                                 String dateStr = bean.getDate();
                                 eventCate = bean.getCategory();
@@ -361,16 +382,23 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 }
 
                                 bean.setDateTime(date);
-                                if (bean.getCategory().equals("holiday")){
-                                    mParshiyotDataList.add(bean);
+                                if (bean.getCategory().equals("holiday") || bean.getCategory().equals("omer") || bean.getCategory().equals("roshchodesh")){
+                                    mHolidaysReformDataList.add(bean);
                                 }
                             }
-                                mReformDataList.addAll(mParshiyotDataList);
+
+                                mReformDataList.addAll(mHolidaysReformDataList);
 //                            mReformDataList.addAll(allEventsReformCalenderData);
                         }
 
                         if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
                             mCurrentYear = year+1;
+
+//                            Set<ParseIsraelItemBean> set = new HashSet<ParseIsraelItemBean>();
+//                            set.addAll(mReformDataList);
+//                            Set<ParseIsraelItemBean> random = new HashSet<ParseIsraelItemBean>();
+//                            Set<ParseIsraelItemBean> sorted = new TreeSet<Integer>(random);
+
                             Collections.sort(mReformDataList);
                             mEventAllAdapter.addMessege(mReformDataList, year);
 
@@ -393,9 +421,11 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
+                                pos = position;
                             }
 
                             mRecyclerView.scrollToPosition(position);
+                            clickOnEventScrolledToTop(pos);
                         }
 
                     } else if (from.equals(Appconstant.ISRAEL) || from.equals(Appconstant.DIASPORA)) {
@@ -403,8 +433,8 @@ public class EventsHolidaysChildFragment extends Fragment {
                         mIsLoading0 = false;
 
                         if (mReformDataList!=null) {
-                            DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
-                            mParshiyotDataList.clear();
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                            mHolidaysReformDataList.clear();
                             for (ParseIsraelItemBean bean : allEventsReformCalenderData) {
                                 String dateStr = bean.getDate();
                                 Date date = null;
@@ -415,21 +445,21 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 }
 
                                 bean.setDateTime(date);
-                                if (bean.getCategory().equals("holiday")) {
-                                    mParshiyotDataList.add(bean);
+                                if (bean.getCategory().equals("holiday") || bean.getCategory().equals("omer") || bean.getCategory().equals("roshchodesh")) {
+                                    mHolidaysReformDataList.add(bean);
                                 }
                             }
                         }
-                        mReformDataList.addAll(mParshiyotDataList);
-                        Collections.sort(mReformDataList);
+//                        mReformDataList.addAll(mHolidaysReformDataList);
+//                        Collections.sort(mReformDataList);
 
-                        mEventAllAdapter.addMessege(mParshiyotDataList, year);
+                        mEventAllAdapter.addMessege(mHolidaysReformDataList, year);
 
                         String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         int position = 0;
                         int count = 0;
-                        for (int j=0; j<mReformDataList.size(); j++) {
-                            String eventDate = mReformDataList.get(j).getDate();
+                        for (int j=0; j<mHolidaysReformDataList.size(); j++) {
+                            String eventDate = mHolidaysReformDataList.get(j).getDate();
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             try {
                                 Date date1 = sdf.parse(TodaysDate);
@@ -444,9 +474,11 @@ public class EventsHolidaysChildFragment extends Fragment {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            pos = position;
                         }
 
                         mRecyclerView.scrollToPosition(position);
+                        clickOnEventScrolledToTop(pos);
                     }
 
 
@@ -490,6 +522,9 @@ public class EventsHolidaysChildFragment extends Fragment {
             urlModel.setFrom(Appconstant.REFORM);
         }
         return urlModel;
+    }
+    public void clickOnEventScrolledToTop(int position){
+        mRecyclerView.scrollToPosition(position);
     }
 
 

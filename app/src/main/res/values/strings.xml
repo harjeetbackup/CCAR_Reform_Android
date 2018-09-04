@@ -2,14 +2,14 @@
     <string name="app_name">Luach</string>
     <string name="about">About</string>
     <string name="date_converter">Date Converter</string>
-    <string name="calender_sync">Calender Sync</string>
+    <string name="calender_sync">Calendar Sync</string>
     <string name="events">Events</string>
     <string name="todays">Today</string>
     <string name="eventparshiyot_childfragment_name">PARSHIYOT</string>
     <string name="eventholidays_childfragment_name">HOLIDAYS</string>
     <string name="eventRosh_childfragment_name">ROSH CHODESH</string>
     <string name="convert">Convert</string>
-    <string name="calender_text">Calender sync places the following Jewish yearly events directly on your device\'s calender app. Select check boxes below, and then tap Sync Events button.</string>
+    <string name="calender_text">Calendar sync places the following Jewish yearly events directly on your device\'s calendar app, on your app default calendar. Selected the check boxes below, and then tap download.</string>
     <string name="custom_events_text">Add custom events to synced calender, such as Yahrzeits, Birthdays or Anniversaries. Tap "\"Add\"" when done.To enter a Hebrew date, start on the Date Converter Page.</string>
     <string name="please_check_internet">Please check internet connection.</string>
     <string name="please_select_month">Please select month.</string>

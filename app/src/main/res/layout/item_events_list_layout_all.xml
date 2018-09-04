@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/linEventItems"
+    android:background="@color/event_background_color"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
+
+    <LinearLayout
+        android:id="@+id/linearMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/llMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            >
+
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:id="@+id/eventNameTxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_5"
+            android:layout_weight="1"
+            android:gravity="start"
+            tools:text="jgjg hkjhj hjg kjhgh gjhghfhfg  "
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:maxLines="2"
+            />
+
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_5"
+            android:gravity="start"
+            android:textColor="@color/colorBlack"
+            tools:text="jgjg hkjhj hjg "
+            android:textSize="14sp"
+
+            />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+        <com.reformluach.typeface.CustomtextViewFontRegular
+            android:id="@+id/tvEventSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textColor="@color/colorBlack"
+            tools:text="ghffgh gjhgh kjgjhgjh kjhg"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="@dimen/margin_5"
+            android:textSize="10dp"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/margin_5"
+            />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_gray_search"/>
+</LinearLayout>
