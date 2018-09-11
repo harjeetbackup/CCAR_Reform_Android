@@ -30,33 +30,35 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/ImgBtnSetting"
+                android:layout_marginTop="@dimen/margin_15"
                 />
 
             <ImageButton
                 android:id="@+id/ImgBtnSetting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@mipmap/reform_setting_icon"
                 android:layout_gravity="left"
                 android:background="@color/transparent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="7dp"
+                android:layout_marginRight="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_10"
                 />
             <TextView
                 android:id="@+id/tvEventCalenderType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="R"
-                android:textSize="10sp"
+                android:textSize="@dimen/calender_type_text_size"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="19dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginRight="@dimen/margin_38"
+                android:layout_marginTop="@dimen/margin_top_caltype_event"
                 />
+
         </android.support.constraint.ConstraintLayout>
 
 
@@ -109,6 +111,7 @@
                 android:hint="Search"
                 android:imeOptions="actionSearch"
                 android:maxLines="1"
+                android:textSize="@dimen/search_text_size_event"
                 android:inputType="textNoSuggestions"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/text_grey"
@@ -135,6 +138,7 @@
             android:gravity="center"
             android:padding="@dimen/margin_5"
             android:text="Cancel"
+            android:textSize="@dimen/search_text_size_event"
             android:textColor="@color/text_grey"/>
     </LinearLayout>
 

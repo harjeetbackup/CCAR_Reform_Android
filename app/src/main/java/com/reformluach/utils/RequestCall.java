@@ -3,6 +3,7 @@ package com.reformluach.utils;
 import com.reformluach.models.ParseIsraelItemBean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface RequestCall {
 

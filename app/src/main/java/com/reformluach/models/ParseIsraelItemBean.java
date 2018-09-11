@@ -5,9 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
-public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelItemBean>{
+public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelItemBean> {
 
     /**
      * date : 2020-01-04
@@ -39,19 +41,6 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
 
     private Date dateTime;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof ParseIsraelItemBean))
-            return false;
-
-        return this.title == ((ParseIsraelItemBean) obj).getTitle();
-    }
-
-    @Override
-    public int hashCode() {
-        return title.hashCode();
-    }
-
     public Date getDateTime() {
         return dateTime;
     }
@@ -65,7 +54,20 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
         if(getDateTime() == null || o == null || o.getDateTime() == null){
             return 0;
         }
-        return getDateTime().compareTo(o.getDateTime());
+
+        String date1 = getDate();
+        String date2 = o.getDate();
+
+        int sComp = date1.compareTo(date2);
+
+        if (sComp != 0) {
+            return sComp;
+        }
+
+        String x1 = getTitle();
+        String x2 = o.getTitle();
+        return x1.compareTo(x2);
+//        return getDateTime().compareTo(o.getDateTime());
     }
 
     public int getActualIndex() {

@@ -33,7 +33,7 @@
             android:gravity="start"
             tools:text="jgjg hkjhj hjg kjhgh gjhghfhfg  "
             android:textColor="@color/colorBlack"
-            android:textSize="16sp"
+            android:textSize="@dimen/search_text_size_event"
             android:maxLines="2"
             />
 
@@ -62,9 +62,9 @@
             android:maxLines="2"
             android:textColor="@color/colorBlack"
             tools:text="ghffgh gjhgh kjgjhgjh kjhg"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/margin_10"
             android:layout_marginRight="@dimen/margin_5"
-            android:textSize="10dp"
+            android:textSize="10sp"
             android:visibility="gone"
             android:layout_marginBottom="@dimen/margin_5"
             />

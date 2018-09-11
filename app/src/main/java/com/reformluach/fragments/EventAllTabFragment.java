@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +73,9 @@ public class EventAllTabFragment extends Fragment  {
     private boolean mIsLoading0, mIsLoading1, mIsLoading2;
 
     private String mSelectedCalType;
+    ProgressBar mProgressBar;
+    Button mBtnTryAgain;
+    private int scrolledState = 1;
 
     public EventAllTabFragment () {
         Log.i("", "");
@@ -85,12 +92,19 @@ public class EventAllTabFragment extends Fragment  {
         controller = (Controller) context.getApplicationContext();
 
         mRecyclerView = eventsHolidaysFragmentView.findViewById(R.id.rv_events_rosh);
+        mProgressBar = eventsHolidaysFragmentView.findViewById(R.id.progressBarAllTab);
+        mBtnTryAgain = eventsHolidaysFragmentView.findViewById(R.id.btn_tryAgainAll);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
         Calendar myCal = Calendar.getInstance();
         myCal.setTime(date);
         mCurrentYear = Integer.parseInt(sdf.format(date));
+
+
+        mBtnTryAgain.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
 
         return eventsHolidaysFragmentView;
     }
@@ -101,8 +115,8 @@ public class EventAllTabFragment extends Fragment  {
 
         mEventAllAdapter = new EventsIsraelAdapter(getActivity(), new ArrayList<ParseIsraelItemBean>());
         layoutManager = new LinearLayoutManager(getActivity());
-            mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(mEventAllAdapter);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mEventAllAdapter);
 
     }
 
@@ -137,12 +151,15 @@ public class EventAllTabFragment extends Fragment  {
         if (isVisible){
             registerSearch();
         }
+        mRecyclerView.getRecycledViewPool().clear();
+
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
+                    scrolledState = recyclerView.getScrollState();
                     getServerCall(mCurrentYear);
 
                 }
@@ -193,6 +210,9 @@ public class EventAllTabFragment extends Fragment  {
             if (text.contains(s)) {
                     filteredList.add(parseItemBeans.get(i));
             }
+//            else if (text.contains(s.toUpperCase())){
+//                filteredList.add(parseItemBeans.get(i));
+//            }
         }
         mEventAllAdapter.clearPreviousData();
         isFilterEnable =true;
@@ -224,7 +244,14 @@ public class EventAllTabFragment extends Fragment  {
             tvEventCalenderType.setText("R");
         }
 
+        TextView tvEventsName = ((EventsFragment) getParentFragment()).tvEvent;
 
+        tvEventsName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrolledToTop();
+            }
+        });
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -285,8 +312,9 @@ public class EventAllTabFragment extends Fragment  {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private ArrayList<ParseIsraelItemBean> mReformDataList = new ArrayList<>();
-    private ArrayList<ParseIsraelItemBean> mReformDataListEvent = new ArrayList<>();
+    private ArrayList<ParseIsraelItemBean> mReformSpecialEvent = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> mSpecialDisporaEvent = new ArrayList<>();
+
 
     private void getServerCall(final int year) {
 
@@ -309,7 +337,9 @@ public class EventAllTabFragment extends Fragment  {
         }
 
         if(urls.size() == 3) {
-            mReformDataList = new ArrayList<>();
+//            mReformDataList = new ArrayList<>();
+            mReformSpecialEvent = new ArrayList<>();
+
         }
 
         mIsLoading0 = true;
@@ -328,6 +358,7 @@ public class EventAllTabFragment extends Fragment  {
                     if (getActivity() == null || getContext() == null || getView() == null) {
                         return;
                     }
+                    mProgressBar.setVisibility(View.VISIBLE);
 
                     String url0 = Url.israelHolidayUrlBeforeDate + year + Url.israelHolidayUrlAfterDate;
                     String url1 = Url.disporahTorahUrlBeforeDate + year + Url.disporahTorahUrlAfterDate;
@@ -347,7 +378,7 @@ public class EventAllTabFragment extends Fragment  {
                             mIsLoading2 = false;
                         }
 
-                        if(mReformDataList != null) {
+                        if(mReformSpecialEvent != null) {
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                             for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
@@ -363,97 +394,218 @@ public class EventAllTabFragment extends Fragment  {
                                 bean.setDateTime(date);
                             }
 
-//                            if (url0.equals(url) || url1.equals(url)){
-//                                mReformDataListEvent.addAll(allEventsReformCalenderData);
-//                            }
-//                            if (url1.equals(url) || url2.equals(url) ){
-//                                mSpecialDisporaEvent.addAll(allEventsReformCalenderData);
+                            if (url0.equals(url) || url1.equals(url)){
+                                mReformSpecialEvent.addAll(allEventsReformCalenderData);
+                            }
+                            if (url1.equals(url) || url2.equals(url) ){
+                                mSpecialDisporaEvent.addAll(allEventsReformCalenderData);
+
+                            }
+                            Collections.sort(mSpecialDisporaEvent);
+
+                            ArrayList<ParseIsraelItemBean> mSpecialDisporaFilteredEvent = new ArrayList<>();
+
+                            if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
+                                mCurrentYear = year+1;
+                                 EventManager.getSpecailDisporaTorahEvents(mSpecialDisporaEvent,mSpecialDisporaFilteredEvent);
+
+                                 if (mSpecialDisporaFilteredEvent.size()>0) {
+                                     for (int i=0; i<mSpecialDisporaFilteredEvent.size(); i++)
+                                         mReformSpecialEvent.add(mSpecialDisporaFilteredEvent.get(i));
+                                 }
+
+
+                                Set<ParseIsraelItemBean> hs = new HashSet<>();
+                                hs.addAll(mReformSpecialEvent);
+                                mReformSpecialEvent.clear();
+                                mReformSpecialEvent.addAll(hs);
+
+
+                                Collections.sort(mReformSpecialEvent);
+
+                                for (int i=0; i<mReformSpecialEvent.size(); i++) {
+                                    mReformSpecialEvent.get(i).setActualIndex(i);
+                                }
+                                HashMap<String, ArrayList<ParseIsraelItemBean>> itemGrp = new HashMap<>();
+                                for(int i=0; i< mReformSpecialEvent.size(); i++) {
+
+                                    ArrayList<ParseIsraelItemBean> dateItemList = itemGrp.get(mReformSpecialEvent.get(i).getDate());
+
+                                    if(dateItemList == null) {
+                                        dateItemList = new ArrayList<>();
+                                    }
+
+                                    dateItemList.add(mReformSpecialEvent.get(i));
+
+                                    itemGrp.put(mReformSpecialEvent.get(i).getDate(), dateItemList);
+
+                                }
+
+                                HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
+                                HashMap<String, ArrayList<ParseIsraelItemBean>> threeStepLogic = new HashMap<>();
+
+                                for (Map.Entry me : itemGrp.entrySet()) {
+                                    String date = (String)me.getKey();
+                                    ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
+
+                                    if(dateItemList.size()==2) {
+                                        twoStepLogic.put(date, dateItemList);
+                                    } else if(dateItemList.size()==3) {
+                                        threeStepLogic.put(date, dateItemList);
+                                    }
+                                }
+
+                                // For Two Step Logic
+                                HttpCall.twoStep(twoStepLogic, mReformSpecialEvent, false);
+
+                                // For Three Step Logic
+                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 1);
+                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 2);
+                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 3);
+                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 4);
+                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 5);
+                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 6);
+
+
+                                HttpCall.firdaySaturdayLogic(mReformSpecialEvent);
+
+                                mProgressBar.setVisibility(View.GONE);
+
+                                if (mReformSpecialEvent.size()!=0) {
+                                    mEventAllAdapter.addMessege(mReformSpecialEvent, year);
+                                }
+                                String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                int position = 0;
+                                int count = 0;
+                                for (int j=0; j<mReformSpecialEvent.size(); j++) {
+                                    String eventDate = mReformSpecialEvent.get(j).getDate();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        Date date1 = sdf.parse(TodaysDate);
+                                        Date date2 = sdf.parse(eventDate);
+                                        if (date2.after(date1)) {
+                                            count = count+1;
+
+                                            if (count == 1) {
+                                                position = j;
+                                            }
+                                        }
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if ((mCurrentYear == Calendar.getInstance().get(Calendar.YEAR)+1)) {
+                                    mRecyclerView.scrollToPosition(position);
+                                } else {
+                                    int pos = layoutManager.findLastCompletelyVisibleItemPosition();
+                                    mRecyclerView.scrollToPosition(pos);
+                                }
+
+                             }
+
+//                            mReformDataList.addAll(allEventsReformCalenderData);
+
+                        }
+
+//                        if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
+//                            mCurrentYear = year+1;
+//                            Collections.sort(mReformDataList);
+//                            mEventAllAdapter.addMessege(mReformDataList, year);
 //
-//                            }
+//                            String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+//                            int position = 0;
+//                            int count = 0;
+//                            for (int j=0; j<mReformDataList.size(); j++) {
+//                                String eventDate = mReformDataList.get(j).getDate();
+//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                                try {
+//                                    Date date1 = sdf.parse(TodaysDate);
+//                                    Date date2 = sdf.parse(eventDate);
+//                                    if (date2.after(date1)) {
+//                                        count = count+1;
 //
-//                            if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
-//                                mCurrentYear = year+1;
-//                                Collections.sort(mSpecialDisporaEvent);
-//
-//                                EventManager.getSpecailDisporaTorahEvents(mSpecialDisporaEvent);
-//
-//                                mReformDataListEvent.addAll( EventManager.getSpecailDisporaTorahEvents(mSpecialDisporaEvent));
-//                                Collections.sort(mReformDataListEvent);
-//                             }
-//                            if (!mIsLoading2 || !mIsLoading0 || !mIsLoading1) {
-//                                if (mReformDataList.size() !=0) {
-//                                    mReformDataListSpecialDisporaTorah.clear();
-//                                    for (int i=0; i<allEventsReformCalenderData.size(); i++) {
-//
-//                                        for (int j=0; j<mReformDataList.size(); j++){
-//
-//                                            if (!allEventsReformCalenderData.get(i).getTitle().equals(mReformDataList.get(j).getTitle()) &&
-//                                                    !allEventsReformCalenderData.get(i).getDate().equals(mReformDataList.get(j).getDate()
-//                                                    )){
-//                                                mReformDataListSpecialDisporaTorah.add(allEventsReformCalenderData.get(i));
-//                                            } else {
-//
-//                                                Log.i("ELEMENT","0");
-//                                            }
+//                                        if (count == 1) {
+//                                            position = j;
 //                                        }
 //                                    }
-//                                    mReformDataList.addAll(mReformDataListSpecialDisporaTorah);
-//                                } else {
-//                                    mReformDataList.addAll(allEventsReformCalenderData);
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
 //                                }
+//                            }
 //
-//                            }
-
-
-                            mReformDataList.addAll(allEventsReformCalenderData);
-
-                        }
-
-                        if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
-                            mCurrentYear = year+1;
-                            Collections.sort(mReformDataList);
-//                            Collections.sort(mReformDataListEvent);
-//                            mReformDataList = mReformDataList.stream().distinct().collect(Collectors.toCollection(Collectors.toList()));
-//                            for (int i=0 ;i<mReformDataList.size(); i++){
-//                                for (int j=i+1; j<mReformDataList.size(); j++){
-//                                    if (mReformDataList.get(i).equals(mReformDataList.get(j))){
-//                                        mReformDataList.remove(j);
-//                                        j--;
-//                                    }
-//                                }
-//                            }
-                            mEventAllAdapter.addMessege(mReformDataList, year);
-
-//                            mEventAllAdapter.addMessege(mReformDataList, year);
-
-                            String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                            int position = 0;
-                            int count = 0;
-                            for (int j=0; j<mReformDataList.size(); j++) {
-                                String eventDate = mReformDataList.get(j).getDate();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                try {
-                                    Date date1 = sdf.parse(TodaysDate);
-                                    Date date2 = sdf.parse(eventDate);
-                                    if (date2.after(date1)) {
-                                        count = count+1;
-
-                                        if (count == 1) {
-                                            position = j;
-                                        }
-                                    }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            mRecyclerView.scrollToPosition(position);
-                        }
+//                            mRecyclerView.scrollToPosition(position);
+//                        }
 
                     } else if (from.equals(Appconstant.ISRAEL) || from.equals(Appconstant.DIASPORA)) {
                         mCurrentYear = year+1;
                         mIsLoading0 = false;
-                        mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                        for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
+                            String dateStr = bean.getDate();
+
+                            Date date = null;
+                            try {
+                                date = format.parse(dateStr);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            bean.setDateTime(date);
+                        }
+
+
+
+                        Collections.sort(allEventsReformCalenderData);
+                        for (int i=0; i<allEventsReformCalenderData.size(); i++) {
+                            allEventsReformCalenderData.get(i).setActualIndex(i);
+                        }
+
+
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> itemGrp = new HashMap<>();
+                        for(int i=0; i< allEventsReformCalenderData.size(); i++) {
+
+                            ArrayList<ParseIsraelItemBean> dateItemList = itemGrp.get(allEventsReformCalenderData.get(i).getDate());
+
+                            if(dateItemList == null) {
+                                dateItemList = new ArrayList<>();
+                            }
+
+                            dateItemList.add(allEventsReformCalenderData.get(i));
+
+                            itemGrp.put(allEventsReformCalenderData.get(i).getDate(), dateItemList);
+
+                        }
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> threeStepLogic = new HashMap<>();
+
+                        for (Map.Entry me : itemGrp.entrySet()) {
+                            String date = (String)me.getKey();
+                            ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
+
+                            if(dateItemList.size()==2) {
+                                twoStepLogic.put(date, dateItemList);
+                            } else if(dateItemList.size()==3) {
+                                threeStepLogic.put(date, dateItemList);
+                            }
+                        }
+
+                        // For Two Step Logic
+                        HttpCall.twoStep(twoStepLogic, allEventsReformCalenderData, false);
+
+                        // For Three Step Logic
+                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 1);
+                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 2);
+                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 3);
+                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 4);
+                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 5);
+                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 6);
+
+
+                        HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
+                        if (allEventsReformCalenderData.size()!=0) {
+                            mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
+                        }
+                        mProgressBar.setVisibility(View.GONE);
 
                         String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         int position = 0;
@@ -475,8 +627,12 @@ public class EventAllTabFragment extends Fragment  {
                                 e.printStackTrace();
                             }
                         }
-
-                        mRecyclerView.scrollToPosition(position);
+                        if (mCurrentYear == Calendar.getInstance().get(Calendar.YEAR)+1) {
+                            mRecyclerView.scrollToPosition(position);
+                        } else {
+                            int pos = layoutManager.findLastCompletelyVisibleItemPosition();
+                            mRecyclerView.scrollToPosition(pos);
+                        }
 
                     }
 
@@ -489,13 +645,57 @@ public class EventAllTabFragment extends Fragment  {
                     mIsLoading0 = false;
                     mIsLoading1 = false;
                     mIsLoading2 = false;
+
+                    mProgressBar.setVisibility(View.GONE);
+                    mBtnTryAgain.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+
+                    mBtnTryAgain.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            mBtnTryAgain.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            getServerCall(mCurrentYear);
+
+                        }
+                    });
                 }
             }, url, mCurrentYear);
         }
 
     }
 
+    private void scrolledToTop(){
 
+        ArrayList<ParseIsraelItemBean> allDataList = mEventAllAdapter.getAllActualData();
+
+        String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        int position = 0;
+        int count = 0;
+        for (int j=0; j<allDataList.size(); j++) {
+            String eventDate = allDataList.get(j).getDate();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date1 = sdf.parse(eventDate);
+                Date date2 = sdf.parse(TodaysDate);
+                if (date2.after(date1)) {
+                    count = count+1;
+
+                    if (count >1) {
+                        position = j;
+                    }
+
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position+1, 0);
+
+//        mRecyclerView.scrollToPosition(position+1);
+
+    }
 
     private UrlModel getUrls(String year) {
         UrlModel urlModel = new UrlModel();

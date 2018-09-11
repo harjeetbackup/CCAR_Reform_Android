@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_70"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_10">
+
+        >
 
         <com.reformluach.typeface.CustomtextViewFontLight
             android:layout_width="0dp"
@@ -19,7 +20,9 @@
             android:gravity="center"
             android:text="@string/about"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/margin_35"/>
+            android:textSize="@dimen/margin_35"
+
+            />
 
         <ImageView
             android:id="@+id/ivSettings"

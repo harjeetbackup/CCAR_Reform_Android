@@ -11,13 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_70"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_10">
+
+        >
 
         <ImageView
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
+            android:layout_marginLeft="@dimen/margin_10"
             android:background="@mipmap/down_arrow"/>
 
         <com.reformluach.typeface.CustomtextViewFontLight

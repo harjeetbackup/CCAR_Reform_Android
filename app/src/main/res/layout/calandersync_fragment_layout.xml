@@ -8,13 +8,25 @@
     android:background="@color/bg_bottom">
 
     <LinearLayout
-        android:id="@+id/llMain"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+    <LinearLayout
+        android:id="@+id/llMainCalender"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_year_calensync"
         android:orientation="vertical"
 
         >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,30 +58,28 @@
                 android:background="@color/transparent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginRight="@dimen/margin_15"
+                android:layout_marginTop="@dimen/margin_18"
                 />
             <TextView
                 android:id="@+id/txtCalenderType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="R"
-                android:textSize="12sp"
+                android:textSize="@dimen/calender_description_text_size"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="23dp"
-                android:layout_marginTop="12dp"
-
+                android:layout_marginRight="@dimen/margin_30"
+                android:layout_marginTop="@dimen/margin_top_caltype_text"
                 />
         </android.support.constraint.ConstraintLayout>
-
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
         >
 
     <com.reformluach.typeface.CustomtextViewFontRegular
@@ -80,31 +90,33 @@
             android:padding="@dimen/margin_10"
             android:text="@string/calender_text"
             android:textColor="@color/colorWhite"
-            android:textSize="14dp"
-            android:layout_marginTop="10dp"
+            android:textSize="@dimen/calender_type_text_size"
             />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvYear"
+
+    </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:scrollbars="horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginRight="@dimen/margin_12"
-            />
+            android:layout_marginEnd="@dimen/margin_10"
+            >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvYear"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:scrollbars="horizontal"
+                />
+        </LinearLayout>
+    </LinearLayout>
 
 
-    </LinearLayout>
-    </LinearLayout>
 
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/llMain"
-        android:layout_marginTop="20dp"
 
         >
     <android.support.v7.widget.RecyclerView
@@ -116,6 +128,7 @@
 
         />
     </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -126,7 +139,7 @@
     <Button
         android:id="@+id/btnDownloadEvents"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_height="@dimen/btn_download_height"
         android:layout_below="@+id/rvEvents"
         android:gravity="center"
         android:layout_marginLeft="@dimen/margin_80"
