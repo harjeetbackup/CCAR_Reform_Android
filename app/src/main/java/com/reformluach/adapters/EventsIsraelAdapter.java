@@ -33,6 +33,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<ParseIsraelItemBean> mAllActualData;
     private ArrayList<ParseIsraelItemBean> mAddAllYearData;
 //    private ReloadAllDataListener reloadAllDataListener;
+    private ArrayList<ParseIsraelItemBean> roshChodeshList = new ArrayList<>();
 
 
     public EventsIsraelAdapter(Context context, ArrayList<ParseIsraelItemBean> data) {
@@ -78,60 +79,43 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         if (title !=null && !TextUtils.isEmpty(title)){
-//            viewHolder.tvEventName.setText(EventTitle.replacetitleWithSpecialChar(title));
             viewHolder.tvEventName.setText(title);
 
         }
 
 
-//              if (model.getTitle().startsWith("Rosh Chodesh") || !model.getTitle().isEmpty() && (position == 0)) {
-//
-//                    model.setTitle("Erev Rosh Chodesh Weekday");
-//                    model.setDate(getPreviousEventOfRoshChodesh(mPopulatingData.get(0).getDate()));
-//                    mPopulatingData.set(0,model);
-//                    mPopulatingData.add(0,model);
-//                }
-//                 if (model.getTitle().startsWith("Rosh Chodesh") || !model.getTitle().isEmpty() && position > 0) {
-//                    model.setTitle("Erev Rosh Chodesh Weekday");
-//                    model.setDate(getPreviousEventOfRoshChodesh(mPopulatingData.get(position).getDate()));
-//                    mPopulatingData.set(position-1,model);
-//                    mPopulatingData.add(position - 1, model);
-//                }
+//        ParseIsraelItemBean roshChodesh = new ParseIsraelItemBean();
+//        roshChodesh = model;
+         ArrayList<ParseIsraelItemBean> roshChodeshList = new ArrayList<>();
 
+        for (int i=0; i<mPopulatingData.size(); i++){
+            ParseIsraelItemBean roshchodesh = mPopulatingData.get(i);
+            if (roshchodesh.getTitle().equals("Rosh Chodesh Tevet")){
+                roshchodesh.setActualIndex(mPopulatingData.get(i).getActualIndex());
+                roshchodesh.setTitle(mPopulatingData.get(i).getTitle());
+                roshchodesh.setDate(mPopulatingData.get(i).getDate());
+                roshChodeshList.add(roshchodesh);
+            }
+        }
 
         viewHolder.llMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                if (mPopulatingData.size() !=0) {
+
                    Intent intent = new Intent(context, EventDetailsActivity.class);
                    intent.putExtra("eventName", mPopulatingData.get(position).getTitle());
-                   intent.putExtra("eventType", mPopulatingData.get(position).getCategory());
+//                   intent.putExtra("eventType", mPopulatingData.get(position).getCategory());
                    intent.putExtra("eventDate", mPopulatingData.get(position).getDate());
+//                   intent.putParcelableArrayListExtra("roshChodeshTevet",roshChodeshList);
+                   intent.putExtra("roshChodeshTevet",roshChodeshList);
+
                    ((Activity) context).startActivity(intent);
                }
             }
         });
     }
 
-    public static String getPreviousEventOfRoshChodesh(String eventDate){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date myDate = null;
-        try {
-            myDate = dateFormat.parse(eventDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(myDate);
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Date newDate = calendar.getTime();
-        // ---  Then, if you need to, convert it back to a String:
-
-        eventDate = dateFormat.format(newDate);
-
-        return eventDate;
-    }
 
     public void removeItem(int position) {
         mPopulatingData.remove(position);

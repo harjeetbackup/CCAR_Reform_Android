@@ -20,7 +20,9 @@
             android:gravity="center"
             android:text="Date Converter"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/margin_35"/>
+            android:textSize="@dimen/margin_33"
+
+            />
     </LinearLayout>
 
     <ScrollView

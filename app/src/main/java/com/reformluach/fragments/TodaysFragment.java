@@ -15,12 +15,15 @@ import android.widget.Toast;
 
 import com.reformluach.R;
 import com.reformluach.activities.EventDetailsActivity;
+import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.RequestURL;
 import com.reformluach.services.ServiceAsync;
 import com.reformluach.services.ServiceStatus;
 import com.reformluach.services.ServicesResponse;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
+
+import java.util.ArrayList;
 
 /**
  * Created by Naveen Mishra on 11/30/2017.
@@ -182,9 +185,11 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.tv_event:
                 Intent intent = new Intent(context, EventDetailsActivity.class);
-                intent.putExtra("eventType", "Todays");
+                ArrayList<ParseIsraelItemBean> roshChodesh = new ArrayList<>();
+//                intent.putExtra("eventType", "Todays");
                 intent.putExtra("eventName", eventName);
                 intent.putExtra("eventDate",eventDate);
+                intent.putExtra("roshChodeshTevet",roshChodesh);
                 startActivity(intent);
                 break;
         }

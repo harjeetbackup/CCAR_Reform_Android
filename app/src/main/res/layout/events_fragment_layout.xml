@@ -19,31 +19,31 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
-            <com.reformluach.typeface.CustomtextViewFontThin
+            <com.reformluach.typeface.CustomtextViewFontLight
                 android:id="@+id/tvEvent"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text=""
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/margin_32"
+                android:textSize="@dimen/margin_33"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/ImgBtnSetting"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginTop="@dimen/margin_15"
                 />
 
             <ImageButton
                 android:id="@+id/ImgBtnSetting"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/margin_50"
+                android:layout_height="@dimen/margin_50"
                 android:src="@mipmap/reform_setting_icon"
                 android:layout_gravity="left"
                 android:background="@color/transparent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="@dimen/margin_15"
-                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_13"
                 />
             <TextView
                 android:id="@+id/tvEventCalenderType"
@@ -55,22 +55,26 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginRight="@dimen/margin_38"
-                android:layout_marginTop="@dimen/margin_top_caltype_event"
+                android:layout_marginRight="@dimen/margin_33"
+                android:layout_marginTop="@dimen/margin_2"
                 />
 
+            <com.reformluach.typeface.CustomtextViewFontThin
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/margin_18"
+                app:layout_constraintTop_toBottomOf="@+id/tvEvent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
         </android.support.constraint.ConstraintLayout>
 
 
-        <com.reformluach.typeface.CustomtextViewFontThin
-            android:id="@+id/tvDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/margin_18"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -134,9 +138,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/margin_5"
+            android:layout_marginLeft="@dimen/margin_8"
             android:gravity="center"
-            android:padding="@dimen/margin_5"
             android:text="Cancel"
             android:textSize="@dimen/search_text_size_event"
             android:textColor="@color/text_grey"/>

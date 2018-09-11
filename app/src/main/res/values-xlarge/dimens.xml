@@ -17,4 +17,9 @@
 
     <dimen name="margin_top_caltype_event">-10dp</dimen>
     <dimen name="search_text_size_event">20dp</dimen>
+
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_26">26dp</dimen>
+    <dimen name="margin_27">27dp</dimen>
+
 </resources>

@@ -10,6 +10,10 @@
     <dimen name="margin_8">10dp</dimen>
     <dimen name="margin_9">20dp</dimen>
     <dimen name="margin_10">20dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_26">26dp</dimen>
+    <dimen name="margin_27">27dp</dimen>
+
     <dimen name="margin_12">22dp</dimen>
     <dimen name="margin_13">24dp</dimen>
     <dimen name="margin_15">26dp</dimen>

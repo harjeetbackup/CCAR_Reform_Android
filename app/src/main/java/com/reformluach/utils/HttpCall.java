@@ -99,37 +99,7 @@ public class HttpCall {
                                 mAllEventsReformCalenderData.addAll(newData);
 
 
-//
-//                                HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
-//                                HashMap<String, ArrayList<ParseIsraelItemBean>> threeStepLogic = new HashMap<>();
-//
-//                                for (Map.Entry me : itemGrp.entrySet()) {
-//                                    String date = (String)me.getKey();
-//                                    ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
-//
-//                                     if(dateItemList.size()==2) {
-//                                        twoStepLogic.put(date, dateItemList);
-//                                    } else if(dateItemList.size()==3) {
-//                                        threeStepLogic.put(date, dateItemList);
-//                                    }
-//                                }
-//
-//                                // For Two Step Logic
-//                                twoStep(twoStepLogic, mAllEventsReformCalenderData, false);
-//
-//                                // For Three Step Logic
-//                                threeStep(threeStepLogic, mAllEventsReformCalenderData, 1);
-//                                threeStep(threeStepLogic, mAllEventsReformCalenderData, 2);
-//                                threeStep(threeStepLogic, mAllEventsReformCalenderData, 3);
-//                                threeStep(threeStepLogic, mAllEventsReformCalenderData, 4);
-//                                threeStep(threeStepLogic, mAllEventsReformCalenderData, 5);
-//                                threeStep(threeStepLogic, mAllEventsReformCalenderData, 6);
-//
-//
-//                                firdaySaturdayLogic(mAllEventsReformCalenderData);
-
                                 ////////////////////////////////////////////////////////////////////
-
 
 
                                 if(requestCall != null) {
@@ -240,36 +210,43 @@ public class HttpCall {
                     item1 = dateItemList.get(0);
                     item2 = dateItemList.get(1);
                     item3 = dateItemList.get(2);
+
                     break;
                 case 2:
                     item1 = dateItemList.get(0);
                     item2 = dateItemList.get(2);
                     item3 = dateItemList.get(1);
+
                     break;
 
                 case 3:
                     item1 = dateItemList.get(1);
                     item2 = dateItemList.get(0);
                     item3 = dateItemList.get(2);
+
                     break;
 
                 case 4:
                     item1 = dateItemList.get(1);
                     item2 = dateItemList.get(2);
                     item3 = dateItemList.get(0);
+
                     break;
 
                 case 5:
                     item1 = dateItemList.get(2);
                     item2 = dateItemList.get(0);
                     item3 = dateItemList.get(1);
+
                     break;
 
                 case 6:
                     item1 = dateItemList.get(2);
                     item2 = dateItemList.get(1);
                     item3 = dateItemList.get(0);
+
                     break;
+
                 default:
                         item1 = dateItemList.get(0);
                         item2 = dateItemList.get(1);
@@ -323,16 +300,73 @@ public class HttpCall {
 //                mAllEventsReformCalenderData.get(actualIndex1).setHighlighted(true);
 //                mAllEventsReformCalenderData.get(actualIndex2).setHighlighted(true);
 //                mAllEventsReformCalenderData.get(actualIndex3).setHighlighted(true);
-
-                if (actualIndex1>actualIndex2 || actualIndex1>actualIndex3 || actualIndex2>actualIndex1 ||
-                        actualIndex2>actualIndex3 || actualIndex3>actualIndex1 || actualIndex3>actualIndex2) {
+//
+//                if (actualIndex1>actualIndex2 || actualIndex1>actualIndex3 || actualIndex2>actualIndex1 ||
+//                        actualIndex2>actualIndex3 || actualIndex3>actualIndex1 || actualIndex3>actualIndex2) {
                     mAllEventsReformCalenderData.get(actualIndex1).setSubTitle("The Haftarah for " + title2 + " should be read.");
                     mAllEventsReformCalenderData.get(actualIndex3).setSubTitle("The Haftarah for " + title2 + " should be read.");
-                }
+//                }
             }
 
         }
     }
+
+    public static void returthreeEventsLogic(ArrayList<ParseIsraelItemBean> threeStepLogic){
+
+
+        ParseIsraelItemBean parashatEvents = null;
+        ParseIsraelItemBean shabbatEvents = null;
+        ParseIsraelItemBean chodeshEvents = null;
+        boolean isParshat = false;
+        boolean isShabat = false;
+        boolean isChodesh = false;
+
+
+        for (int i=0;i<threeStepLogic.size(); i++){
+            ParseIsraelItemBean events = threeStepLogic.get(i);
+
+
+            if(events.getTitle().startsWith("Parashat")) {
+                isParshat = true;
+                parashatEvents = threeStepLogic.get(i);
+            }
+
+            if (events.getTitle().contains("Shabbat Parah") ||
+                    events.getTitle().equals("Shabbat Sh'kalim") ||
+                    events.getTitle().equals("Shabbat HaGadol") || events.getTitle().equals("Shabbat Zachor") ||
+                    events.getTitle().equals("Shabbat HaChodesh") || events.getTitle().equals("Shabbat Shuva")
+                    || events.getTitle().equals("Shabbat Chanukah") || events.getTitle().startsWith("Chanukah")) {
+
+                isShabat = true;
+                shabbatEvents = threeStepLogic.get(i);
+
+            }
+
+            if (events.getTitle().startsWith("Rosh Chodesh")){
+                isChodesh = true;
+                 chodeshEvents = threeStepLogic.get(i);
+            }
+
+
+            if(isParshat && isShabat && isChodesh) {
+                if (parashatEvents.getDate().equals(shabbatEvents.getDate()) &&
+                        shabbatEvents.getDate().equals(chodeshEvents.getDate()) &&
+                        chodeshEvents.getDate().equals(parashatEvents.getDate())) {
+                    String title = shabbatEvents.getTitle();
+                    if (shabbatEvents.getTitle().equals("Chanukah: 2nd Night")   || shabbatEvents.getTitle().equals("Chanukah: 3rd Night")
+                            ||shabbatEvents.getTitle().equals("Chanukah: 4th Night") || shabbatEvents.getTitle().equals("Chanukah: 5th Night") ||
+                            shabbatEvents.getTitle().equals("Chanukah: 6th Night") || shabbatEvents.getTitle().equals("Chanukah: 7th Night") ||
+                            shabbatEvents.getTitle().equals("Chanukah: 8th Night") || shabbatEvents.getTitle().equals("Chanukah: 8th Day")) {
+//                        shabbatEvents.setTitle("Shabbat Chanukah");
+                         title = "Shabbat Chanukah";
+                    }
+                    parashatEvents.setSubTitle("The Haftarah for " + title + " should be read.");
+                    chodeshEvents.setSubTitle("The Haftarah for " + title + " should be read.");
+                }
+                }
+            }
+        }
+
 
 
     public static void firdaySaturdayLogic(ArrayList<ParseIsraelItemBean> mAllEventsReformCalenderData) {
@@ -448,6 +482,10 @@ public class HttpCall {
                 if (title1.equals("Sh'mini Atzeret/Simchat Torah")){
                     isSukkot2 = true;
                 }
+
+            if (title1.equals("Erev Rosh Chodesh Weekday")){
+                isSukkot2 = true;
+            }
                 //END Saturday Logic for Chanukah -------------------------------------------------
 
 
@@ -541,6 +579,10 @@ public class HttpCall {
                     }
                     if (title1.equals("Erev Shavout") && days == 6) {
                         mAllEventsReformCalenderData.get(i).setTitle("Erev Shavout Friday");
+                    }
+
+                    if (title1.equals("Erev Rosh Chodesh Weekday") && days == 6) {
+                        mAllEventsReformCalenderData.get(i).setTitle("Erev Rosh Chodesh Friday");
                     }
                     // END Friday Logic --------------------------------------------------------------
 
