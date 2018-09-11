@@ -70,8 +70,6 @@ import java.util.TimeZone;
 public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapter.OnYearSelected,CalenderSyncEventsAdapter.OnEventSelected {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
     private Context context;
-    private String eventdate, event;
-    private long timestamp;
     private ContentResolver resolver;
     private Controller controller;
     private RecyclerView rvCalendar;
@@ -637,9 +635,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_WRITE_CALENDAR:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    addReminderInCalendar(timestamp, event);
-//                    btnDownloadEvents.setEnabled(true);
-
+                   btnDownloadEvents.setEnabled(true);
                 } else {
                     //code for deny
                     btnDownloadEvents.setEnabled(false);
@@ -647,10 +643,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 break;
         }
     }
-
-
-
-
 
     private void setBgAccordingToMonth(int month) {
         switch (month + 1) {
@@ -725,9 +717,9 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                     Log.e("Data Size", String.valueOf(checkedItems.size()));
                     for (int i = 0; i < checkedItems.size(); i++) {
-                        eventdate = checkedItems.get(i).getDate();
-                        event = checkedItems.get(i).getTitle();
-                        timestamp = controller.getUtcTimeInMillisEvents(eventdate);
+                        String eventdate = checkedItems.get(i).getDate();
+                        String event = checkedItems.get(i).getTitle();
+                        long timestamp = controller.getUtcTimeInMillisEvents(eventdate);
                         Log.e("Timestamp", "Timestamp" + timestamp);
                         addReminderInCalendar(timestamp, event);
                     }
