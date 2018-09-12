@@ -215,12 +215,11 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                                 mDesporaDataList.addAll(allEventsReformCalenderData);
 
                             }
-//                            mReformDataList.addAll(allEventsReformCalenderData);
-//                        }
                             ArrayList<ParseIsraelItemBean> mSpecialDisporaFilteredEvent = new ArrayList<>();
 
                             if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
                                 EventManager.getSpecailDisporaTorahEvents(mDesporaDataList, mSpecialDisporaFilteredEvent);
+
                                 if (mSpecialDisporaFilteredEvent.size()>0) {
                                     for (int i=0; i<mSpecialDisporaFilteredEvent.size(); i++)
                                         mReformDataList.add(mSpecialDisporaFilteredEvent.get(i));
@@ -235,16 +234,151 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
 
                                 Collections.sort(mReformDataList);
 
+                                for (int i=0; i<mReformDataList.size(); i++) {
+                                    mReformDataList.get(i).setActualIndex(i);
+                                }
+                                HashMap<String, ArrayList<ParseIsraelItemBean>> itemGrp = new HashMap<>();
+                                for(int i=0; i< mReformDataList.size(); i++) {
+
+                                    ArrayList<ParseIsraelItemBean> dateItemList = itemGrp.get(mReformDataList.get(i).getDate());
+
+                                    if(dateItemList == null) {
+                                        dateItemList = new ArrayList<>();
+                                    }
+
+                                    dateItemList.add(mReformDataList.get(i));
+
+                                    itemGrp.put(mReformDataList.get(i).getDate(), dateItemList);
+
+                                }
+
+                                HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
+
+                                for (Map.Entry me : itemGrp.entrySet()) {
+                                    String date = (String)me.getKey();
+                                    ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
+                                    if(dateItemList.size()==2) {
+                                        twoStepLogic.put(date, dateItemList);
+                                    }
+                                }
+
+                                // For Two Step Logic
+                                HttpCall.twoStep(twoStepLogic, mReformDataList, false);
+
+                                // For Three Step Logic
+
+                                HttpCall.returthreeEventsLogic(mReformDataList);
+                                HttpCall.firdaySaturdayLogic(mReformDataList);
+
+//                                if (mSpecialDisporaFilteredEvent.size()>0) {
+//                                    for (int i=0; i<mSpecialDisporaFilteredEvent.size(); i++)
+//                                        mReformDataList.add(mSpecialDisporaFilteredEvent.get(i));
+//                                }
+//
+//
+//                                Set<ParseIsraelItemBean> hs = new HashSet<>();
+//                                hs.addAll(mReformDataList);
+//                                mReformDataList.clear();
+//                                mReformDataList.addAll(hs);
+//
+//
+//                                Collections.sort(mReformDataList);
+
 //                                Collections.sort(mReformDataList);
                                 // TODO, Dismiss Progress Dialog
                             }
                         }
                     } else if (from.equals(Appconstant.ISRAEL)) {
                         mIsLoading0 = false;
+
+                        Collections.sort(allEventsReformCalenderData);
+                        for (int i=0; i<allEventsReformCalenderData.size(); i++) {
+                            allEventsReformCalenderData.get(i).setActualIndex(i);
+                        }
+
+
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> itemGrp = new HashMap<>();
+                        for(int i=0; i< allEventsReformCalenderData.size(); i++) {
+
+                            ArrayList<ParseIsraelItemBean> dateItemList = itemGrp.get(allEventsReformCalenderData.get(i).getDate());
+
+                            if(dateItemList == null) {
+                                dateItemList = new ArrayList<>();
+                            }
+
+                            dateItemList.add(allEventsReformCalenderData.get(i));
+
+                            itemGrp.put(allEventsReformCalenderData.get(i).getDate(), dateItemList);
+
+                        }
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
+
+                        for (Map.Entry me : itemGrp.entrySet()) {
+                            String date = (String)me.getKey();
+                            ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
+
+                            if(dateItemList.size()==2) {
+                                twoStepLogic.put(date, dateItemList);
+                            }
+//
+                        }
+
+                        // For Two Step Logic
+                        HttpCall.twoStep(twoStepLogic, allEventsReformCalenderData, false);
+
+                        // For Three Step Logic
+                        HttpCall.returthreeEventsLogic(allEventsReformCalenderData);
+
+                        // FridaySaturday Logic-----
+                        HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
+
+
                         mIsarailDataList.addAll(allEventsReformCalenderData);
                         // TODO, Dismiss Progress Dialog
                     } else if (from.equals(Appconstant.DIASPORA)) {
                         mIsLoading0 = false;
+
+                        Collections.sort(allEventsReformCalenderData);
+                        for (int i=0; i<allEventsReformCalenderData.size(); i++) {
+                            allEventsReformCalenderData.get(i).setActualIndex(i);
+                        }
+
+
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> itemGrp = new HashMap<>();
+                        for(int i=0; i< allEventsReformCalenderData.size(); i++) {
+
+                            ArrayList<ParseIsraelItemBean> dateItemList = itemGrp.get(allEventsReformCalenderData.get(i).getDate());
+
+                            if(dateItemList == null) {
+                                dateItemList = new ArrayList<>();
+                            }
+
+                            dateItemList.add(allEventsReformCalenderData.get(i));
+
+                            itemGrp.put(allEventsReformCalenderData.get(i).getDate(), dateItemList);
+
+                        }
+                        HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
+
+                        for (Map.Entry me : itemGrp.entrySet()) {
+                            String date = (String)me.getKey();
+                            ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
+
+                            if(dateItemList.size()==2) {
+                                twoStepLogic.put(date, dateItemList);
+                            }
+//
+                        }
+
+                        // For Two Step Logic
+                        HttpCall.twoStep(twoStepLogic, allEventsReformCalenderData, false);
+
+                        // For Three Step Logic
+                        HttpCall.returthreeEventsLogic(allEventsReformCalenderData);
+
+                        // FridaySaturday Logic-----
+                        HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
+
                         mDesporaDataList.addAll(allEventsReformCalenderData);
                         // TODO, Dismiss Progress Dialog
                     }
@@ -722,8 +856,6 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                             long timestamp = controller.getUtcTimeInMillisEvents(eventdate);
                             Log.e("Timestamp", "Timestamp" + timestamp);
                             addReminderInCalendar(timestamp, event);
-
-
                         }
                         SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
                         for (int i=0; i<mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {

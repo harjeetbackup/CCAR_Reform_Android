@@ -24,6 +24,7 @@
     <dimen name="margin_60">60dp</dimen>
     <dimen name="margin_70">71dp</dimen>
     <dimen name="margin_80">81dp</dimen>
+    <dimen name="margin_80a">81dp</dimen>
     <dimen name="margin_13">13dp</dimen>
     <dimen name="margin_110">108dp</dimen>
     <dimen name="margin_120">118dp</dimen>
@@ -49,7 +50,7 @@
     <dimen name="margin_left_caltype_text">10dp</dimen>
     <dimen name="margin_right_caltype_text">30dp</dimen>
     <dimen name="margin_top_caltype_text">18dp</dimen>
-    <dimen name="margin_year_calensync">200dp</dimen>
+    <dimen name="margin_year_calensync">190dp</dimen>
 
     <dimen name="margin_top_caltype_event">14dp</dimen>
     <dimen name="search_text_size_event">20dp</dimen>

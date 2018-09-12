@@ -416,6 +416,28 @@ public class EventAllTabFragment extends Fragment  {
 
 
                                 Collections.sort(mReformSpecialEvent);
+                                ArrayList<ParseIsraelItemBean> newData = new ArrayList<>();
+                                for (int i=0; i<mReformSpecialEvent.size(); i++) {
+                                    if (i>0) {
+                                        String prevDate = mReformSpecialEvent.get(i-1).getDate();
+                                        String prevTitle = mReformSpecialEvent.get(i-1).getTitle();
+                                                ParseIsraelItemBean bean = new ParseIsraelItemBean();
+                                        if (mReformSpecialEvent.get(i).getTitle().startsWith("Rosh Chodesh") && prevTitle.equals("Erev Rosh Chodesh Weekday") && mReformSpecialEvent.get(i).getDate().equals(prevDate)) {
+                                            newData.remove(newData.size()-1);
+                                            newData.add(mReformSpecialEvent.get(i));
+                                        } else {
+                                            newData.add(mReformSpecialEvent.get(i));
+                                        }
+                                    } else {
+                                        newData.add(mReformSpecialEvent.get(i));
+                                    }
+
+                                }
+
+                                mReformSpecialEvent.clear();
+                                mReformSpecialEvent.addAll(newData);
+
+
 
                                 for (int i=0; i<mReformSpecialEvent.size(); i++) {
                                     mReformSpecialEvent.get(i).setActualIndex(i);
@@ -488,18 +510,17 @@ public class EventAllTabFragment extends Fragment  {
                                     int pos = layoutManager.findLastCompletelyVisibleItemPosition();
                                     mRecyclerView.scrollToPosition(pos);
                                 }
-
                              }
-
                         }
-
-//
 
                     } else if (from.equals(Appconstant.ISRAEL) || from.equals(Appconstant.DIASPORA)) {
                         mCurrentYear = year+1;
                         mIsLoading0 = false;
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                         for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
+                            if (bean.getTitle().equals("Sh'mini Atzeret/Simchat Torah")){
+                                bean.setTitle("Sh'mini Atzeret");
+                            }
                             String dateStr = bean.getDate();
 
                             Date date = null;
@@ -512,13 +533,10 @@ public class EventAllTabFragment extends Fragment  {
                             bean.setDateTime(date);
                         }
 
-
-
                         Collections.sort(allEventsReformCalenderData);
                         for (int i=0; i<allEventsReformCalenderData.size(); i++) {
                             allEventsReformCalenderData.get(i).setActualIndex(i);
                         }
-
 
                         HashMap<String, ArrayList<ParseIsraelItemBean>> itemGrp = new HashMap<>();
                         for(int i=0; i< allEventsReformCalenderData.size(); i++) {
@@ -543,7 +561,6 @@ public class EventAllTabFragment extends Fragment  {
                             if(dateItemList.size()==2) {
                                 twoStepLogic.put(date, dateItemList);
                             }
-//
                         }
 
                         // For Two Step Logic
@@ -590,11 +607,7 @@ public class EventAllTabFragment extends Fragment  {
                             int pos = layoutManager.findLastCompletelyVisibleItemPosition();
                             mRecyclerView.scrollToPosition(pos);
                         }
-
                     }
-
-
-
                 }
 
                 @Override
@@ -614,7 +627,6 @@ public class EventAllTabFragment extends Fragment  {
                             mBtnTryAgain.setVisibility(View.GONE);
                             mRecyclerView.setVisibility(View.VISIBLE);
                             getServerCall(mCurrentYear);
-
                         }
                     });
                 }

@@ -29,6 +29,7 @@
     <dimen name="margin_13">11dp</dimen>
     <dimen name="margin_70">67dp</dimen>
     <dimen name="margin_80">77dp</dimen>
+    <dimen name="margin_80a">77dp</dimen>
     <dimen name="margin_110">107dp</dimen>
     <dimen name="margin_120">117dp</dimen>
     <dimen name="margin_140">137dp</dimen>

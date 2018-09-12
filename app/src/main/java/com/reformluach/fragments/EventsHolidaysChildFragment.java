@@ -458,8 +458,6 @@ public class EventsHolidaysChildFragment extends Fragment {
 
                                     if (dateItemList.size() == 2) {
                                         twoStepLogic.put(date, dateItemList);
-                                    } else if (dateItemList.size() == 3) {
-                                        threeStepLogic.put(date, dateItemList);
                                     }
                                 }
 
@@ -467,13 +465,7 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 HttpCall.twoStep(twoStepLogic, mReformDataList, false);
 
                                 // For Three Step Logic
-                                HttpCall.threeStep(threeStepLogic, mReformDataList, 1);
-                                HttpCall.threeStep(threeStepLogic, mReformDataList, 2);
-                                HttpCall.threeStep(threeStepLogic, mReformDataList, 3);
-                                HttpCall.threeStep(threeStepLogic, mReformDataList, 4);
-                                HttpCall.threeStep(threeStepLogic, mReformDataList, 5);
-                                HttpCall.threeStep(threeStepLogic, mReformDataList, 6);
-
+                                HttpCall.returthreeEventsLogic(mReformDataList);
 
                                 HttpCall.firdaySaturdayLogic(mReformDataList);
                                 ArrayList<ParseIsraelItemBean> duplicate = new ArrayList<>();
@@ -529,7 +521,9 @@ public class EventsHolidaysChildFragment extends Fragment {
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                         for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
                             String dateStr = bean.getDate();
-
+                            if (bean.getTitle().equals("Sh'mini Atzeret/Simchat Torah")){
+                                bean.setTitle("Sh'mini Atzeret");
+                            }
                             Date date = null;
                             try {
                                 date = format.parse(dateStr);
@@ -565,7 +559,6 @@ public class EventsHolidaysChildFragment extends Fragment {
                         }
 
                         HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
-                        HashMap<String, ArrayList<ParseIsraelItemBean>> threeStepLogic = new HashMap<>();
 
                         for (Map.Entry me : itemGrp.entrySet()) {
                             String date = (String)me.getKey();
@@ -573,8 +566,6 @@ public class EventsHolidaysChildFragment extends Fragment {
 
                             if(dateItemList.size()==2) {
                                 twoStepLogic.put(date, dateItemList);
-                            } else if(dateItemList.size()==3) {
-                                threeStepLogic.put(date, dateItemList);
                             }
                         }
 
@@ -582,13 +573,7 @@ public class EventsHolidaysChildFragment extends Fragment {
                         HttpCall.twoStep(twoStepLogic, allEventsReformCalenderData, false);
 
                         // For Three Step Logic
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 1);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 2);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 3);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 4);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 5);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 6);
-
+                        HttpCall.returthreeEventsLogic(allEventsReformCalenderData);
 
                         HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
                         ArrayList<ParseIsraelItemBean> duplicate = new ArrayList<>();

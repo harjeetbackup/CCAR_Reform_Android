@@ -28,6 +28,7 @@
     <dimen name="margin_60">64dp</dimen>
     <dimen name="margin_70">74dp</dimen>
     <dimen name="margin_80">84dp</dimen>
+    <dimen name="margin_80a">180dp</dimen>
     <dimen name="margin_13">20dp</dimen>
     <dimen name="margin_110">112dp</dimen>
     <dimen name="margin_120">122dp</dimen>

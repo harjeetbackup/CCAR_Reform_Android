@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:id="@+id/linEventItems"
     android:background="@color/event_background_color"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
+
+    >
 
     <LinearLayout
         android:id="@+id/linearMain"
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/margin_5"
             >
 
         <com.reformluach.typeface.CustomtextViewFontRegular
@@ -60,10 +60,10 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:maxLines="2"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/text_greycal"
             tools:text="ghffgh gjhgh kjgjhgjh kjhg"
             android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_5"
+            android:layout_marginRight="@dimen/margin_8"
             android:textSize="10sp"
             android:visibility="gone"
             android:layout_marginBottom="@dimen/margin_5"

@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.reformluach.models.EventTitle;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.Url;
 
@@ -86,7 +87,8 @@ public class HttpCall {
                                 ArrayList<ParseIsraelItemBean> newData = new ArrayList<>();
                                 for (int i=0; i<mAllEventsReformCalenderData.size(); i++) {
                                     ParseIsraelItemBean bean = new ParseIsraelItemBean();
-                                    if (mAllEventsReformCalenderData.get(i).getTitle().startsWith("Rosh Chodesh") ) {
+                                    if (mAllEventsReformCalenderData.get(i).getTitle().startsWith("Rosh Chodesh")) {
+
                                         String previosDate = getPreviousEventOfRoshChodesh(mAllEventsReformCalenderData.get(i).getDate());
                                         bean.setTitle("Erev Rosh Chodesh Weekday");
                                         bean.setCategory(mAllEventsReformCalenderData.get(i).getCategory());

@@ -2,11 +2,14 @@ package com.reformluach.typeface;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+
+import java.lang.reflect.Field;
 
 public class CustomTabLayout extends android.support.design.widget.TabLayout {
     public CustomTabLayout(Context context) {
@@ -37,4 +40,5 @@ public class CustomTabLayout extends android.support.design.widget.TabLayout {
             }
         }
     }
+
 }

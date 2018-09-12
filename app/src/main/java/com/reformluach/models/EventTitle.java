@@ -1255,6 +1255,9 @@ public  class EventTitle {
                     else if (eventName.contains("Parashat Lech L'cha")) {
                         url = htmlFileUrl + "OlderHtmlFile/Lech_L'cha.html";
                     }
+                    else if (eventName.contains("Sh'mini Atzeret")) {
+                        url = htmlFileUrl + "OlderHtmlFile/Sh'mini_Atzeret.html";
+                    }
 //        }
         return url;
 
