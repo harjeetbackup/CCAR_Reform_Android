@@ -551,7 +551,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
     }
 
 
-    private void addReminderInCalendar(long open, String name) {
+    private void addReminderInCalendar(long open, String name, String eventDate) {
         Calendar cal = Calendar.getInstance();
         Uri EVENTS_URI = Uri.parse(getCalendarUriBase(true) + "events");
         ContentResolver cr = context.getContentResolver();
@@ -562,7 +562,10 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
         values.put(CalendarContract.Events.TITLE, name);
         values.put(CalendarContract.Events.DTSTART, open);
         //evt.getEndTime())
+//        values.put(CalendarContract.Events.DTEND, open);
         values.put(CalendarContract.Events.DTEND, open + 82800000);
+//        values.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
+//                + controller.getOneDayAfterInMillsEvent(eventDate));
 //        }
         values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
         values.put(CalendarContract.Events.ALL_DAY, 1);
@@ -715,25 +718,29 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                     final ArrayList<ParseIsraelItemBean> checkedItems = entry.getValue();
                     boolean isSync = SyncCalendarPref.getInstance(getActivity()).isEventSynced(mSelectedYear, key, selectedCal);
                     Log.e("Data Size", String.valueOf(checkedItems.size()));
+                    Log.e("SELECTED", "SelectedYear " + selectedCal +" "+ mSelectedYear);
                     if (!isSync) {
                         for (int i = 0; i < checkedItems.size(); i++) {
                             String eventdate = checkedItems.get(i).getDate();
                             String event = checkedItems.get(i).getTitle();
-                            long timestamp = controller.getUtcTimeInMillisEvents(eventdate);
+                            eventdate = controller.getOneDayAfterInMillsEvent(eventdate);
+                            long timestamp = controller.getTimeInMillisEvent(eventdate);
                             Log.e("Timestamp", "Timestamp" + timestamp);
-                            addReminderInCalendar(timestamp, event);
 
-
-                        }
-                        SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
-                        for (int i=0; i<mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {
-                            if (mYearsHolidayCatMap.get(mSelectedYear).get(i).getEventname().equalsIgnoreCase(key)) {
-                                mYearsHolidayCatMap.get(mSelectedYear).get(i).setSync(true);
-                                mYearsHolidayCatMap.get(mSelectedYear).get(i).setSelected(false);
-                            }
+                            addReminderInCalendar(timestamp, event, eventdate);
                         }
                     }
-
+                    break;
+                }
+                for (Map.Entry<String, ArrayList<ParseIsraelItemBean>> entry : mapEvent.entrySet()) {
+                    String key = entry.getKey();
+                    SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
+                    for (int i = 0; i < mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {
+                        if (mYearsHolidayCatMap.get(mSelectedYear).get(i).getEventname().equalsIgnoreCase(key)) {
+                            mYearsHolidayCatMap.get(mSelectedYear).get(i).setSync(true);
+                            mYearsHolidayCatMap.get(mSelectedYear).get(i).setSelected(false);
+                        }
+                    }
                 }
             }
             return null;
