@@ -447,10 +447,10 @@ public class EventAllTabFragment extends Fragment  {
                                 for (Map.Entry me : itemGrp.entrySet()) {
                                     String date = (String)me.getKey();
                                     ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
-
+                                    ArrayList<ParseIsraelItemBean> threeEventsData = new ArrayList<>();
                                     if(dateItemList.size()==2) {
                                         twoStepLogic.put(date, dateItemList);
-                                    } else if(dateItemList.size()==3) {
+                                    } else if(dateItemList.size()>=3) {
                                         threeStepLogic.put(date, dateItemList);
                                     }
                                 }
@@ -459,14 +459,14 @@ public class EventAllTabFragment extends Fragment  {
                                 HttpCall.twoStep(twoStepLogic, mReformSpecialEvent, false);
 
                                 // For Three Step Logic
-                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 1);
-                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 2);
-                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 3);
-                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 4);
-                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 5);
-                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 6);
+//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 1);
+//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 2);
+//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 3);
+//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 4);
+//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 5);
+//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 6);
 
-
+                                HttpCall.returthreeEventsLogic(mReformSpecialEvent);
                                 HttpCall.firdaySaturdayLogic(mReformSpecialEvent);
 
                                 mProgressBar.setVisibility(View.GONE);
@@ -503,38 +503,9 @@ public class EventAllTabFragment extends Fragment  {
 
                              }
 
-//                            mReformDataList.addAll(allEventsReformCalenderData);
-
                         }
 
-//                        if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
-//                            mCurrentYear = year+1;
-//                            Collections.sort(mReformDataList);
-//                            mEventAllAdapter.addMessege(mReformDataList, year);
 //
-//                            String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-//                            int position = 0;
-//                            int count = 0;
-//                            for (int j=0; j<mReformDataList.size(); j++) {
-//                                String eventDate = mReformDataList.get(j).getDate();
-//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//                                try {
-//                                    Date date1 = sdf.parse(TodaysDate);
-//                                    Date date2 = sdf.parse(eventDate);
-//                                    if (date2.after(date1)) {
-//                                        count = count+1;
-//
-//                                        if (count == 1) {
-//                                            position = j;
-//                                        }
-//                                    }
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//
-//                            mRecyclerView.scrollToPosition(position);
-//                        }
 
                     } else if (from.equals(Appconstant.ISRAEL) || from.equals(Appconstant.DIASPORA)) {
                         mCurrentYear = year+1;
@@ -576,7 +547,6 @@ public class EventAllTabFragment extends Fragment  {
 
                         }
                         HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
-                        HashMap<String, ArrayList<ParseIsraelItemBean>> threeStepLogic = new HashMap<>();
 
                         for (Map.Entry me : itemGrp.entrySet()) {
                             String date = (String)me.getKey();
@@ -584,25 +554,20 @@ public class EventAllTabFragment extends Fragment  {
 
                             if(dateItemList.size()==2) {
                                 twoStepLogic.put(date, dateItemList);
-                            } else if(dateItemList.size()==3) {
-                                threeStepLogic.put(date, dateItemList);
                             }
+//
                         }
 
                         // For Two Step Logic
                         HttpCall.twoStep(twoStepLogic, allEventsReformCalenderData, false);
 
                         // For Three Step Logic
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 1);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 2);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 3);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 4);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 5);
-                        HttpCall.threeStep(threeStepLogic, allEventsReformCalenderData, 6);
+                        HttpCall.returthreeEventsLogic(allEventsReformCalenderData);
 
-
+                        // FridaySaturday Logic-----
                         HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
-                        if (allEventsReformCalenderData.size()!=0) {
+
+                        if (allEventsReformCalenderData.size()!=0 || allEventsReformCalenderData!=null) {
                             mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
                         }
                         mProgressBar.setVisibility(View.GONE);

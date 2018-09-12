@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.reformluach.utils.FunctionSpellChange;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -150,7 +151,7 @@ public class ParseIsraelItemBean implements Parcelable, Comparable<ParseIsraelIt
     }
 
     public void setTitle(String title) {
-        this.title = EventTitle.funcspellChangedForTitle(title);
+        this.title = FunctionSpellChange.funcspellChangedForTitle(title);
     }
 
     public String getMemo() {

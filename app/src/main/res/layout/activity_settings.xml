@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/margin_30"
+            android:layout_height="@dimen/margin_30"
             android:layout_gravity="start|center"
             android:layout_marginLeft="@dimen/margin_10"
             android:background="@mipmap/down_arrow"/>
@@ -28,9 +28,9 @@
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/margin_15"
             android:gravity="center"
-            android:text="SETTINGS"
+            android:text="Settings"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/margin_18"/>
+            android:textSize="@dimen/margin_33"/>
     </LinearLayout>
 
     <LinearLayout
