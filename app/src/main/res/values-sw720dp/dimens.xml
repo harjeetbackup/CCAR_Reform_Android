@@ -50,10 +50,10 @@
     <dimen name="margin_right_caltype_text">20dp</dimen>
     <dimen name="margin_top_caltype_image">2dp</dimen>
     <dimen name="margin_top_caltype_text">-10dp</dimen>
-    <dimen name="margin_year_calensync">380dp</dimen>
+    <dimen name="margin_year_calensync">360dp</dimen>
 
     <dimen name="margin_top_caltype_event">10dp</dimen>
-    <dimen name="search_text_size_event">20dp</dimen>
+    <dimen name="search_text_size_event">25dp</dimen>
     <!--<dimen name="margin_right_caltype_text_event">25dp</dimen>-->
 
 </resources>

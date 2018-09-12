@@ -495,7 +495,31 @@ public class Controller extends Application {
         cal.setTime(date);
         // Get timezone offset then use it to adjust the return value
         int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
-//        return cal.getTimeInMillis() + offset - 19800000;
-        return cal.getTimeInMillis() ;
+        return cal.getTimeInMillis() + offset - 19800000;
+    }
+
+    public long getTimeInMillisEvent (String datetime) {
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = (Date)formatter.parse(datetime);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Today is " +date.getTime());
+        return date.getTime();
+    }
+
+
+    public String getOneDayAfterInMillsEvent (String datetime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(datetime));
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, 1);  // number of days to add
+        return sdf.format(c.getTime());
     }
 }

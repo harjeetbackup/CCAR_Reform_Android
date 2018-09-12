@@ -429,6 +429,27 @@ public class EventsHolidaysChildFragment extends Fragment {
                                 mReformDataList.addAll(hs);
 
                                 Collections.sort(mReformDataList);
+                                ArrayList<ParseIsraelItemBean> newData = new ArrayList<>();
+                                for (int i=0; i<mReformDataList.size(); i++) {
+                                    if (i>0) {
+                                        String prevDate = mReformDataList.get(i-1).getDate();
+                                        String prevTitle = mReformDataList.get(i-1).getTitle();
+                                        ParseIsraelItemBean bean = new ParseIsraelItemBean();
+                                        if (mReformDataList.get(i).getTitle().startsWith("Rosh Chodesh") && prevTitle.equals("Erev Rosh Chodesh Weekday") && mReformDataList.get(i).getDate().equals(prevDate)) {
+                                            newData.remove(newData.size()-1);
+                                            newData.add(mReformDataList.get(i));
+                                        } else {
+                                            newData.add(mReformDataList.get(i));
+                                        }
+                                    } else {
+                                        newData.add(mReformDataList.get(i));
+                                    }
+
+                                }
+
+                                mReformDataList.clear();
+                                mReformDataList.addAll(newData);
+
                                 mProgressBar.setVisibility(View.GONE);
 
                                 for (int i = 0; i < mReformDataList.size(); i++) {
@@ -534,6 +555,27 @@ public class EventsHolidaysChildFragment extends Fragment {
                             bean.setDateTime(date);
                         }
                         Collections.sort(allEventsReformCalenderData);
+                        ArrayList<ParseIsraelItemBean> newData = new ArrayList<>();
+                        for (int i=0; i<allEventsReformCalenderData.size(); i++) {
+                            if (i>0) {
+                                String prevDate = allEventsReformCalenderData.get(i-1).getDate();
+                                String prevTitle = allEventsReformCalenderData.get(i-1).getTitle();
+                                ParseIsraelItemBean bean = new ParseIsraelItemBean();
+                                if (allEventsReformCalenderData.get(i).getTitle().startsWith("Rosh Chodesh") && prevTitle.equals("Erev Rosh Chodesh Weekday") && allEventsReformCalenderData.get(i).getDate().equals(prevDate)) {
+                                    newData.remove(newData.size()-1);
+                                    newData.add(allEventsReformCalenderData.get(i));
+                                } else {
+                                    newData.add(allEventsReformCalenderData.get(i));
+                                }
+                            } else {
+                                newData.add(allEventsReformCalenderData.get(i));
+                            }
+
+                        }
+
+                        allEventsReformCalenderData.clear();
+                        allEventsReformCalenderData.addAll(newData);
+
 //                        Set<ParseIsraelItemBean> hs = new HashSet<>();
 //                        hs.addAll(allEventsReformCalenderData);
 //                        allEventsReformCalenderData.clear();

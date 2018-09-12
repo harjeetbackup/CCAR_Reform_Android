@@ -58,7 +58,7 @@
                     android:textColor="@color/colorWhite"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/margin_5"
+                    android:layout_marginTop="@dimen/margin_2"
                     />
             </FrameLayout>
 

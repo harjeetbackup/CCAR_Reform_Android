@@ -534,6 +534,27 @@ public class EventAllTabFragment extends Fragment  {
                         }
 
                         Collections.sort(allEventsReformCalenderData);
+                        ArrayList<ParseIsraelItemBean> newData = new ArrayList<>();
+                        for (int i=0; i<mReformSpecialEvent.size(); i++) {
+                            if (i>0) {
+                                String prevDate = mReformSpecialEvent.get(i-1).getDate();
+                                String prevTitle = mReformSpecialEvent.get(i-1).getTitle();
+                                ParseIsraelItemBean bean = new ParseIsraelItemBean();
+                                if (mReformSpecialEvent.get(i).getTitle().startsWith("Rosh Chodesh") && prevTitle.equals("Erev Rosh Chodesh Weekday") && mReformSpecialEvent.get(i).getDate().equals(prevDate)) {
+                                    newData.remove(newData.size()-1);
+                                    newData.add(mReformSpecialEvent.get(i));
+                                } else {
+                                    newData.add(mReformSpecialEvent.get(i));
+                                }
+                            } else {
+                                newData.add(mReformSpecialEvent.get(i));
+                            }
+
+                        }
+
+                        mReformSpecialEvent.clear();
+                        mReformSpecialEvent.addAll(newData);
+
                         for (int i=0; i<allEventsReformCalenderData.size(); i++) {
                             allEventsReformCalenderData.get(i).setActualIndex(i);
                         }
