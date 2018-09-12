@@ -350,8 +350,7 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
             linearLayoutManager.setStackFromEnd(true);
             linearLayoutManager.setReverseLayout(false);
 
-            calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(),
-                    mYearsHolidayCatMap.get(mSelectedYear), this);
+            calenderSyncEventsAdapter = new CalenderSyncEventsAdapter(getActivity(), mYearsHolidayCatMap.get(mSelectedYear), this);
             recyclerViewEventName.setAdapter(calenderSyncEventsAdapter);
 
             mDesporaDataList.clear();
@@ -714,25 +713,48 @@ public class CalenderSyncFragment extends Fragment implements CalenderPagerAdapt
                 for (Map.Entry<String, ArrayList<ParseIsraelItemBean>> entry : mapEvent.entrySet()) {
                     String key = entry.getKey();
                     final ArrayList<ParseIsraelItemBean> checkedItems = entry.getValue();
-
+                    boolean isSync = SyncCalendarPref.getInstance(getActivity()).isEventSynced(mSelectedYear, key, selectedCal);
                     Log.e("Data Size", String.valueOf(checkedItems.size()));
-                    for (int i = 0; i < checkedItems.size(); i++) {
-                        String eventdate = checkedItems.get(i).getDate();
-                        String event = checkedItems.get(i).getTitle();
-                        long timestamp = controller.getUtcTimeInMillisEvents(eventdate);
-                        Log.e("Timestamp", "Timestamp" + timestamp);
-                        addReminderInCalendar(timestamp, event);
+                    if (!isSync) {
+                        for (int i = 0; i < checkedItems.size(); i++) {
+                            String eventdate = checkedItems.get(i).getDate();
+                            String event = checkedItems.get(i).getTitle();
+                            long timestamp = controller.getUtcTimeInMillisEvents(eventdate);
+                            Log.e("Timestamp", "Timestamp" + timestamp);
+                            addReminderInCalendar(timestamp, event);
+
+
+                        }
+                        SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
+                        for (int i=0; i<mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {
+                            if (mYearsHolidayCatMap.get(mSelectedYear).get(i).getEventname().equalsIgnoreCase(key)) {
+                                mYearsHolidayCatMap.get(mSelectedYear).get(i).setSync(true);
+                                mYearsHolidayCatMap.get(mSelectedYear).get(i).setSelected(false);
+                            }
+                        }
                     }
-                    SyncCalendarPref.getInstance(context).successEventSyncStatus(mSelectedYear, key, true, selectedCal);
-                    for (int i=0; i<mYearsHolidayCatMap.get(mSelectedYear).size(); i++) {
-                       if (mYearsHolidayCatMap.get(mSelectedYear).get(i).getEventname().equalsIgnoreCase(key)) {
-                           mYearsHolidayCatMap.get(mSelectedYear).get(i).setSync(true);
-                           mYearsHolidayCatMap.get(mSelectedYear).get(i).setSelected(false);
-                       }
-                    }
+
                 }
             }
             return null;
+        }
+
+        public boolean isEventInCal(Context context, String cal_meeting_id, boolean eventUri) {
+            Uri calendarURI = null;
+            if (android.os.Build.VERSION.SDK_INT <= 7) {
+                calendarURI = (eventUri) ? Uri.parse("content://calendar/events/") : Uri.parse("content://calendar/calendars/events");
+            } else {
+                calendarURI = (eventUri) ? Uri.parse("content://com.android.calendar/events/") : Uri.parse("content://com.android.calendar/calendars/events");
+            }
+            Cursor cursor = context.getContentResolver().query(
+                    calendarURI,
+                    new String[] { "_id" }, " _id = ? ",
+                    new String[] { cal_meeting_id }, null);
+
+            if (cursor.moveToFirst()) {
+                return true;
+            }
+            return false;
         }
 
         @SuppressLint("NewApi")
