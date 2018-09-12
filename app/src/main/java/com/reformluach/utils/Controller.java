@@ -495,6 +495,7 @@ public class Controller extends Application {
         cal.setTime(date);
         // Get timezone offset then use it to adjust the return value
         int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
-        return cal.getTimeInMillis() + offset - 19800000;
+//        return cal.getTimeInMillis() + offset - 19800000;
+        return cal.getTimeInMillis() ;
     }
 }
