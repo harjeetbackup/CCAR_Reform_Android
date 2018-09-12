@@ -206,13 +206,10 @@ public class EventAllTabFragment extends Fragment  {
         final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
         ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
         for (int i = 0; i < parseItemBeans.size(); i++) {
-            final String text = parseItemBeans.get(i).getTitle();
-            if (text.contains(s)) {
+            final String text = parseItemBeans.get(i).getTitle().toLowerCase();
+            if (text.contains(s.toLowerCase())) {
                     filteredList.add(parseItemBeans.get(i));
             }
-//            else if (text.contains(s.toUpperCase())){
-//                filteredList.add(parseItemBeans.get(i));
-//            }
         }
         mEventAllAdapter.clearPreviousData();
         isFilterEnable =true;
@@ -259,26 +256,26 @@ public class EventAllTabFragment extends Fragment  {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }
                     else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     } else {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
@@ -311,7 +308,6 @@ public class EventAllTabFragment extends Fragment  {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private ArrayList<ParseIsraelItemBean> mReformDataList = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> mReformSpecialEvent = new ArrayList<>();
     private ArrayList<ParseIsraelItemBean> mSpecialDisporaEvent = new ArrayList<>();
 
@@ -337,9 +333,7 @@ public class EventAllTabFragment extends Fragment  {
         }
 
         if(urls.size() == 3) {
-//            mReformDataList = new ArrayList<>();
             mReformSpecialEvent = new ArrayList<>();
-
         }
 
         mIsLoading0 = true;
@@ -442,16 +436,12 @@ public class EventAllTabFragment extends Fragment  {
                                 }
 
                                 HashMap<String, ArrayList<ParseIsraelItemBean>> twoStepLogic = new HashMap<>();
-                                HashMap<String, ArrayList<ParseIsraelItemBean>> threeStepLogic = new HashMap<>();
 
                                 for (Map.Entry me : itemGrp.entrySet()) {
                                     String date = (String)me.getKey();
                                     ArrayList<ParseIsraelItemBean> dateItemList = (ArrayList<ParseIsraelItemBean>)me.getValue();
-                                    ArrayList<ParseIsraelItemBean> threeEventsData = new ArrayList<>();
                                     if(dateItemList.size()==2) {
                                         twoStepLogic.put(date, dateItemList);
-                                    } else if(dateItemList.size()>=3) {
-                                        threeStepLogic.put(date, dateItemList);
                                     }
                                 }
 
@@ -459,12 +449,6 @@ public class EventAllTabFragment extends Fragment  {
                                 HttpCall.twoStep(twoStepLogic, mReformSpecialEvent, false);
 
                                 // For Three Step Logic
-//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 1);
-//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 2);
-//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 3);
-//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 4);
-//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 5);
-//                                HttpCall.threeStep(threeStepLogic, mReformSpecialEvent, 6);
 
                                 HttpCall.returthreeEventsLogic(mReformSpecialEvent);
                                 HttpCall.firdaySaturdayLogic(mReformSpecialEvent);
@@ -473,6 +457,10 @@ public class EventAllTabFragment extends Fragment  {
 
                                 if (mReformSpecialEvent.size()!=0) {
                                     mEventAllAdapter.addMessege(mReformSpecialEvent, year);
+                                    mRecyclerView.setVisibility(View.VISIBLE);
+
+                                }else {
+                                    mRecyclerView.setVisibility(View.GONE);
                                 }
                                 String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                 int position = 0;
@@ -567,8 +555,12 @@ public class EventAllTabFragment extends Fragment  {
                         // FridaySaturday Logic-----
                         HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
 
-                        if (allEventsReformCalenderData.size()!=0 || allEventsReformCalenderData!=null) {
+                        if (allEventsReformCalenderData.size()!=0 ) {
                             mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+
+                        }else {
+                            mRecyclerView.setVisibility(View.GONE);
                         }
                         mProgressBar.setVisibility(View.GONE);
 

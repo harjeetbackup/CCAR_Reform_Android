@@ -199,8 +199,8 @@ public class EventsParshiyotChildFragment extends Fragment  {
         final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
         ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
         for (int i = 0; i < parseItemBeans.size(); i++) {
-            final String text = parseItemBeans.get(i).getTitle();
-            if (text.contains(s)) {
+            final String text = parseItemBeans.get(i).getTitle().toLowerCase();
+            if (text.contains(s.toLowerCase())) {
                 filteredList.add(parseItemBeans.get(i));
             }
         }
@@ -249,26 +249,26 @@ public class EventsParshiyotChildFragment extends Fragment  {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }
                     else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
                     }else {
                         if (!searchEditText.getText().toString().isEmpty()) {
-                            callRefreshIsrael(searchEditText.getText().toString());
+                            callRefreshIsrael(searchEditText.getText().toString().toLowerCase());
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
                         }
@@ -392,28 +392,6 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
                             ArrayList<ParseIsraelItemBean> mSpecialDisporaFilteredEvent = new ArrayList<>();
 
-//                            if(mReformDataList != null || mReformDataList.size()!=0) {
-//
-//                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-//                            mParshiyotDataList.clear();
-//
-//                            for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
-//                                String dateStr = bean.getDate();
-//                                Date date = null;
-//                                try {
-//                                    date = format.parse(dateStr);
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                                bean.setDateTime(date);
-//                                mReformDataList.add(bean);
-//
-//                            }
-
-//                                mReformDataList.addAll(allEventsReformCalenderData);
-//                        }
-
                             if (!mIsLoading2 && !mIsLoading0 && !mIsLoading1) {
                                 mCurrentYear = year + 1;
                                 EventManager.getSpecailDisporaTorahEvents(mSpecialDisporaEvent,mSpecialDisporaFilteredEvent);
@@ -487,6 +465,9 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
                                 if (mReformDataList.size() !=0) {
                                     mEventAllAdapter.addMessege(mReformDataList, year);
+                                    mRecyclerView.setVisibility(View.VISIBLE);
+                                }else {
+                                    mRecyclerView.setVisibility(View.GONE);
                                 }
 
                                 String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -590,6 +571,10 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
                         if (allEventsReformCalenderData.size() !=0) {
                             mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+
+                        }else {
+                            mRecyclerView.setVisibility(View.GONE);
                         }
                         String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         int position = 0;
