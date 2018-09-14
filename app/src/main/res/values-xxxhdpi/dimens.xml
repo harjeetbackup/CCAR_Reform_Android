@@ -44,7 +44,7 @@
     <dimen name="small_size">12dp</dimen>
 
     <dimen name="calender_description_text_size">11sp</dimen>
-    <dimen name="calender_type_text_size">11sp</dimen>
+    <dimen name="calender_type_text_size">19sp</dimen>
     <dimen name="btn_download_height">43dp</dimen>
     <dimen name="about_margin">20dp</dimen>
     <dimen name="margin_left_caltype_text">10dp</dimen>
@@ -53,5 +53,12 @@
     <dimen name="margin_year_calensync">250dp</dimen>
 
     <dimen name="margin_top_caltype_event">-10dp</dimen>
-    <dimen name="search_text_size_event">20dp</dimen>
+    <dimen name="search_text_size_event">20sp</dimen>
+    <dimen name="date_converter_text_size">15sp</dimen>
+    <dimen name="btn_year_height">30dp</dimen>
+    <dimen name="btn_year_width">80dp</dimen>
+    <dimen name="margin_left_subtitle">7dp</dimen>
+
+    <dimen name="text_size_download">15sp</dimen>
+
 </resources>

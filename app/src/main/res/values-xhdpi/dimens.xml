@@ -50,9 +50,17 @@
     <dimen name="margin_left_caltype_text">10dp</dimen>
     <dimen name="margin_right_caltype_text">30dp</dimen>
     <dimen name="margin_top_caltype_text">18dp</dimen>
-    <dimen name="margin_year_calensync">190dp</dimen>
+    <dimen name="margin_year_calensync">180dp</dimen>
 
     <dimen name="margin_top_caltype_event">14dp</dimen>
-    <dimen name="search_text_size_event">20dp</dimen>
+    <dimen name="search_text_size_event">15sp</dimen>
+    <dimen name="date_converter_text_size">15sp</dimen>
+    <dimen name="frame_width_height">50dp</dimen>
+
+    <dimen name="btn_year_height">30dp</dimen>
+    <dimen name="btn_year_width">83dp</dimen>
+    <dimen name="margin_left_subtitle">3dp</dimen>
+    <dimen name="text_size_download">19sp</dimen>
+
 
 </resources>

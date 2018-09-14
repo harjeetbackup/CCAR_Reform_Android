@@ -1,7 +1,9 @@
 package com.reformluach.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
         return new CalenderPagerAdapter.YearsView(view);
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onBindViewHolder(final CalenderPagerAdapter.YearsView holder, final int position) {
        final CalenderPagerAdapter.YearsView sportsView = (CalenderPagerAdapter.YearsView) holder;
@@ -60,6 +63,7 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
         if (isSelected){
             sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_selected_shape));
             sportsView.btnYear.setTextColor(context.getResources().getColor(R.color.color_gray));
+//            sportsView.btnYear.setTextColor(Color.TRANSPARENT);
         }else if (!isSelected){
             sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_shape));
         }else {
@@ -72,42 +76,6 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
             @Override
             public void onClick(View v) {
 
-
-//                int clickedPos = ((Integer)sportsView.btnYear.getTag()).intValue();
-
-//                if(sportsView.btnYear.isSelected())
-//                {
-//                    if(lastChecked != null)
-//                    {
-//                        lastChecked.setSelected(false);
-//                        model.get(lastCheckedPos).setSelected(false);
-//                    }
-//
-//                    lastChecked = sportsView.btnYear;
-//                    lastCheckedPos = clickedPos;
-//                }
-//                else {
-//                    lastChecked = null;
-//
-//                    model.get(clickedPos).setSelected(sportsView.btnYear.isSelected());
-//                }
-
-//                ModelForYear bean = model.get(position);
-//                bean.setSelected(!isSelected);
-//                notifyDataSetChanged();
-//
-////
-//                for(int i = 0; i<model.size(); i++) {
-//                    if(i == position) {
-//
-//                        model.get(position).setSelected(true);
-//                    }else {
-//                        model.get(i).setSelected(false);
-//                    }
-//                }
-//                if(onCourseSelect != null) {
-//                    onCourseSelect.onCourseSelected(bean.isSelected(), bean,position);
-//                }
                 selectedYear(position, !isSelected);
             }
         });

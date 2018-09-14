@@ -980,43 +980,38 @@ public  class EventTitle {
                     }
 
 
-             else if (eventName.contains("Erev Pesach/Ta'anit Bechorot") && (days==6)) {
+             else if (eventName.equals("Erev Pesach/Ta'anit Bechorot") && (days==6)) {
                 url = htmlFileUrl + "OlderHtmlFile/Erev_Pesach-Ta'anit_Bechorot_Friday.html";
             }
-            else if (eventName.contains("Erev Shavuot") && (days==6)) {
+            else if (eventName.equals("Erev Shavuot") && (days==6)) {
                 url = htmlFileUrl + "OlderHtmlFile/Erev_Shavuot_Friday.html";
             }
-            else if (eventName.contains("Yom Kippur") && (days==6)) {
+            else if (eventName.equals("Yom Kippur") && (days==6)) {
                 url = htmlFileUrl + "OlderHtmlFile/Erev_Yom_Kippur_Friday.html";
             }
-            else if (eventName.contains("Erev Sukkot") && (days==6)) {
+            else if (eventName.equals("Erev Sukkot") && (days==6)) {
                 url = htmlFileUrl + "OlderHtmlFile/Erev_Sukkot_Friday.html";
             }
-                 else if (eventName.contains("Pesach Day 7 Shabbat") && (days==7)) {
+                 else if (eventName.equals("Pesach Day 7 Shabbat") && (days==7)) {
                       url = htmlFileUrl + "OlderHtmlFile/Pesach_Day_7_Shabbat.html";
                     }
-                    else if (eventName.contains("Pesach Day VII") && !(days==7)) {
+                    else if (eventName.equals("Pesach Day VII") && !(days==7)) {
                         url = htmlFileUrl + "OlderHtmlFile/Pesach_Day_7.html";
                     }
 
-                    else if (eventName.contains("Pesach I") && (days==7)) {
+                    else if (eventName.equals("Pesach I") && (days==7)) {
                         url = htmlFileUrl + "OlderHtmlFile/Pesach_Day_1_Shabbat.html";
                     }
-                    else if (eventName.contains("Pesach I") && !(days==7)) {
+                    else if (eventName.equals("Pesach I") && !(days==7)) {
                         url = htmlFileUrl + "OlderHtmlFile/Pesach_Day_1_Weekday.html";
                     }
-                    else if (eventName.contains("Pesach VIII") ) {
+                    else if (eventName.equals("Pesach VIII") ) {
                         url = htmlFileUrl + "OlderHtmlFile/Pesach-VIII.html";
                     }
-                    else if (eventName.contains("Tu B'Av") ) {
+                    else if (eventName.equals("Tu B'Av") ) {
                         url = htmlFileUrl + "OlderHtmlFile/Tu_B'Av.html";
                     }
-                  else if (eventName.equals("Erev Rosh Hashanah Weekday") && !(days==6)) {
-                      url = htmlFileUrl + "OlderHtmlFile/Erev_Rosh_Hashanah_Weekday.html";
-                  }
-                  else if (eventName.equals("Erev Rosh Hashanah Friday") && (days==6)) {
-                      url = htmlFileUrl + "OlderHtmlFile/Erev_Rosh_Hashanah_Friday.html";
-                  }
+
 
                   else if (eventName.equals("Chol Hamoed Sukkot Shabbat") && (days==7)) {
                       url = htmlFileUrl + "OlderHtmlFile/Chol_Hamoed_Sukkot_Shabbat.html";
@@ -1040,9 +1035,6 @@ public  class EventTitle {
              else if (eventName.equals("Rosh Chodesh Adar II") ){
                  url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Adar_II.html";
              }
-//             else if (eventName.contains("Rosh Hashanna 5780") ){
-//                 url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Adar_I.html";
-//             }
              else if (eventName.contains("Rosh Chodesh Adar") ) {
                 url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Adar_I.html";
              }
@@ -1062,25 +1054,23 @@ public  class EventTitle {
                  url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_I_Weekday.html";
              }
              else if (eventName.contains("Rosh Chodesh Av") ) {
-                        url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Av.html";
-                    } else if (eventName.contains("Rosh Chodesh Elul") ) {
-                        url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Elul.html";
-                    }
-                    else if (eventName.contains("Erev Rosh Hashanah Weekday")) {
-                        url = htmlFileUrl + "Rosh_Chodesh_Cheshvan.html";
-                    }
+                  url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Av.html";
+              } else if (eventName.contains("Rosh Chodesh Elul") ) {
+                  url = htmlFileUrl + "OlderHtmlFile/Rosh_Chodesh_Elul.html";
+              }
 
-                  else if (eventName.contains("Erev Rosh Chodesh Weekday") ) {
+
+                  else if (eventName.equals("Erev Rosh Chodesh Weekday") ) {
                   url = htmlFileUrl + "OlderHtmlFile/Erev_Rosh_Chodesh_Weekday.html";
-                  }else if (eventName.contains("Erev Rosh Chodesh Friday") && (days==6)) {
+                  }else if (eventName.equals("Erev Rosh Chodesh Friday") && (days==6)) {
                   url = htmlFileUrl + "OlderHtmlFile/Erev_Rosh_Chodesh_Friday.html";
                   }
-                    else if (eventName.contains("Parashat Acharei Mot-Kedoshim") ) {
+                    else if (eventName.equals("Parashat Acharei Mot-Kedoshim") ) {
                         url = htmlFileUrl + "OlderHtmlFile/Shabbat_Acharei_Mot-K'doshim.html";
                     }
-                    else if (eventName.contains("Erev Rosh Hashanah Weekday")){
+                    else if (eventName.equals("Erev Rosh Hashanah Weekday")){
                         url = htmlFileUrl+ "OlderHtmlFile/Erev_Rosh_Hashanah_Weekday.html";
-                    }else if (eventName.contains("Erev Rosh Hashanah Friday") && (days==6)){
+                    }else if (eventName.equals("Erev Rosh Hashanah Friday") && (days==6)){
                     url = htmlFileUrl+ "OlderHtmlFile/Erev_Rosh_Hashanah_Friday.html";
                     }
 

@@ -93,23 +93,17 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/margin_25"/>
 
-        <!--<android.support.constraint.ConstraintLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content">-->
-
-        <!--</android.support.constraint.ConstraintLayout>-->
-
-
 
     </LinearLayout>
     <ImageView
         android:id="@+id/ccarImage"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/margin_50"
         android:src="@mipmap/ccar_text_logo"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/margin_10"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/margin_5"
         android:layout_marginLeft="@dimen/margin_180"
         />
 </RelativeLayout>

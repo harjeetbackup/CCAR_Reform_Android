@@ -53,5 +53,13 @@
 
 
     <dimen name="margin_top_caltype_event">-10dp</dimen>
-    <dimen name="search_text_size_event">20dp</dimen>
+    <dimen name="search_text_size_event">20sp</dimen>
+    <dimen name="date_converter_text_size">15sp</dimen>
+    <dimen name="frame_width_height">70dp</dimen>
+    <dimen name="btn_year_height">33dp</dimen>
+    <dimen name="btn_year_width">120dp</dimen>
+    <dimen name="margin_left_subtitle">5dp</dimen>
+
+    <dimen name="text_size_download">22sp</dimen>
+
 </resources>

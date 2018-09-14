@@ -30,7 +30,7 @@
     <dimen name="margin_70">82dp</dimen>
     <dimen name="margin_80">92dp</dimen>
     <dimen name="margin_80a">180dp</dimen>
-    <dimen name="margin_110">120dp</dimen>
+    <dimen name="margin_110">135dp</dimen>
     <dimen name="margin_120">150dp</dimen>
     <dimen name="margin_140">240dp</dimen>
     <dimen name="margin_25">37dp</dimen>
@@ -42,16 +42,24 @@
     <dimen name="medium_size">25dp</dimen>
     <dimen name="small_size">22dp</dimen>
 
-    <dimen name="calender_description_text_size">11sp</dimen>
-    <dimen name="calender_type_text_size">11sp</dimen>
-    <dimen name="btn_download_height">43dp</dimen>
+    <dimen name="calender_description_text_size">15sp</dimen>
+    <dimen name="calender_type_text_size">13sp</dimen>
+    <dimen name="btn_download_height">50dp</dimen>
     <dimen name="about_margin">20dp</dimen>
-    <dimen name="margin_year_calensync">230dp</dimen>
+    <dimen name="margin_year_calensync">220dp</dimen>
     <dimen name="margin_left_caltype_text">10dp</dimen>
     <dimen name="margin_right_caltype_text">23dp</dimen>
     <dimen name="margin_top_caltype_text">10dp</dimen>
     <dimen name="width_match_parent">-2dp</dimen>
 
     <dimen name="margin_top_caltype_event">-10dp</dimen>
-    <dimen name="search_text_size_event">20dp</dimen>
+    <dimen name="search_text_size_event">20sp</dimen>
+    <dimen name="date_converter_text_size">20sp</dimen>
+    <dimen name="frame_width_height">70dp</dimen>
+    <dimen name="btn_year_height">35dp</dimen>
+    <dimen name="btn_year_width">130dp</dimen>
+    <dimen name="margin_left_subtitle">13dp</dimen>
+
+    <dimen name="text_size_download">30sp</dimen>
+
 </resources>

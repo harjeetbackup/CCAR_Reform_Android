@@ -62,4 +62,11 @@
     <!--<dimen name="margin_year_calensync">250dp</dimen>-->
 
     <dimen name="btn_download_height">43dp</dimen>
+    <dimen name="date_converter_text_size">15sp</dimen>
+    <dimen name="frame_width_height">50dp</dimen>
+    <dimen name="btn_year_height">30dp</dimen>
+    <dimen name="btn_year_width">60dp</dimen>
+    <dimen name="margin_left_subtitle">3dp</dimen>
+    <dimen name="text_size_download">18sp</dimen>
+
 </resources>

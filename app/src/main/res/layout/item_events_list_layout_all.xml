@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_margin="@dimen/margin_13"
         >
 
         <LinearLayout
@@ -21,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="@dimen/margin_5"
             >
 
         <com.reformluach.typeface.CustomtextViewFontRegular
@@ -35,17 +35,18 @@
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/search_text_size_event"
             android:maxLines="2"
+            android:textStyle="bold"
             />
 
         <com.reformluach.typeface.CustomtextViewFontRegular
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_5"
+            android:layout_marginLeft="@dimen/margin_5"
             android:gravity="start"
             android:textColor="@color/colorBlack"
             tools:text="jgjg hkjhj hjg "
-            android:textSize="14sp"
+            android:textSize="@dimen/search_text_size_event"
 
             />
     </LinearLayout>
@@ -62,11 +63,11 @@
             android:maxLines="2"
             android:textColor="@color/text_greycal"
             tools:text="ghffgh gjhgh kjgjhgjh kjhg"
-            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_5"
             android:layout_marginRight="@dimen/margin_8"
-            android:textSize="10sp"
+            android:textSize="@dimen/calender_description_text_size"
             android:visibility="gone"
-            android:layout_marginBottom="@dimen/margin_5"
+            android:paddingTop="@dimen/margin_5"
             />
 
         </LinearLayout>
