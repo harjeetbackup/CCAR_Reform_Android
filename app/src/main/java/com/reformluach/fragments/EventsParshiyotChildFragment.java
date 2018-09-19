@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -193,11 +194,12 @@ public class EventsParshiyotChildFragment extends Fragment  {
         super.onCreate(savedInstanceState);
     }
 
+    final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
 
     boolean isFilterEnable = false;
     private void callRefreshIsrael(String s) {
-        final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
         ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
+        filteredList.clear();
         for (int i = 0; i < parseItemBeans.size(); i++) {
             final String text = parseItemBeans.get(i).getTitle().toLowerCase();
             if (text.contains(s.toLowerCase())) {
@@ -223,8 +225,15 @@ public class EventsParshiyotChildFragment extends Fragment  {
         TextView tvCanc = ((EventsFragment) getParentFragment()).tvCancel;
 
         TextView tvEventsName = ((EventsFragment) getParentFragment()).tvEvent;
+        TextView tvEventDate = ((EventsFragment) getParentFragment()).tvDate;
 
         tvEventsName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrolledToTop();
+            }
+        });
+        tvEventDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scrolledToTop();
@@ -235,12 +244,24 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
         if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
             tvEventCalenderType.setText("R");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         } else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
             tvEventCalenderType.setText("D");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
             tvEventCalenderType.setText("I");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         }else {
             tvEventCalenderType.setText("R");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         }
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -475,12 +496,8 @@ public class EventsParshiyotChildFragment extends Fragment  {
 
                                 mReformDataList = duplicate;
 
-                                if (mReformDataList.size() !=0) {
                                     mEventAllAdapter.addMessege(mReformDataList, year);
                                     mRecyclerView.setVisibility(View.VISIBLE);
-                                }else {
-                                    mRecyclerView.setVisibility(View.GONE);
-                                }
 
                                 String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                 int position = 0;
@@ -594,13 +611,10 @@ public class EventsParshiyotChildFragment extends Fragment  {
 //                        Collections.sort(mReformDataList);
                         mProgressBar.setVisibility(View.GONE);
 
-                        if (allEventsReformCalenderData.size() !=0) {
                             mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
                             mRecyclerView.setVisibility(View.VISIBLE);
 
-                        }else {
-                            mRecyclerView.setVisibility(View.GONE);
-                        }
+
                         String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         int position = 0;
                         int count = 0;

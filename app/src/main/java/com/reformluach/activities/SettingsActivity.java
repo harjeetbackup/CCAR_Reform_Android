@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -25,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Context context;
     private RadioGroup rgSettings;
 
+    private FrameLayout frameBackSetting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +45,9 @@ public class SettingsActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.ivBack);
         llMain = findViewById(R.id.llMain);
         setBgAccordingToMonth(controller.getMonth());
+        frameBackSetting = findViewById(R.id.frameBackSetting);
 
-        ivBack.setOnClickListener(new View.OnClickListener() {
+        frameBackSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                onBackPressed();

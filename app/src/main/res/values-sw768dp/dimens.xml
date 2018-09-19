@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dialog_width">480dp</dimen>
+    <dimen name="detail_txt_size">13dp</dimen>
+    <dimen name="schedule_cardview_width">88dp</dimen>
+    <dimen name="schedule_cardview_time_width">98dp</dimen>
+    <dimen name="margin_2">3dp</dimen>
+    <dimen name="margin_4">7dp</dimen>
+    <dimen name="margin_5">19dp</dimen>
+    <dimen name="margin_8">12dp</dimen>
+    <dimen name="margin_9">14dp</dimen>
+    <dimen name="margin_10">17dp</dimen>
+    <dimen name="margin_12">18dp</dimen>
+    <dimen name="margin_15">19dp</dimen>
+    <dimen name="margin_18">22dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_26">26dp</dimen>
+    <dimen name="margin_27">27dp</dimen>
+
+    <dimen name="margin_30">34dp</dimen>
+    <dimen name="margin_32">36dp</dimen>
+    <dimen name="margin_38">38dp</dimen>
+    <dimen name="margin_40">40dp</dimen>
+    <dimen name="margin_33">37dp</dimen>
+    <dimen name="margin_35">39dp</dimen>
+    <dimen name="margin_45">69dp</dimen>
+    <dimen name="margin_50">54dp</dimen>
+    <dimen name="margin_60">70dp</dimen>
+    <dimen name="margin_70">74dp</dimen>
+    <dimen name="margin_80">84dp</dimen>
+    <dimen name="margin_80a">180dp</dimen>
+    <dimen name="margin_13">30dp</dimen>
+    <dimen name="margin_110">162dp</dimen>
+    <dimen name="margin_120">122dp</dimen>
+    <dimen name="margin_140">142dp</dimen>
+    <dimen name="margin_25">39dp</dimen>
+    <dimen name="margin_180">400dp</dimen>
+    <dimen name="margin_200">344dp</dimen>
+    <dimen name="margin_240">244dp</dimen>
+    <!--Sizes for the TextViews-->
+    <dimen name="large_size">19dp</dimen>
+    <dimen name="medium_size">17dp</dimen>
+    <dimen name="small_size">14dp</dimen>
+
+    <dimen name="calender_description_text_size">15sp</dimen>
+    <dimen name="calender_type_text_size">20sp</dimen>
+    <dimen name="btn_download_height">53dp</dimen>
+    <dimen name="about_margin">20dp</dimen>
+    <dimen name="margin_left_caltype_text">10dp</dimen>
+    <dimen name="margin_right_caltype_text">23dp</dimen>
+    <dimen name="margin_top_caltype_text">10dp</dimen>
+    <dimen name="margin_year_calensync">270dp</dimen>
+
+    <dimen name="margin_top_caltype_event">-10dp</dimen>
+    <dimen name="search_text_size_event">20sp</dimen>
+    <dimen name="date_converter_text_size">20sp</dimen>
+    <dimen name="frame_width_height">90dp</dimen>
+    <dimen name="btn_year_height">40dp</dimen>
+    <dimen name="btn_year_width">210dp</dimen>
+    <dimen name="margin_left_subtitle">13dp</dimen>
+
+    <dimen name="text_size_download">27sp</dimen>
+
+</resources>

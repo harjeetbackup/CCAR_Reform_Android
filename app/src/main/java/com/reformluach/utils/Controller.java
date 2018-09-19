@@ -519,7 +519,7 @@ public class Controller extends Application {
         } catch (java.text.ParseException e) {
             e.printStackTrace();
         }
-        c.add(Calendar.DATE, 1);  // number of days to add
+        c.add(Calendar.DATE, 0);  // number of days to add
         return sdf.format(c.getTime());
     }
 }

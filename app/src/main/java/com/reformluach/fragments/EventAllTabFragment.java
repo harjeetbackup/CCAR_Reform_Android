@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -131,6 +132,7 @@ public class EventAllTabFragment extends Fragment  {
         if(mSelectedCalType == null || !mSelectedCalType.equals(HttpCall.getSelectedCalendarType(getActivity()))) {
             mSelectedCalType = HttpCall.getSelectedCalendarType(getActivity());
             mEventAllAdapter.clearPreviousData();
+
         }
 
         if(mEventAllAdapter.getItemCount() == 0) {
@@ -143,15 +145,13 @@ public class EventAllTabFragment extends Fragment  {
             mIsLoading0 = false;
             mIsLoading1 = false;
             mIsLoading2 = false;
-            getServerCall(mCurrentYear);
 
-//            registerSearch();
+            getServerCall(mCurrentYear);
         }
 
         if (isVisible){
             registerSearch();
         }
-        mRecyclerView.getRecycledViewPool().clear();
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -161,11 +161,9 @@ public class EventAllTabFragment extends Fragment  {
                 if (!recyclerView.canScrollVertically(1)) {
                     scrolledState = recyclerView.getScrollState();
                     getServerCall(mCurrentYear);
-
                 }
             }
         });
-
     }
 
 
@@ -178,48 +176,19 @@ public class EventAllTabFragment extends Fragment  {
         if (!isVisible){
             return;
         }
+
+
         if(isVisible) {
             registerSearch();
         }
 
         if (isVisible){
-
             getServerCall(mCurrentYear);
         }
-//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//
-//                if (!recyclerView.canScrollVertically(1)) {
-//                    getServerCall(mCurrentYear);
-//
-//                }
-//            }
-//        });
 
     }
 
 
-    boolean isFilterEnable = false;
-    private void callRefreshIsrael(String s) {
-        final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
-        ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
-        for (int i = 0; i < parseItemBeans.size(); i++) {
-            final String text = parseItemBeans.get(i).getTitle().toLowerCase();
-            if (text.contains(s.toLowerCase())) {
-                    filteredList.add(parseItemBeans.get(i));
-            }
-        }
-        mEventAllAdapter.clearPreviousData();
-        isFilterEnable =true;
-        mEventAllAdapter.showFilteredData(filteredList);
-    }
-
-    public void showFullData(){
-        ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
-        mEventAllAdapter.showFilteredData(parseItemBeans);
-    }
 
     private void registerSearch() {
         if((EventsFragment) getParentFragment() == null || ((EventsFragment) getParentFragment()).events_search_edittext == null ) {
@@ -232,18 +201,38 @@ public class EventAllTabFragment extends Fragment  {
         TextView tvEventCalenderType = ((EventsFragment) getParentFragment()).tvEventCalenderType;
 
         if (Controller.getPreferencesString((Activity) context, Appconstant.REFORM).equalsIgnoreCase("selected")) {
-                tvEventCalenderType.setText("R");
+            tvEventCalenderType.setText("R");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         } else if (Controller.getPreferencesString((Activity) context, Appconstant.DIASPORA).equalsIgnoreCase("selected")) {
-                tvEventCalenderType.setText("D");
+            tvEventCalenderType.setText("D");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         } else if (Controller.getPreferencesString((Activity) context, Appconstant.ISRAEL).equalsIgnoreCase("selected")) {
-                tvEventCalenderType.setText("I");
+            tvEventCalenderType.setText("I");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         }else {
             tvEventCalenderType.setText("R");
+            mEventAllAdapter.clearFilteredData(filteredList);
+            scrolledToTop();
+            isFilterEnable=false;
         }
 
         TextView tvEventsName = ((EventsFragment) getParentFragment()).tvEvent;
+        TextView tvEventDate = ((EventsFragment) getParentFragment()).tvDate;
 
         tvEventsName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrolledToTop();
+            }
+        });
+
+        tvEventDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scrolledToTop();
@@ -281,6 +270,7 @@ public class EventAllTabFragment extends Fragment  {
                         }
                     }
                     if (searchEditText.getText().length()==0){
+                        mEventAllAdapter.clearPreviousData();
                         showFullData();
                         isFilterEnable=false;
                     }
@@ -303,8 +293,9 @@ public class EventAllTabFragment extends Fragment  {
                 isFilterEnable=false;
             }
         });
-
     }
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -376,6 +367,9 @@ public class EventAllTabFragment extends Fragment  {
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                             for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
+                                if (bean.getTitle().equals("Shmini Atzeret")){
+                                    bean.setTitle(" Sh'mini Atzeret/Simchat Torah");
+                                }
                                 String dateStr = bean.getDate();
 
                                 Date date = null;
@@ -477,13 +471,9 @@ public class EventAllTabFragment extends Fragment  {
 
                                 mProgressBar.setVisibility(View.GONE);
 
-                                if (mReformSpecialEvent.size()!=0) {
-                                    mEventAllAdapter.addMessege(mReformSpecialEvent, year);
-                                    mRecyclerView.setVisibility(View.VISIBLE);
+                                mEventAllAdapter.addMessege(mReformSpecialEvent, year);
+                                mRecyclerView.setVisibility(View.VISIBLE);
 
-                                }else {
-                                    mRecyclerView.setVisibility(View.GONE);
-                                }
                                 String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                                 int position = 0;
                                 int count = 0;
@@ -518,9 +508,9 @@ public class EventAllTabFragment extends Fragment  {
                         mIsLoading0 = false;
                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                         for(ParseIsraelItemBean bean : allEventsReformCalenderData) {
-                            if (bean.getTitle().equals("Sh'mini Atzeret/Simchat Torah")){
-                                bean.setTitle("Sh'mini Atzeret");
-                            }
+//                            if (bean.getTitle().equals("Sh'mini Atzeret/Simchat Torah")){
+//                                bean.setTitle("Sh'mini Atzeret");
+//                            }
                             String dateStr = bean.getDate();
 
                             Date date = null;
@@ -529,7 +519,6 @@ public class EventAllTabFragment extends Fragment  {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
                             bean.setDateTime(date);
                         }
 
@@ -593,14 +582,9 @@ public class EventAllTabFragment extends Fragment  {
                         // FridaySaturday Logic-----
                         HttpCall.firdaySaturdayLogic(allEventsReformCalenderData);
 
-                        if (allEventsReformCalenderData.size()!=0 ) {
                             mEventAllAdapter.addMessege(allEventsReformCalenderData, year);
-                            mRecyclerView.setVisibility(View.VISIBLE);
+                            mProgressBar.setVisibility(View.GONE);
 
-                        }else {
-                            mRecyclerView.setVisibility(View.GONE);
-                        }
-                        mProgressBar.setVisibility(View.GONE);
 
                         String TodaysDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         int position = 0;
@@ -628,6 +612,7 @@ public class EventAllTabFragment extends Fragment  {
                             int pos = layoutManager.findLastCompletelyVisibleItemPosition();
                             mRecyclerView.scrollToPosition(pos);
                         }
+
                     }
                 }
 
@@ -714,7 +699,27 @@ public class EventAllTabFragment extends Fragment  {
         }
         return urlModel;
     }
+    final ArrayList<ParseIsraelItemBean> filteredList = new ArrayList<>();
+
+    boolean isFilterEnable = false;
+    private void callRefreshIsrael(String s) {
+        ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
+        filteredList.clear();
+        for (int i = 0; i < parseItemBeans.size(); i++) {
+            final String text = parseItemBeans.get(i).getTitle().toLowerCase();
+            if (text.contains(s.toLowerCase())) {
+                filteredList.add(parseItemBeans.get(i));
+            }
+        }
+        mEventAllAdapter.clearPreviousData();
+        isFilterEnable =true;
+        mEventAllAdapter.showFilteredData(filteredList);
+    }
 
 
+    public void showFullData(){
+        ArrayList<ParseIsraelItemBean> parseItemBeans = mEventAllAdapter.getAllActualData();
+        mEventAllAdapter.showFilteredData(parseItemBeans);
+    }
 
 }

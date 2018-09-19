@@ -108,10 +108,6 @@ public class EventsFragment extends Fragment {
 
 
     public void setupViewPager(ViewPager viewPager) {
-//        eventsParshiyotChildFragment = (EventsParshiyotChildFragment) controller.getFragmentInstance(5);
-//        eventsHolidaysFragment = (EventsHolidaysChildFragment) controller.getFragmentInstance(6);
-//        mEventAllTabFragment = (EventAllTabFragment) controller.getFragmentInstance(7);
-
 
         eventsParshiyotChildFragment = new EventsParshiyotChildFragment();
         eventsHolidaysFragment = new EventsHolidaysChildFragment();
@@ -205,36 +201,16 @@ public class EventsFragment extends Fragment {
                 setupViewPager(viewPager);
             }
         }
-
     }
-//
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         clearTabSetup();
     }
-//
+
     private void clearTabSetup() {
         ViewPagerAdapterHome viewPagerAdapterHome =null;
         viewPager = null;
-    }
-//
-//    public void openEventsAllTab() {
-//        if(viewPager != null) {
-//            viewPager.setCurrentItem(0);
-//        }
-//    }
-
-
-    public void openEventsParshiyotTab() {
-        if(viewPager != null) {
-            viewPager.setCurrentItem(1);
-        }
-    }
-
-    public void openEventsHolidayTab() {
-        if(viewPager != null) {
-            viewPager.setCurrentItem(2);
-        }
     }
 }

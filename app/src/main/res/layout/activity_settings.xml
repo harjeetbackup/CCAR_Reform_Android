@@ -14,13 +14,23 @@
 
         >
 
-        <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="@dimen/margin_30"
-            android:layout_height="@dimen/margin_30"
-            android:layout_gravity="start|center"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:background="@mipmap/down_arrow"/>
+        <FrameLayout
+            android:id="@+id/frameBackSetting"
+            android:layout_width="@dimen/margin_60"
+            android:layout_height="@dimen/margin_60"
+            android:layout_marginTop="@dimen/margin_5"
+            >
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="@dimen/margin_30"
+                android:layout_height="@dimen/margin_30"
+                android:layout_gravity="start|center"
+                android:background="@mipmap/down_arrow"
+                android:layout_marginLeft="@dimen/margin_10"
+
+                />
+
+        </FrameLayout>
 
         <com.reformluach.typeface.CustomtextViewFontLight
             android:layout_width="match_parent"
@@ -30,7 +40,9 @@
             android:gravity="center"
             android:text="Settings"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/margin_33"/>
+            android:textSize="@dimen/margin_33"
+
+            />
     </LinearLayout>
 
     <LinearLayout

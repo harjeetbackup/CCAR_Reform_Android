@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.reformluach.R;
 import com.reformluach.activities.EventDetailsActivity;
+import com.reformluach.models.EventTitle;
 import com.reformluach.models.ParseIsraelItemBean;
 import com.reformluach.services.RequestURL;
 import com.reformluach.services.ServiceAsync;
@@ -22,6 +23,7 @@ import com.reformluach.services.ServiceStatus;
 import com.reformluach.services.ServicesResponse;
 import com.reformluach.utils.Appconstant;
 import com.reformluach.utils.Controller;
+import com.reformluach.utils.FunctionSpellChange;
 
 import java.util.ArrayList;
 
@@ -89,10 +91,12 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
                 tv_month.setText(String.valueOf(servicesResponse.hm));
                 tv_year.setText(String.valueOf(servicesResponse.hy));
                 tv_gre_date.setText(getMonthString(finalMonth) + " " + date + ", " + year);
-                tv_event.setText(String.valueOf(servicesResponse.events.get(0)));
+//                tv_event.setText(String.valueOf(servicesResponse.events.get(0)));
+                tv_event.setText(String.valueOf( FunctionSpellChange.funcspellChangedForTitle(servicesResponse.events.get(0))));
+
                 eventName = String.valueOf(servicesResponse.events.get(0));
                 try {
-                    controller.savePreferencesString(context, Appconstant.EVENTS_NAME, String.valueOf(servicesResponse.events.get(0)));
+                    controller.savePreferencesString(context, Appconstant.EVENTS_NAME, String.valueOf( FunctionSpellChange.funcspellChangedForTitle(servicesResponse.events.get(0))));
                     controller.savePreferencesString(context, Appconstant.HEBREW_MONTH, String.valueOf(servicesResponse.hy) + "/" + controller.getYear());
                     controller.savePreferencesString(context, Appconstant.CURRENT_DATE_MONTH, getMonthString(finalMonth) + " " + date);
                 } catch (Exception e) {
@@ -187,7 +191,7 @@ public class TodaysFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(context, EventDetailsActivity.class);
                 ArrayList<ParseIsraelItemBean> roshChodesh = new ArrayList<>();
 //                intent.putExtra("eventType", "Todays");
-                intent.putExtra("eventName", eventName);
+                intent.putExtra("eventName",  FunctionSpellChange.funcspellChangedForTitle(eventName));
                 intent.putExtra("eventDate",eventDate);
                 intent.putExtra("roshChodeshTevet",roshChodesh);
                 startActivity(intent);

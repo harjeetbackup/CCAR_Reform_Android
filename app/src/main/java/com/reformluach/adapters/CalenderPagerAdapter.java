@@ -45,17 +45,6 @@ public class CalenderPagerAdapter extends RecyclerView.Adapter<CalenderPagerAdap
 
         final ModelForYear modelForYear = model.get(position);
 
-//        sportsView.btnYear.setSelected(model.get(0).isSelected());
-
-
-//        if(position == 0 && model.get(0).isSelected() && sportsView.btnYear.isSelected())
-//        {
-//            sportsView.btnYear.setBackground(context.getResources().getDrawable(R.drawable.button_year_selected_shape));
-//            lastChecked = sportsView.btnYear;
-//            lastCheckedPos = 0;
-//        }
-
-
 
         sportsView.btnYear.setText(modelForYear.getYear());
         final boolean isSelected = model.get(position).isSelected();

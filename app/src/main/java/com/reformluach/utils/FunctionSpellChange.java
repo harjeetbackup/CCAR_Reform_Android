@@ -55,7 +55,7 @@ public class FunctionSpellChange {
         name = name.replace( "Yom HaShoah",  "Yom HaShoah V'hag'vurah");
         name = name.replace( "Yom HaAtzma'ut",  "Yom Ha'atzma'ut");
         name = name.replace( "Lag BaOmer",  "Lag Ba'Omer");
-        name = name.replace( "Shmini Atzeret",  "Sh'mini Atzeret/Simchat Torah");
+//        name = name.replace( "Shmini Atzeret",  "Sh'mini Atzeret/Simchat Torah");
         name = name.replace( "Sukkot II (CH''M)",  "Sukkot 2 Weekday");
         name = name.replace( "Sukkot II",  "Sukkot 2 Weekday");
         name = name.replace("Sukkot 2 WeekdayI (CH''M)","Sukkot 3 Weekday");

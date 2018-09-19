@@ -31,10 +31,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final Context context;
     private ArrayList<ParseIsraelItemBean> mPopulatingData;
     private ArrayList<ParseIsraelItemBean> mAllActualData;
-    private ArrayList<ParseIsraelItemBean> mAddAllYearData;
-//    private ReloadAllDataListener reloadAllDataListener;
-    private ArrayList<ParseIsraelItemBean> roshChodeshList = new ArrayList<>();
-
+    private ArrayList<ParseIsraelItemBean> mFilterData;
 
     public EventsIsraelAdapter(Context context, ArrayList<ParseIsraelItemBean> data) {
         this.context = context;
@@ -84,8 +81,6 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-//        ParseIsraelItemBean roshChodesh = new ParseIsraelItemBean();
-//        roshChodesh = model;
          ArrayList<ParseIsraelItemBean> roshChodeshList = new ArrayList<>();
 
         for (int i=0; i<mPopulatingData.size(); i++){
@@ -105,9 +100,7 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                    Intent intent = new Intent(context, EventDetailsActivity.class);
                    intent.putExtra("eventName", mPopulatingData.get(position).getTitle());
-//                   intent.putExtra("eventType", mPopulatingData.get(position).getCategory());
                    intent.putExtra("eventDate", mPopulatingData.get(position).getDate());
-//                   intent.putParcelableArrayListExtra("roshChodeshTevet",roshChodeshList);
                    intent.putExtra("roshChodeshTevet",roshChodeshList);
 
                    ((Activity) context).startActivity(intent);
@@ -148,14 +141,6 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-//    public void setReloadAllDataListener(ReloadAllDataListener reloadAllDataListener) {
-//        this.reloadAllDataListener = reloadAllDataListener;
-//    }
-
-    public interface ReloadAllDataListener {
-        void refreshAllIsraelData();
-    }
-
     public void clearPreviousData() {
         if(this.mPopulatingData != null)
             this.mPopulatingData.clear();
@@ -167,17 +152,12 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (!postsDataBeans.get(i).getTitle().equals("Sigd")) {
                 mPopulatingData.add(postsDataBeans.get(i));
             }
-//
         }
-
-//        notifyItemInserted(mPopulatingData.size() - 1);
-//        mPopulatingData.addAll(postsDataBeans);
 
         Log.i("Ashwani", "Size :: "+mPopulatingData.size()+" :: Year :: "+year);
 
         notifyDataSetChanged();
         mAllActualData = new ArrayList<>(mPopulatingData);
-
     }
 
     public void showFilteredData(ArrayList<ParseIsraelItemBean> postsDataBeans) {
@@ -185,6 +165,12 @@ public class EventsIsraelAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    public void clearFilteredData(ArrayList<ParseIsraelItemBean> postsDataBeans) {
+        if (postsDataBeans.size()!=0) {
+            postsDataBeans.clear();
+            notifyDataSetChanged();
+        }
+    }
 
     public  void getAllData(ArrayList<ParseIsraelItemBean> allData){
          allData.addAll(mAllActualData);

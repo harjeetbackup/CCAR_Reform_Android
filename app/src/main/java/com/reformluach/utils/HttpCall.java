@@ -481,13 +481,16 @@ public class HttpCall {
                     isSukkot2 = true;
                 }
 
-                if (title1.equals("Sh'mini Atzeret/Simchat Torah")){
+                if (title1.equals(" Sh'mini Atzeret/Simchat Torah")){
                     isSukkot2 = true;
                 }
-
-            if (title1.equals("Erev Rosh Chodesh Weekday")){
+                 if (title1.equals("Shmini Atzeret")){
                 isSukkot2 = true;
-            }
+                 }
+
+               if (title1.equals("Erev Rosh Chodesh Weekday")){
+                isSukkot2 = true;
+               }
                 //END Saturday Logic for Chanukah -------------------------------------------------
 
 
@@ -495,8 +498,12 @@ public class HttpCall {
 
                     // Saturday Logic for Sukkot -------------------------------------------------
 
-
-
+                    if (title1.equals("Shmini Atzeret") && (days == 7)) {
+                        mAllEventsReformCalenderData.get(i).setTitle("Sh'mini Atzeret/Simchat Torah Shabbat");
+                    }
+                    if (title1.equals(" Sh'mini Atzeret/Simchat Torah") && (days == 7)) {
+                        mAllEventsReformCalenderData.get(i).setTitle("Sh'mini Atzeret/Simchat Torah Shabbat");
+                    }
                     if (title1.equals("Sukkot 2 Weekday") && days == 7) {
                         mAllEventsReformCalenderData.get(i).setTitle("Chol Hamoed Sukkot Shabbat");
                         mAllEventsReformCalenderData.get(i).setSubTitle("Sukkot 2");
@@ -518,9 +525,10 @@ public class HttpCall {
                         mAllEventsReformCalenderData.get(i).setSubTitle("Sukkot 6");
                     }
 
-                    if (title1.equals("Sh'mini Atzeret/Simchat Torah") && days == 7) {
-                        mAllEventsReformCalenderData.get(i).setTitle("Sh'mini Atzeret/Simchat Torah Shabbat");
-                    }
+
+//                    else if (title1.equals("Sh'mini Atzeret/Simchat Torah") && !(days==7)) {
+//                        mAllEventsReformCalenderData.get(i).setTitle("Sh'mini Atzeret/Simchat Torah");
+//                    }
                     if (title1.equals("Pesach I") && days==7){
                         mAllEventsReformCalenderData.get(i).setTitle("Pesach Day 1 Shabbat");
                     }else if (title1.equals("Pesach I") && !(days==7)){
