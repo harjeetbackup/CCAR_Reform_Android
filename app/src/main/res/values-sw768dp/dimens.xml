@@ -6,7 +6,7 @@
     <dimen name="schedule_cardview_time_width">98dp</dimen>
     <dimen name="margin_2">3dp</dimen>
     <dimen name="margin_4">7dp</dimen>
-    <dimen name="margin_5">19dp</dimen>
+    <dimen name="margin_5">10dp</dimen>
     <dimen name="margin_8">12dp</dimen>
     <dimen name="margin_9">14dp</dimen>
     <dimen name="margin_10">17dp</dimen>
@@ -56,7 +56,7 @@
     <dimen name="date_converter_text_size">20sp</dimen>
     <dimen name="frame_width_height">90dp</dimen>
     <dimen name="btn_year_height">40dp</dimen>
-    <dimen name="btn_year_width">210dp</dimen>
+    <dimen name="btn_year_width">180dp</dimen>
     <dimen name="margin_left_subtitle">13dp</dimen>
 
     <dimen name="text_size_download">27sp</dimen>

@@ -39,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginRight="@dimen/margin_5"
-                android:layout_marginTop="@dimen/margin_13">
+                android:layout_marginTop="@dimen/margin_8">
                 <ImageButton
                     android:id="@+id/ImgBtnSetting"
                     android:layout_width="wrap_content"
