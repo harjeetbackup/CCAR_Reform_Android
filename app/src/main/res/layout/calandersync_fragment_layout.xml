@@ -17,7 +17,9 @@
         <LinearLayout
         android:id="@+id/llMainCalender"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_year_calensync"
+        android:minHeight="@dimen/margin_year_calensync"
+            android:layout_height="wrap_content"
+
         android:orientation="vertical">
 
 
